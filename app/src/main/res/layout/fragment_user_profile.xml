@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="user"
+            type="com.example.recipeapp.room_DB.model.UserInfo" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text = "@{`Username: ` + user.name}"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text= "@{`Height: ` + String.valueOf(user.height) + ` cm`}"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`Weight: ` + String.valueOf(user.weight) + ` kg`}"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_diet_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`Diet Type: ` + user.dietType}"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_goal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`Goal: ` + user.goal}"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_bmi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`BMI: ` + user.bmi}"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/favoriteRecipes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favourite Recipes" />
+
+        <Button
+            android:id="@+id/cookedRecipes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cooked Before Recipes" />
+
+        <Button
+            android:id="@+id/editProfileInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile Info" />
+    </LinearLayout>
+</layout>

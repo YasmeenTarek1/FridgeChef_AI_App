@@ -1,0 +1,51 @@
+package com.example.recipeapp.ui.toBuyIngredientsFragment
+
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.recipeapp.R
+import com.example.recipeapp.Repository
+import com.example.recipeapp.api.service.RetrofitInstance
+import com.example.recipeapp.databinding.FragmentToBuyIngredientsBinding
+import com.example.recipeapp.room_DB.database.AppDatabase
+import kotlinx.coroutines.launch
+
+
+class ToBuyIngredientsFragment : Fragment(R.layout.fragment_to_buy_ingredients) {
+
+    private lateinit var binding: FragmentToBuyIngredientsBinding
+    private lateinit var repository: Repository
+    private lateinit var viewModel: ToBuyIngredientsViewModel
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var toBuyIngredientsAdapter: ToBuyIngredientsAdapter
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding = FragmentToBuyIngredientsBinding.bind(view)
+        binding.lifecycleOwner = this
+
+        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
+
+        val factory = ToBuyIngredientsViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory).get(ToBuyIngredientsViewModel::class.java)
+
+        toBuyIngredientsAdapter = ToBuyIngredientsAdapter()
+
+        recyclerView = binding.recyclerView
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.setAdapter(toBuyIngredientsAdapter)
+
+
+        lifecycleScope.launch {
+            viewModel.ingredients.collect { ingredients ->
+                toBuyIngredientsAdapter.differ.submitList(ingredients)
+            }
+        }
+    }
+}
