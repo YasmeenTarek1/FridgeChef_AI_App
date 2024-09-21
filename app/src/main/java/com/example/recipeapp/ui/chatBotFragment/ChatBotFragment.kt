@@ -40,14 +40,6 @@ class ChatBotFragment : Fragment(R.layout.fragment_chat_bot) {
             0 -> {
                 showRecipe(args.ingredients)
             }
-            1 -> {
-                binding.enteredIngredientsButton.visibility = View.INVISIBLE
-                binding.otherIngredientsButton.visibility = View.INVISIBLE
-                binding.scrollView3.visibility = View.VISIBLE
-                binding.chatbotResponse.text = "Go Crazy Bot: Thinking..."
-
-                showCookingTip()
-            }
             2 ->{
                 binding.enteredIngredientsButton.visibility = View.INVISIBLE
                 binding.otherIngredientsButton.visibility = View.INVISIBLE
@@ -105,14 +97,6 @@ class ChatBotFragment : Fragment(R.layout.fragment_chat_bot) {
 
             binding.goCrazyButton.visibility = View.INVISIBLE
             binding.ingredientsInput.visibility = View.INVISIBLE
-        }
-    }
-
-    private fun showCookingTip() {
-        lifecycleScope.launch {
-            val recipe:String = viewModel.getCookingTip()
-            val markwon = Markwon.create(requireContext())
-            markwon.setMarkdown(binding.chatbotResponse, recipe)
         }
     }
 

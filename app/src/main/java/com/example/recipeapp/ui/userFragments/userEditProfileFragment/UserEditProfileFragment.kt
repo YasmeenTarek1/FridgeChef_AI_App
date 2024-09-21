@@ -32,11 +32,10 @@ class UserEditProfileFragment : Fragment(R.layout.fragment_user_edit_profile) {
         val factory = UserEditProfileViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(UserEditProfileViewModel::class.java)
 
-        val db:AppDatabase = AppDatabase.getInstance(requireContext())!!
         var oldUser: UserInfo? = null
 
         lifecycleScope.launch {
-            oldUser = db.userDao().getUserById(AppUser.instance!!.userId!!)!!
+            oldUser = repository.getUserById(AppUser.instance!!.userId!!)!!
             binding.user = oldUser
         }
 
@@ -46,7 +45,7 @@ class UserEditProfileFragment : Fragment(R.layout.fragment_user_edit_profile) {
             val height = binding.editTextHeight.text.toString().toInt()
 
             lifecycleScope.launch {
-                db.userDao().updateUser(
+                repository.updateUser(
                     UserInfo(
                         oldUser!!.id,
                         name = binding.editTextName.text.toString(),

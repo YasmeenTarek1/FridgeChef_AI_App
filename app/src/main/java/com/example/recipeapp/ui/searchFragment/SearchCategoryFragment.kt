@@ -23,12 +23,15 @@ class SearchCategoryFragment : Fragment(R.layout.fragment_search_category) {
             when (checkedId) {
                 R.id.SearchByIngredientsRadioButton -> {
                     findNavController().navigate(R.id.action_searchCategoryFragment_to_searchByIngredientsFragment)
+                    radioGroup.clearCheck()
                 }
                 R.id.SearchByNutrientsRadioButton -> {
                     findNavController().navigate(R.id.action_searchCategoryFragment_to_searchByNutrientsFragment)
+                    radioGroup.clearCheck()
                 }
                 R.id.SearchByRecipeNameRadioButton -> {
                     findNavController().navigate(R.id.action_searchCategoryFragment_to_searchByNameFragment)
+                    radioGroup.clearCheck()
                 }
             }
         }

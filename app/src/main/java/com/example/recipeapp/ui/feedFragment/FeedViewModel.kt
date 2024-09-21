@@ -29,4 +29,12 @@ class FeedViewModel(application: Application ,private val repository: Repository
             ))
         }
     }
+
+    fun checkFavorite(recipeId: Int) :Boolean {
+        var isFavorite = false
+        viewModelScope.launch {
+            isFavorite = repository.isFavoriteRecipeExists(recipeId)
+        }
+        return isFavorite
+    }
 }

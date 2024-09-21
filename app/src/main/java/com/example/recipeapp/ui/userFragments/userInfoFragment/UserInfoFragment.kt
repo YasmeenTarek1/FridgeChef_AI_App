@@ -61,7 +61,7 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
             saveUserInfoInFirestoreAndRoom(userInfo!!)
             binding.buttonSave.setOnClickListener {
-                findNavController().navigate(R.id.action_userInfoFragment_to_homeFragment)
+                findNavController().navigate(R.id.action_userInfoFragment_to_feedFragment)
             }
         }
     }

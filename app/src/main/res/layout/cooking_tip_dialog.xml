@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/rounded_white_background">
+
+    <TextView
+        android:id="@+id/cookingTipText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="9dp"
+        android:textColor="@android:color/black" />
+
+    <Button
+        android:id="@+id/gotItButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Got it"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:backgroundTint="#FB6063"
+        android:layout_gravity="end"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

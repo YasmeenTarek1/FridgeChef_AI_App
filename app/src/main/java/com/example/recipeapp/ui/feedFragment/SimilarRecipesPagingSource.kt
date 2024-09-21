@@ -1,21 +1,22 @@
-package com.example.recipeapp.ui.feedFragment
-
 import android.content.Context
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.recipeapp.AppUser
+import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.DetailedRecipeResponse
 import com.example.recipeapp.api.model.Recipe
-import com.example.recipeapp.api.service.ApiService
-import com.example.recipeapp.room_DB.dao.FavoriteRecipesDao
+import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.room_DB.database.AppDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlin.random.Random
+import kotlinx.coroutines.launch
 
-class SimilarRecipesPagingSource(private val api: ApiService, private val favoriteRecipesDao: FavoriteRecipesDao , private val context: Context) : PagingSource<Int, Recipe>() {
+class SimilarRecipesPagingSource(private val context: Context) : PagingSource<Int, Recipe>() {
 
-    private val takenIDs = mutableSetOf<Int>()
+    private val takenIDs = mutableSetOf<Int>() // to not repeat a fav recipe
+    private val currentRecipes = mutableSetOf<Int>() // to not repeat a result recipe
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Recipe> {
         return try {
@@ -23,38 +24,55 @@ class SimilarRecipesPagingSource(private val api: ApiService, private val favori
             var taken = false
             var recipeId = 0
 
-            // only the first value of the fav recipes will be collected and then the flow is shut down (Cold Stream)
-            val favoriteRecipes = favoriteRecipesDao.getAllFavoriteRecipes().first()
+            val repository = Repository(RetrofitInstance(), AppDatabase.getInstance(context))
 
-            for(i in favoriteRecipes.indices){ // get another fav recipe that wasn't handled before, otherwise go get random recipes
-                if(!takenIDs.contains(favoriteRecipes.get(i).id)){
-                    takenIDs.add(favoriteRecipes.get(i).id)
+            // Collect all favorite recipes (Cold Stream)
+            val favoriteRecipes = repository.getAllFavoriteRecipes().first() // Ensure this collects all
+            currentRecipes.addAll(favoriteRecipes.map { it.id })
+
+            // Get another favorite recipe that wasn't handled before
+            for (favorite in favoriteRecipes) {
+                if (!takenIDs.contains(favorite.id)) {
+                    takenIDs.add(favorite.id)
                     taken = true
-                    recipeId = favoriteRecipes.get(i).id
+                    recipeId = favorite.id
                     break
                 }
             }
 
             var response: MutableList<Recipe> = mutableListOf()
-            if (!taken) {
-                var diet:String? = AppDatabase.getInstance(context)!!.userDao().getUserById(AppUser.instance!!.userId!!)!!.dietType.lowercase()
-                if(diet == "balanced")
-                    diet = null
-                response = api.getRandomRecipes(diet = diet).recipes.toMutableList()
-            } else {
-                var recipes: List<Recipe> = api.getSimilarRecipes(recipeId = recipeId)
-                for(recipe in recipes){
-                    val detailedRecipe: DetailedRecipeResponse = api.getRecipeInfo(recipe.id)
-                    recipe.image = detailedRecipe.image
-                    recipe.likes = Random.nextInt(1, 11)
-                    recipe.healthScore = detailedRecipe.healthScore.toDouble()
+
+            // Fetch user's diet type, if balanced, treat it as null (no filter)
+            var diet: String? = repository.getUserById(AppUser.instance!!.userId!!)?.dietType?.lowercase()
+            if (diet == "balanced") diet = null
+
+            response = repository.getRandomRecipes(diet = diet).toMutableList()
+
+            // If a favorite recipe was found, fetch similar recipes
+            if (taken) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    var recipes: List<Recipe> = repository.getSimilarRecipes(recipeId = recipeId)
+
+                    // Filter out already present recipes
+                    recipes = recipes.filterNot { currentRecipes.contains(it.id) }.toMutableList()
+                    // Update current recipes to prevent duplicates
+                    currentRecipes.addAll(response.map { it.id })
+
+                    recipes.forEach { recipe ->
+                        val detailedRecipe: DetailedRecipeResponse =
+                            repository.getRecipeInfo(recipe.id)
+                        recipe.image = detailedRecipe.image
+                        recipe.healthScore = detailedRecipe.healthScore.toDouble()
+                    }
+                    response = recipes.toMutableList()
                 }
-                response = recipes.toMutableList()
             }
+
+            // Return page data
             LoadResult.Page(
                 data = response,
-                prevKey = if (page == 1) null else page - 1,
-                nextKey = if (response.isEmpty()) null else page + 1
+                prevKey = if (page == 1) null else page - 1, // Handle first page
+                nextKey = if (response.isEmpty()) null else page + 1 // No more data if response is empty
             )
         } catch (e: Exception) {
             Log.e("PagingSource", "Error loading data", e)
@@ -63,6 +81,9 @@ class SimilarRecipesPagingSource(private val api: ApiService, private val favori
     }
 
     override fun getRefreshKey(state: PagingState<Int, Recipe>): Int? {
-        return null
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+        }
     }
 }

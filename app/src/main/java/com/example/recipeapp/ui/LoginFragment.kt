@@ -14,6 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.recipeapp.AppUser
 import com.example.recipeapp.R
+import com.example.recipeapp.Repository
+import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentLoginBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.room_DB.model.CookedRecipe
@@ -40,12 +42,15 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var auth: FirebaseAuth
     private lateinit var credentialManager: CredentialManager
     private lateinit var callbackManager: CallbackManager
+    private lateinit var repository: Repository
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentLoginBinding.bind(view)
         binding.lifecycleOwner = this
+
+        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         auth = FirebaseAuth.getInstance()
         AppUser.instance!!.userId = auth.currentUser?.uid
@@ -89,7 +94,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
                         AppUser.instance!!.userId = auth.currentUser?.uid
-                        Toast.makeText(requireContext(), "Sign in successful!", Toast.LENGTH_SHORT).show()
+                        lifecycleScope.launch {
+                            val userName = repository.getUserById(AppUser.instance!!.userId!!)!!.name
+                            Toast.makeText(requireContext(), "Welcome Back, ${userName}", Toast.LENGTH_SHORT).show()
+                        }
                         fetchUserInfoFromFirestoreAndSyncWithRoom() // It's already collected before
                         goToHomePage()
                     } else {
@@ -196,7 +204,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun goToHomePage() {
-        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+        findNavController().navigate(R.id.action_loginFragment_to_feedFragment)
     }
 
     private fun fetchUserInfoFromFirestoreAndSyncWithRoom() {
@@ -217,14 +225,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         userInfo?.let {
                             // Sync data with local Room database
                             lifecycleScope.launch {
-                                val db = AppDatabase.getInstance(requireContext())
                                 Log.d("BMI" , "${userInfo.bmi}")
-                                if (db!!.userDao().getUserById(userId) == null) {
+                                if (repository.getUserById(userId) == null) {
                                     // NOT saved before to my Room DB so insert it
-                                    db.userDao().insertUser(userInfo)
+                                    repository.insertUser(userInfo)
                                 } else {
                                     // just update the one saved in the Room DB
-                                    db.userDao().updateUser(userInfo)
+                                    repository.updateUser(userInfo)
                                 }
                             }
                         }
@@ -242,8 +249,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     }
 
                     lifecycleScope.launch {
-                        val db = AppDatabase.getInstance(requireContext())
-                        db!!.favoriteRecipesDao().insertFavoriteRecipes(favoriteRecipes)
+                        repository.insertFavoriteRecipes(favoriteRecipes)
                     }
 
                 }
@@ -263,8 +269,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     }
 
                     lifecycleScope.launch {
-                        val db = AppDatabase.getInstance(requireContext())
-                        db!!.cookedRecipesDao().insertCookedRecipes(cookedRecipes)
+                        repository.insertCookedRecipes(cookedRecipes)
                     }
 
                 }
@@ -284,8 +289,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     }
 
                     lifecycleScope.launch {
-                        val db = AppDatabase.getInstance(requireContext())
-                        db!!.toBuyIngredientsDao().insertToBuyIngredients(ingredients)
+                        repository.insertToBuyIngredients(ingredients)
                     }
 
                 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<style name="CustomTooltip" parent="Widget.AppCompat.PopupWindow">
+    <item name="android:background">@drawable/tooltip_background</item>
+    <item name="android:textColor">#FFFFFF</item>
+    <item name="android:textSize">14sp</item>
+</style>
+
+</resources>

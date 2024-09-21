@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/toBuyIngredientsFragment"
+        android:icon="@drawable/cart"
+        android:title="Cart" />
+    <item
+        android:id="@+id/specialRecipesFragment"
+        android:icon="@drawable/pot"
+        android:title="Recipes" />
+    <item
+        android:id="@+id/feedFragment"
+        android:icon="@drawable/home"
+        android:title="Home" />
+    <item
+        android:id="@+id/searchCategoryFragment"
+        android:icon="@drawable/search"
+        android:title="Search" />
+    <item
+        android:id="@+id/userProfileFragment"
+        android:icon="@drawable/profile"
+        android:title="Profile" />
+
+</menu>

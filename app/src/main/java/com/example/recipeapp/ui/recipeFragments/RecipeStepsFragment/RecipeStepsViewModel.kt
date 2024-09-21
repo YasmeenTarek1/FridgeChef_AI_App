@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.Step
-import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.room_DB.model.CookedRecipe
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -23,7 +22,7 @@ class RecipeStepsViewModel(private val recipeId: Int, private val repository: Re
         return steps!!
     }
 
-    fun addToCookedRecipes(cookedRecipe: CookedRecipe, db: AppDatabase?){
+    fun addToCookedRecipes(cookedRecipe: CookedRecipe){
         viewModelScope.launch{
             repository.insertCookedRecipe(cookedRecipe)
         }

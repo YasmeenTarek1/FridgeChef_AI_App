@@ -5,27 +5,65 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#d9d8d9">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FE256F"
+            android:layout_marginTop="60dp"
+            android:background="#d9d8d9"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <!-- TextView hint to the user -->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/cookingTipButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Cooking Tip"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:src="@drawable/tip3"
+            android:layout_marginEnd="2dp"
+            app:backgroundTint="#FB6063"
+            app:elevation="12dp"
+            android:background="#d9d8d9"
+            app:fabCustomSize="40dp"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxImageSize="24dp"
+            app:tint="@null" />
+
+        <ImageButton
+            android:id="@+id/logOutButton"
+            android:layout_width="40dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="0dp"
+            android:scaleX="-1"
+            android:src="@drawable/logout"
+            android:background="#d9d8d9"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/welcomeTextView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="Explore"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#FB6063"
+            android:background="#d9d8d9"
+            app:layout_constraintStart_toEndOf="@id/logOutButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cookingTipButton"
+            app:layout_constraintBottom_toTopOf="@id/recyclerView"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

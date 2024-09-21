@@ -58,18 +58,6 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/favoriteRecipes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Favourite Recipes" />
-
-        <Button
-            android:id="@+id/cookedRecipes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cooked Before Recipes" />
-
-        <Button
             android:id="@+id/editProfileInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

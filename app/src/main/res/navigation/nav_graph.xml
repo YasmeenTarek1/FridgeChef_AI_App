@@ -30,11 +30,11 @@
             android:id="@+id/action_loginFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-        <action
             android:id="@+id/action_loginFragment_to_userInfoFragment"
             app:destination="@id/userInfoFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -46,27 +46,6 @@
             app:destination="@id/userInfoFragment" />
     </fragment>
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.recipeapp.ui.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_feedFragment"
-            app:destination="@id/feedFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_searchCategoryFragment"
-            app:destination="@id/searchCategoryFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_toBuyIngredientsFragment"
-            app:destination="@id/toBuyIngredientsFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/feedFragment"
         android:name="com.example.recipeapp.ui.feedFragment.FeedFragment"
         android:label="FeedFragment" >
@@ -74,8 +53,8 @@
             android:id="@+id/action_feedFragment_to_recipeDetailsFragment"
             app:destination="@id/recipeDetailsFragment" />
         <action
-            android:id="@+id/action_feedFragment_to_chatBotFragment"
-            app:destination="@id/chatBotFragment" />
+            android:id="@+id/action_feedFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/recipeDetailsFragment"
@@ -154,20 +133,14 @@
         android:name="com.example.recipeapp.ui.userFragments.userInfoFragment.UserInfoFragment"
         android:label="UserInfoFragment" >
         <action
-            android:id="@+id/action_userInfoFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_userInfoFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.example.recipeapp.ui.userFragments.userProfileFragment.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" >
-        <action
-            android:id="@+id/action_userProfileFragment_to_cookedRecipesFragment"
-            app:destination="@id/cookedRecipesFragment" />
-        <action
-            android:id="@+id/action_userProfileFragment_to_favoriteRecipesFragment"
-            app:destination="@id/favoriteRecipesFragment" />
         <action
             android:id="@+id/action_userProfileFragment_to_userEditProfileFragment"
             app:destination="@id/userEditProfileFragment" />
@@ -212,6 +185,18 @@
         <argument
             android:name="classification"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/specialRecipesFragment"
+        android:name="com.example.recipeapp.ui.specialRecipesFragment.SpecialRecipesFragment"
+        android:label="fragment_special_recipes"
+        tools:layout="@layout/fragment_special_recipes" >
+        <action
+            android:id="@+id/action_specialRecipesFragment_to_cookedRecipesFragment"
+            app:destination="@id/cookedRecipesFragment" />
+        <action
+            android:id="@+id/action_specialRecipesFragment_to_favoriteRecipesFragment"
+            app:destination="@id/favoriteRecipesFragment" />
     </fragment>
 
 </navigation>

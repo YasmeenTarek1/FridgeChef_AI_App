@@ -1,5 +1,6 @@
 package com.example.recipeapp
 
+import SimilarRecipesPagingSource
 import android.content.Context
 import android.util.Log
 import androidx.paging.Pager
@@ -20,7 +21,6 @@ import com.example.recipeapp.room_DB.model.CookedRecipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
 import com.example.recipeapp.room_DB.model.UserInfo
-import com.example.recipeapp.ui.feedFragment.SimilarRecipesPagingSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -60,6 +60,23 @@ class Repository(
         }
     }
 
+
+    suspend fun getSimilarRecipes(recipeId: Int) :List<Recipe>{
+        return try {
+            api.getSimilarRecipes(recipeId = recipeId)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun getRandomRecipes(diet: String?) :List<Recipe>{
+        return try {
+            api.getRandomRecipes(diet = diet).recipes
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     suspend fun getSteps(recipeId: Int): List<Step> {
         return try {
             api.getInstructions(recipeId = recipeId).get(0).steps
@@ -72,13 +89,13 @@ class Repository(
     fun getSimilarRecipesForFavorites(context: Context): Flow<PagingData<Recipe>> {
         return Pager(
             config = PagingConfig(pageSize = 5, enablePlaceholders = false),
-            pagingSourceFactory = { SimilarRecipesPagingSource(api, favoriteRecipesDao , context) }
+            pagingSourceFactory = { SimilarRecipesPagingSource(context) }
         ).flow
     }
 
     suspend fun autocompleteRecipeSearch(query: String): List<Recipe> {
         return try {
-            api.autocompleteRecipeSearch(query = query).recipes
+            api.autocompleteRecipeSearch(query = query)
         } catch (e: Exception) {
             emptyList()
         }
@@ -143,6 +160,8 @@ class Repository(
     suspend fun clearAllToFavoriteRecipes() = favoriteRecipesDao.clearAll()
 
     suspend fun deleteFavoriteRecipe(favoriteRecipe: FavoriteRecipe) = favoriteRecipesDao.deleteFavoriteRecipe(favoriteRecipe)
+
+    suspend fun isFavoriteRecipeExists(recipeId : Int) = favoriteRecipesDao.isFavoriteRecipeExists(recipeId)
 
     // Database-related functions for ToBuyIngredients
 

@@ -4,76 +4,122 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="recipe"
+            type="com.example.recipeapp.api.model.Recipe" />
+    </data>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view"
-            android:layout_width="370dp"
-            android:layout_height="340dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="20dp"
-            app:cardCornerRadius="40dp"
-            app:cardElevation="4dp">
+            android:layout_width="193dp"
+            android:layout_height="195dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="150dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#FFEB3B">
+                android:background="#FB6063">
 
                 <ImageView
                     android:id="@+id/recipeImage"
-                    android:layout_width="320dp"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_width="200dp"
+                    android:layout_height="180dp"
+                    android:layout_marginBottom="40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintHorizontal_bias="0.533"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
                 <TextView
                     android:id="@+id/readyInMinutes"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="24dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recipeImage" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="3dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/clock"
+                    app:layout_constraintStart_toEndOf="@+id/clock"
+                    app:layout_constraintTop_toTopOf="@+id/clock"
+                    app:layout_constraintVertical_bias="1.0"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="@{recipe.readyInMinutes.toString()}"/>
 
                 <TextView
                     android:id="@+id/servings"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="@+id/readyInMinutes"
-                    app:layout_constraintStart_toStartOf="@+id/readyInMinutes"
-                    app:layout_constraintTop_toBottomOf="@+id/readyInMinutes" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="3dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/servingsImage"
+                    app:layout_constraintStart_toEndOf="@+id/servingsImage"
+                    app:layout_constraintTop_toTopOf="@+id/servingsImage"
+                    app:layout_constraintVertical_bias="0.666"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="@{recipe.servings.toString()}"/>
 
 
-                <!--                <androidx.recyclerview.widget.RecyclerView-->
-                <!--                    android:layout_width="200dp"-->
-                <!--                    android:layout_height="40dp"-->
-                <!--                    android:layout_marginStart="24dp"-->
-                <!--                    android:layout_marginTop="20dp"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent"-->
-                <!--                    app:layout_constraintTop_toBottomOf="@+id/recipeImage" />-->
-
-
-                <Button
+                <ImageButton
                     android:id="@+id/love"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginBottom="25dp"
-                    android:text="love"
+                    android:layout_marginStart="156dp"
+                    android:layout_marginBottom="152dp"
+                    android:background="@drawable/white_circle"
+                    android:src="@drawable/heart"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/fullLove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="156dp"
+                    android:layout_marginBottom="152dp"
+                    android:background="@drawable/white_circle"
+                    android:src="@drawable/heart_full"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="164dp"
-                    android:layout_marginTop="60dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recipeImage" />
+                    android:id="@+id/clock"
+                    android:layout_width="22dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="135dp"
+                    android:layout_marginBottom="35dp"
+                    android:src="@drawable/clock_three"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/servingsImage"
+                    android:layout_width="21dp"
+                    android:layout_height="19dp"
+                    android:layout_marginStart="135dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/plate_eating"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:layout_width="115dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginBottom="17dp"
+                    android:text="@{recipe.title}"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

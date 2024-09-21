@@ -29,12 +29,6 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
             binding.user = userInfo!!
         }
 
-        binding.favoriteRecipes.setOnClickListener {
-            findNavController().navigate(R.id.action_userProfileFragment_to_favoriteRecipesFragment)
-        }
-        binding.cookedRecipes.setOnClickListener {
-            findNavController().navigate(R.id.action_userProfileFragment_to_cookedRecipesFragment)
-        }
 
         binding.editProfileInfo.setOnClickListener {
             findNavController().navigate(R.id.action_userProfileFragment_to_userEditProfileFragment)

@@ -35,8 +35,6 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
         val factory = RecipeStepsViewModelFactory(recipeId, repository)
         viewModel = ViewModelProvider(this, factory).get(RecipeStepsViewModel::class.java)
 
-
-        val db = AppDatabase.getInstance(requireContext())
         var steps: List<Step> = emptyList()
         var idx = 0
 
@@ -51,7 +49,7 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
                 binding.stepText.text = steps[idx++].step
                 TTS(requireActivity(), binding.stepText.text.toString())
             } else {
-                viewModel.addToCookedRecipes(args.cookedRecipe, db)
+                viewModel.addToCookedRecipes(args.cookedRecipe)
 
                 binding.stepText.text = "Congrats, Recipe is Finished"
                 TTS(requireActivity(), binding.stepText.text.toString())
