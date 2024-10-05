@@ -61,7 +61,7 @@ class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLo
         }
 
         holder.itemView.setOnClickListener { view ->
-            val action = FeedFragmentDirections.actionFeedFragmentToRecipeDetailsFragment(recipe.id)
+            val action = FeedFragmentDirections.actionFeedFragmentToRecipeDetailsFragment(recipe.id , null)
             view.findNavController().navigate(action)
         }
 

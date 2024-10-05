@@ -26,6 +26,7 @@ class FeedViewModel(application: Application ,private val repository: Repository
                 servings = recipe.servings,
                 likes = recipe.likes,
                 healthScore = recipe.healthScore,
+                createdAt = System.currentTimeMillis()
             ))
         }
     }

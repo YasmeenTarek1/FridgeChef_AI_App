@@ -6,14 +6,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#d9d8d9">
+        android:background="#FEFFF8">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="60dp"
-            android:background="#d9d8d9"
+            android:layout_marginTop="55dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,9 +26,9 @@
             android:layout_height="wrap_content"
             android:src="@drawable/tip3"
             android:layout_marginEnd="2dp"
-            app:backgroundTint="#FB6063"
+            app:backgroundTint="#901431"
             app:elevation="12dp"
-            android:background="#d9d8d9"
+            android:background="#FEFFF8"
             app:fabCustomSize="40dp"
             app:layout_constraintBottom_toTopOf="@+id/recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +43,7 @@
             android:layout_marginBottom="0dp"
             android:scaleX="-1"
             android:src="@drawable/logout"
-            android:background="#d9d8d9"
+            android:background="#FEFFF8"
             app:layout_constraintBottom_toTopOf="@+id/recyclerView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_bias="0.0" />
@@ -57,8 +56,8 @@
             android:textSize="25sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:textColor="#FB6063"
-            android:background="#d9d8d9"
+            android:textColor="#901431"
+            android:background="#FEFFF8"
             app:layout_constraintStart_toEndOf="@id/logOutButton"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cookingTipButton"

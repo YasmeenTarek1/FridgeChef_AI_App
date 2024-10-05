@@ -14,13 +14,16 @@ import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentRecipeStepsBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import kotlinx.coroutines.launch
-
 class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
+
     private lateinit var binding: FragmentRecipeStepsBinding
     private lateinit var repository: Repository
     private lateinit var viewModel: RecipeStepsViewModel
     private val args: RecipeStepsFragmentArgs by navArgs()
 
+    private var tts: TTS? = null // Create a variable to hold the TTS instance
+    private var steps: List<Step> = emptyList()
+    private var idx = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,28 +34,21 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         val recipeId: Int = args.recipeID
-
         val factory = RecipeStepsViewModelFactory(recipeId, repository)
         viewModel = ViewModelProvider(this, factory).get(RecipeStepsViewModel::class.java)
 
-        var steps: List<Step> = emptyList()
-        var idx = 0
-
         lifecycleScope.launch {
             steps = viewModel.getSteps()
-            binding.stepText.text = steps[idx++].step
-            TTS(requireActivity(), binding.stepText.text.toString())
+            showStep() // Display the first step
         }
 
         binding.nextButton.setOnClickListener {
             if (idx < steps.size) {
-                binding.stepText.text = steps[idx++].step
-                TTS(requireActivity(), binding.stepText.text.toString())
+                showStep()
             } else {
                 viewModel.addToCookedRecipes(args.cookedRecipe)
-
                 binding.stepText.text = "Congrats, Recipe is Finished"
-                TTS(requireActivity(), binding.stepText.text.toString())
+                stopAndSpeak(binding.stepText.text.toString()) // TTS for final message
                 binding.nextButton.text = "Return to Feed"
                 binding.nextButton.setOnClickListener {
                     findNavController().navigate(RecipeStepsFragmentDirections.actionRecipeStepsFragmentToFeedFragment())
@@ -61,4 +57,22 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
         }
     }
 
+    private fun showStep() {
+        // Stop any ongoing TTS playback
+        tts?.stopTTS()
+
+        binding.stepText.text = steps[idx++].step
+        stopAndSpeak(binding.stepText.text.toString())
+    }
+
+    private fun stopAndSpeak(text: String) {
+        // Stop the current TTS instance and create a new one
+        tts?.stopTTS()
+        tts = TTS(requireActivity(), text)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        tts?.release() // Ensure that TTS is released when the fragment is destroyed
+    }
 }

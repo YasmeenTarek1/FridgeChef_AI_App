@@ -18,6 +18,7 @@ import com.example.recipeapp.Repository
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentLoginBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
+import com.example.recipeapp.room_DB.model.AiRecipe
 import com.example.recipeapp.room_DB.model.CookedRecipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
@@ -296,6 +297,26 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 .addOnFailureListener { exception ->
                     Log.w("Error" , "Error in fetching To-Buy Ingredients from Firestore" , exception)
                 }
+
+            // fetching Ai Recipes
+            firestore.collection("users").document(userId)
+                .collection("Ai Recipes") // sub Collection
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    // Convert the documents to Ai Recipes objects
+                    val aiRecipes = querySnapshot.documents.mapNotNull { documentSnapshot ->
+                        documentSnapshot.toObject<AiRecipe>()
+                    }
+
+                    lifecycleScope.launch {
+                        repository.insertAiRecipes(aiRecipes)
+                    }
+
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("Error" , "Error in fetching Ai Recipes from Firestore" , exception)
+                }
+
         }
 
     }

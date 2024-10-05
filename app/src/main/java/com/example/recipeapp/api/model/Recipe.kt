@@ -15,6 +15,8 @@ data class Recipe(
     val missedIngredients: @RawValue List<Ingredient>? = null,
     val usedIngredients: @RawValue List<Ingredient>? = null,
     var healthScore: Double? = null,
+    val ingredients: String? = null,  // Stored as a comma-separated string
+    val steps: String? = null         // Stored as a comma-separated string
 ): Parcelable
 
 

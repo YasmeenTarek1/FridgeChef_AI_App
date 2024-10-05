@@ -23,7 +23,7 @@ import com.example.recipeapp.Repository
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentFeedBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
-import com.example.recipeapp.ui.chatBotFragment.ChatBotViewModel
+import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import com.facebook.login.LoginManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -90,6 +90,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 repository.clearAllToFavoriteRecipes()
                 repository.clearAllCookedRecipes()
                 repository.clearAllToBuyIngredients()
+                repository.clearAllAiRecipes()
             }
 
             findNavController().navigate(R.id.action_feedFragment_to_loginFragment)
@@ -117,7 +118,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     }
 
     private fun showCookingTip() {
-        val chatBotViewModel = ChatBotViewModel(repository)
+        val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
 
         val inflater = LayoutInflater.from(context)
         val dialogView = inflater.inflate(R.layout.cooking_tip_dialog, null)
@@ -132,7 +133,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             dialog.show()
 
             tipTextView.text = "Loading..."
-            val tip:String = chatBotViewModel.getCookingTip()
+            val tip:String = chatBotServiceViewModel.getCookingTip()
             val markwon = Markwon.create(requireContext())
             markwon.setMarkdown(tipTextView , tip)
 

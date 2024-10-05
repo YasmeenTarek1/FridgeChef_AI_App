@@ -41,7 +41,7 @@ class CookedBeforeAdapter : RecyclerView.Adapter<CookedBeforeAdapter.CookedRecip
         binding.servings.text = "Servings: " + cookedRecipe.servings.toString()
 
         holder.itemView.setOnClickListener { view ->
-            val action = CookedRecipesFragmentDirections.actionCookedRecipesFragmentToRecipeDetailsFragment(cookedRecipe.id)
+            val action = CookedRecipesFragmentDirections.actionCookedRecipesFragmentToRecipeDetailsFragment(cookedRecipe.id , null)
             view.findNavController().navigate(action)
         }
     }

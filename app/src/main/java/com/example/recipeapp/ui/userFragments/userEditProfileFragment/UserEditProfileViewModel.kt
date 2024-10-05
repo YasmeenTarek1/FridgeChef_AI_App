@@ -23,6 +23,7 @@ class UserEditProfileViewModel(private val repository: Repository) : ViewModel()
                     servings = recipe.servings,
                     likes = recipe.likes,
                     healthScore = recipe.healthScore,
+                    createdAt = System.currentTimeMillis()
                 )
             )
         }

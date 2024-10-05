@@ -67,9 +67,13 @@
         <argument
             android:name="recipeID"
             app:argType="integer"/>
+        <argument
+            android:name="aiRecipe"
+            app:argType="com.example.recipeapp.room_DB.model.AiRecipe"
+            app:nullable="true"/>
         <action
-            android:id="@+id/action_recipeDetailsFragment_to_chatBotFragment"
-            app:destination="@id/chatBotFragment" />
+            android:id="@+id/action_recipeDetailsFragment_to_chatBotServiceFragment"
+            app:destination="@id/chatBotServiceFragment" />
     </fragment>
     <fragment
         android:id="@+id/recipeStepsFragment"
@@ -109,8 +113,8 @@
             android:id="@+id/action_searchByIngredientsFragment_to_recipeDetailsFragment"
             app:destination="@id/recipeDetailsFragment" />
         <action
-            android:id="@+id/action_searchByIngredientsFragment_to_chatBotFragment"
-            app:destination="@id/chatBotFragment" />
+            android:id="@+id/action_searchByIngredientsFragment_to_chatBotServiceFragment"
+            app:destination="@id/chatBotServiceFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchByNutrientsFragment"
@@ -171,9 +175,38 @@
             app:destination="@id/userProfileFragment" />
     </fragment>
     <fragment
-        android:id="@+id/chatBotFragment"
-        android:name="com.example.recipeapp.ui.chatBotFragment.ChatBotFragment"
-        android:label="ChatBotFragment">
+        android:id="@+id/specialRecipesFragment"
+        android:name="com.example.recipeapp.ui.specialRecipesFragment.SpecialRecipesFragment"
+        android:label="fragment_special_recipes"
+        tools:layout="@layout/fragment_special_recipes" >
+        <action
+            android:id="@+id/action_specialRecipesFragment_to_cookedRecipesFragment"
+            app:destination="@id/cookedRecipesFragment" />
+        <action
+            android:id="@+id/action_specialRecipesFragment_to_favoriteRecipesFragment"
+            app:destination="@id/favoriteRecipesFragment" />
+        <action
+            android:id="@+id/action_specialRecipesFragment_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
+        <action
+            android:id="@+id/action_specialRecipesFragment_to_chatBotRecipesFragment"
+            app:destination="@id/chatBotRecipesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatBotRecipesFragment"
+        android:name="com.example.recipeapp.ui.chatBotRecipesFragment.ChatBotRecipesFragment"
+        android:label="ChatBotRecipesFragment" >
+        <action
+            android:id="@+id/action_chatBotRecipesFragment_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatBotServiceFragment"
+        android:name="com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceFragment"
+        android:label="ChatBotServiceFragment" >
+        <action
+            android:id="@+id/action_chatBotServiceFragment_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
         <argument
             android:name="ingredients"
             app:argType="string"
@@ -185,18 +218,6 @@
         <argument
             android:name="classification"
             app:argType="integer" />
-    </fragment>
-    <fragment
-        android:id="@+id/specialRecipesFragment"
-        android:name="com.example.recipeapp.ui.specialRecipesFragment.SpecialRecipesFragment"
-        android:label="fragment_special_recipes"
-        tools:layout="@layout/fragment_special_recipes" >
-        <action
-            android:id="@+id/action_specialRecipesFragment_to_cookedRecipesFragment"
-            app:destination="@id/cookedRecipesFragment" />
-        <action
-            android:id="@+id/action_specialRecipesFragment_to_favoriteRecipesFragment"
-            app:destination="@id/favoriteRecipesFragment" />
     </fragment>
 
 </navigation>

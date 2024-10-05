@@ -33,4 +33,12 @@ class TTS(private val activity: Activity, private val message: String) : TextToS
     private fun speakOut(message: String) {
         tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null)
     }
+
+    fun stopTTS() {
+        tts.stop() // Stop the ongoing speech if any
+    }
+
+    fun release() {
+        tts.shutdown() // Call this to release resources when TTS is no longer needed
+    }
 }

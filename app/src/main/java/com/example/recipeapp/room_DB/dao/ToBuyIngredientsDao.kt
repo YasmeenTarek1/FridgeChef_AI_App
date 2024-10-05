@@ -17,7 +17,7 @@ interface ToBuyIngredientsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToBuyIngredients(toBuyIngredients: List<ToBuyIngredient>)
 
-    @Query("SELECT * FROM to_buy_ingredients")
+    @Query("SELECT * FROM to_buy_ingredients  ORDER BY createdAt DESC")
     fun getAllToBuyIngredients(): Flow<List<ToBuyIngredient>>
 
     @Query("DELETE FROM to_buy_ingredients")

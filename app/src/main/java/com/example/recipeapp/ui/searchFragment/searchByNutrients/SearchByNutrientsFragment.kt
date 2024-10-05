@@ -8,13 +8,15 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
-import com.example.recipeapp.room_DB.database.AppDatabase
+import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentSearchByNutrientsBinding
+import com.example.recipeapp.room_DB.database.AppDatabase
+import kotlinx.coroutines.launch
 
 class SearchByNutrientsFragment : Fragment(R.layout.fragment_search_by_nutrients) {
 
@@ -98,7 +100,9 @@ class SearchByNutrientsFragment : Fragment(R.layout.fragment_search_by_nutrients
         if(caloriesSeekBar.progress != 0)
             calories = caloriesSeekBar.progress*10
 
-        adapter.differ.submitList(viewModel.searchRecipesByNutrients(maxCarbs = carb, maxProtein = protein, maxFat = fat, maxSugar = sugar, maxCalories = calories))
+        lifecycleScope.launch {
+            adapter.differ.submitList(viewModel.searchRecipesByNutrients(maxCarbs = carb, maxProtein = protein, maxFat = fat, maxSugar = sugar, maxCalories = calories))
+        }
     }
 
     private fun setupSeekBars() {

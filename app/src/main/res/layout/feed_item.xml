@@ -18,12 +18,12 @@
             android:layout_marginEnd="5dp"
             android:layout_marginTop="10dp"
             app:cardCornerRadius="25dp"
-            app:cardElevation="150dp">
+            app:cardElevation="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#FB6063">
+                android:background="#ff5c67">
 
                 <ImageView
                     android:id="@+id/recipeImage"

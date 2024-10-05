@@ -17,7 +17,7 @@ interface CookedRecipesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCookedRecipes(cookedRecipes: List<CookedRecipe>)
 
-    @Query("SELECT * FROM cooked_recipes")
+    @Query("SELECT * FROM cooked_recipes ORDER BY createdAt DESC")
     fun getAllCookedRecipes(): Flow<List<CookedRecipe>>
 
     @Query("DELETE FROM cooked_recipes")

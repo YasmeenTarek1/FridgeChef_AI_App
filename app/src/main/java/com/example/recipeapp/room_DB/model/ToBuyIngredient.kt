@@ -15,8 +15,9 @@ data class ToBuyIngredient(
     val amount: Double,
     val unit: String,
     val aisle: String,
-    val image: String?
+    val image: String?,
+    val createdAt: Long
 ): Parcelable {
-    constructor() : this(0, "",0.0, "", "", "")
+    constructor() : this(0, "",0.0, "", "", "", 0)
 }
 

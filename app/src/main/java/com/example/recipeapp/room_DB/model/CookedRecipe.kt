@@ -17,7 +17,7 @@ data class CookedRecipe(
     val likes: Int? = null,
     val healthScore: Double? = null,
     val dateCooked: Long = 0,  // Store as timestamp
-
+    val createdAt: Long
 ): Parcelable{
-    constructor() : this(0, "","" , 0, 0,0 , 0.0, 0)
+    constructor() : this(0, "","" , 0, 0,0 , 0.0, 0, 0)
 }

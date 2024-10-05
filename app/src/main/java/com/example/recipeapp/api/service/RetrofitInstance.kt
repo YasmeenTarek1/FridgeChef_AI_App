@@ -8,10 +8,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitInstance { // is used to make Network Calls
 
-    companion object {
-        private const val BASE_URL = "https://api.spoonacular.com/"
-    }
-
     // httpClient is just to enable logging of network requests and responses using the HttpLoggingInterceptor
     private val httpClient: OkHttpClient by lazy {
         val httpLoggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
@@ -20,7 +16,7 @@ class RetrofitInstance { // is used to make Network Calls
         OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build()
     }
 
-    private fun getRetrofitInstance(): Retrofit {
+    private fun getRetrofitInstance(BASE_URL:String): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
@@ -28,7 +24,7 @@ class RetrofitInstance { // is used to make Network Calls
             .build()
     }
 
-    fun getApiService(): ApiService {
-        return getRetrofitInstance().create(ApiService::class.java)
+    fun getApiService(BASE_URL:String): ApiService {
+        return getRetrofitInstance(BASE_URL).create(ApiService::class.java)
     }
 }

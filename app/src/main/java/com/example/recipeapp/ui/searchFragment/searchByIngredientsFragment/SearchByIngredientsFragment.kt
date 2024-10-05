@@ -72,9 +72,9 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
 
         binding.chatBot.setOnClickListener {
             if (ingredients.isEmpty()) {
-                findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotFragment(null, null, 0))
+                findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(null, null, 0))
             } else {
-                findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotFragment(ingredients.toString(), null, 0))
+                findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(ingredients.toString(), null, 0))
             }
         }
     }

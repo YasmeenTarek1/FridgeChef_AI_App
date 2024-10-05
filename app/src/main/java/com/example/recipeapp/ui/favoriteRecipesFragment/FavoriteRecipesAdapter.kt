@@ -43,7 +43,7 @@ class FavoriteRecipesAdapter : RecyclerView.Adapter<FavoriteRecipesAdapter.Favor
         binding.servings.text = "Servings: " + favRecipe.servings.toString()
 
         holder.itemView.setOnClickListener { view ->
-            val action = FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToRecipeDetailsFragment(favRecipe.id)
+            val action = FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToRecipeDetailsFragment(favRecipe.id , null)
             view.findNavController().navigate(action)
         }
     }

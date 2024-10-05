@@ -20,7 +20,8 @@ interface FavoriteRecipesDao {
     suspend fun clearAll()
 
     // Retrieve all favorite recipes
-    @Query("SELECT * FROM favorite_recipes")
+    @Query("SELECT * FROM favorite_recipes ORDER BY createdAt DESC")
+
     fun getAllFavoriteRecipes(): Flow<List<FavoriteRecipe>>
 
     @Delete

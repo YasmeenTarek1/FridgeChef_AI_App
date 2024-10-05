@@ -12,11 +12,13 @@ import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.api.model.Step
 import com.example.recipeapp.api.service.ApiService
 import com.example.recipeapp.api.service.RetrofitInstance
+import com.example.recipeapp.room_DB.dao.AiRecipesDao
 import com.example.recipeapp.room_DB.dao.CookedRecipesDao
 import com.example.recipeapp.room_DB.dao.FavoriteRecipesDao
 import com.example.recipeapp.room_DB.dao.ToBuyIngredientsDao
 import com.example.recipeapp.room_DB.dao.UserDao
 import com.example.recipeapp.room_DB.database.AppDatabase
+import com.example.recipeapp.room_DB.model.AiRecipe
 import com.example.recipeapp.room_DB.model.CookedRecipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
@@ -36,11 +38,14 @@ class Repository(
     dataBase: AppDatabase?
 ) {
 
-    private val api: ApiService = retrofitInstance.getApiService()
+    private val api: ApiService = retrofitInstance.getApiService(BASE_URL = "https://api.spoonacular.com/")
+    private val customSearchApi: ApiService = retrofitInstance.getApiService(BASE_URL = "https://www.googleapis.com/")
     private val cookedRecipesDao: CookedRecipesDao = dataBase!!.cookedRecipesDao()
     private val favoriteRecipesDao: FavoriteRecipesDao = dataBase!!.favoriteRecipesDao()
     private val toBuyIngredientsDao: ToBuyIngredientsDao = dataBase!!.toBuyIngredientsDao()
+    private val aiRecipesDao: AiRecipesDao = dataBase!!.aiRecipesDao()
     private val userDao: UserDao = dataBase!!.userDao()
+
 
     // API-related functions
 
@@ -137,6 +142,14 @@ class Repository(
         }
     }
 
+    suspend fun getAiImageForRecipeTitle(title: String): String{
+        return try {
+            customSearchApi.getAiImageForRecipeTitle(title = title).items!!.get(0).link
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     // Database-related functions for CookedRecipes
 
     suspend fun insertCookedRecipe(cookedRecipe: CookedRecipe) = cookedRecipesDao.insertCookedRecipe(cookedRecipe)
@@ -175,6 +188,19 @@ class Repository(
 
     suspend fun deleteIngredient(toBuyIngredient: ToBuyIngredient) = toBuyIngredientsDao.deleteIngredient(toBuyIngredient)
 
+
+    // Database-related functions for AiRecipes
+
+    suspend fun insertAiRecipe(aiRecipe: AiRecipe) = aiRecipesDao.insertAiRecipe(aiRecipe)
+
+    suspend fun insertAiRecipes(aiRecipes: List<AiRecipe>) = aiRecipesDao.insertAiRecipes(aiRecipes)
+
+    suspend fun clearAllAiRecipes() = aiRecipesDao.clearAll()
+
+    fun getAllAiRecipes(): Flow<List<AiRecipe>> = aiRecipesDao.getAllAiRecipes()
+
+    suspend fun deleteIngredient(aiRecipe: AiRecipe) = aiRecipesDao.deleteAiRecipe(aiRecipe)
+
     // User-related functions
 
     suspend fun insertUser(userInfo: UserInfo) = userDao.insertUser(userInfo)
@@ -182,7 +208,6 @@ class Repository(
     suspend fun updateUser(userInfo: UserInfo) = userDao.updateUser(userInfo)
 
     suspend fun getUserById(userId: String): UserInfo? = userDao.getUserById(userId)
-
 
     fun listenForFirestoreChangesInCookedRecipes() {
         val firestore = FirebaseFirestore.getInstance()
@@ -281,8 +306,8 @@ class Repository(
                     when (documentChange.type) {
                         DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
                             // If an ingredient is added or modified, add it to the list
-                            val recipe = documentChange.document.toObject(ToBuyIngredient::class.java)
-                            updatedIngredients.add(recipe)
+                            val ingredient = documentChange.document.toObject(ToBuyIngredient::class.java)
+                            updatedIngredients.add(ingredient)
                         }
                         DocumentChange.Type.REMOVED -> {
                             // If an ingredient is removed in Firestore, delete it from Room
@@ -296,6 +321,45 @@ class Repository(
 
                 CoroutineScope(Dispatchers.IO).launch {
                     toBuyIngredientsDao.insertToBuyIngredients(updatedIngredients)
+                }
+            }
+        }
+    }
+
+    fun listenForFirestoreChangesInAiRecipes() {
+        val firestore = FirebaseFirestore.getInstance()
+        val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
+        val recipesCollection = userDocRef.collection("Ai Recipes")
+
+        // Listen for changes in Firestore
+        recipesCollection.addSnapshotListener { snapshots, e ->
+            if (e != null) {
+                // Handle error
+                return@addSnapshotListener
+            }
+
+            if (snapshots != null) {
+                val updatedRecipes = mutableListOf<AiRecipe>()
+
+                for (documentChange in snapshots.documentChanges) {
+                    when (documentChange.type) {
+                        DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
+                            // If an ingredient is added or modified, add it to the list
+                            val recipe = documentChange.document.toObject(AiRecipe::class.java)
+                            updatedRecipes.add(recipe)
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            // If an ingredient is removed in Firestore, delete it from Room
+                            val removedRecipe = documentChange.document.toObject(AiRecipe::class.java)
+                            CoroutineScope(Dispatchers.IO).launch {
+                                aiRecipesDao.deleteAiRecipe(removedRecipe)
+                            }
+                        }
+                    }
+                }
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    aiRecipesDao.insertAiRecipes(updatedRecipes)
                 }
             }
         }

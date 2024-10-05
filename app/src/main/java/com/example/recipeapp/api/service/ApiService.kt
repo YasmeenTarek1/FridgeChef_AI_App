@@ -1,5 +1,6 @@
 package com.example.recipeapp.api.service
 
+import com.example.recipeapp.api.model.CustomSearchResponse
 import com.example.recipeapp.api.model.DetailedRecipeResponse
 import com.example.recipeapp.api.model.IngredientAutocompleteResponse
 import com.example.recipeapp.api.model.InstructionResponse
@@ -12,15 +13,15 @@ import retrofit2.http.Query
 
 interface ApiService {
 
+    // a547ab5aeb1d4f48a8bb7345e388cfc8
     // c5494363166246e185c7b8e837ba8c7a
     // ad28d9e80f7c42219ce7dd5c918b9cb0
     // 488151604a9240598a2fa7c7189d2c0f
-    // a547ab5aeb1d4f48a8bb7345e388cfc8
     // ebb0fbc667bd4b4cb68f97ae56fc4ded
     // b6a39b82b408445f9100f6e8a7436249
     // e46d27c80c5c41948205811245e738f0
     companion object{
-        const val API_KEY = "c5494363166246e185c7b8e837ba8c7a"
+        const val API_KEY = "488151604a9240598a2fa7c7189d2c0f"
     }
 
     @GET("recipes/{id}/similar")
@@ -97,4 +98,17 @@ interface ApiService {
         @Query("query") query: String,
         @Query("number") number: Int = 5
     ): List<Recipe>
+
+
+    // GET  https://www.googleapis.com/
+
+    @GET("customsearch/v1")
+    suspend fun getAiImageForRecipeTitle(
+        @Query("key") apiKey: String = "AIzaSyBXAW4Ybjb3iLqiOgC7-irQijjSczuWs90",
+        @Query("q") title: String,
+        @Query("num") number: Int = 1,
+        @Query("cx") cx: String = "d7935696c02424683",
+        @Query("searchType") searchType: String = "image"
+    ): CustomSearchResponse
+
 }

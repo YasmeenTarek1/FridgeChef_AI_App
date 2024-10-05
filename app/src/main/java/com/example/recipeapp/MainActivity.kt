@@ -32,24 +32,51 @@ class MainActivity : AppCompatActivity() {
         // Add a listener for destination changes to hide or show the BottomNavigationView
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.recipeStepsFragment -> {
-                    binding.bottomNavigation.visibility = BottomNavigationView.GONE
-                }
-                R.id.recipeDetailsFragment -> {
-                    binding.bottomNavigation.visibility = BottomNavigationView.GONE
-                }
-                R.id.loginFragment -> {
-                    binding.bottomNavigation.visibility = BottomNavigationView.GONE
-                }
-                R.id.signUpFragment -> {
-                    binding.bottomNavigation.visibility = BottomNavigationView.GONE
-                }
-                R.id.userInfoFragment -> {
-                    binding.bottomNavigation.visibility = BottomNavigationView.GONE
-                }
-                else -> {
+                R.id.feedFragment -> {
                     binding.bottomNavigation.visibility = BottomNavigationView.VISIBLE
                 }
+                R.id.searchCategoryFragment -> {
+                    binding.bottomNavigation.visibility = BottomNavigationView.VISIBLE
+                }
+                R.id.userProfileFragment -> {
+                    binding.bottomNavigation.visibility = BottomNavigationView.VISIBLE
+                }
+                R.id.specialRecipesFragment -> {
+                    binding.bottomNavigation.visibility = BottomNavigationView.VISIBLE
+                }
+                R.id.toBuyIngredientsFragment -> {
+                    binding.bottomNavigation.visibility = BottomNavigationView.VISIBLE
+                }
+                else -> {
+                    binding.bottomNavigation.visibility = BottomNavigationView.INVISIBLE
+                }
+            }
+        }
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.feedFragment -> {
+                    navController.navigate(R.id.feedFragment)
+                    true
+                }
+                R.id.specialRecipesFragment -> {
+                    navController.navigate(R.id.specialRecipesFragment)
+                    true
+                }
+                R.id.searchCategoryFragment -> {
+                    navController.navigate(R.id.searchCategoryFragment)
+                    true
+                }
+                R.id.userProfileFragment -> {
+                    navController.navigate(R.id.userProfileFragment)
+                    true
+                }
+                R.id.toBuyIngredientsFragment -> {
+                    navController.navigate(R.id.toBuyIngredientsFragment)
+                    true
+                }
+                // Add other fragments if necessary
+                else -> false
             }
         }
 

@@ -16,6 +16,7 @@ data class FavoriteRecipe(
     val servings: Int? = null,
     val likes: Int? = null,
     val healthScore: Double? = null,
+    val createdAt: Long
 ): Parcelable {
-    constructor() : this(0, "", "",0, 0,0 , 0.0)
+    constructor() : this(0, "", "",0, 0,0 , 0.0 , 0)
 }
