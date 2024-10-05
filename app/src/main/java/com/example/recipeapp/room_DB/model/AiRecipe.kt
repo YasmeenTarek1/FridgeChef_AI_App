@@ -19,6 +19,6 @@ data class AiRecipe(
     val steps: String,        // Stored as a comma-separated string
     val createdAt: Long
 ): Parcelable{
-    constructor() : this(0, "","" , 0, 0,"" , "", 0)
+    constructor() : this(0, "","" , 0, 0, "" , "", 0)
 }
 

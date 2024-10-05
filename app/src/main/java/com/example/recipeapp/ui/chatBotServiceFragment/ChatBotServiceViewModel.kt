@@ -22,78 +22,47 @@ class ChatBotServiceViewModel (private val repository: Repository) : ViewModel()
         // Title (String)
         var prompt = "Create a recipe no one has heard of using: $ingredients that matches my goal: ${user!!.goal} " +
                 "and follows my diet type: ${user!!.dietType}. If any information is missing, just choose the option you want. " +
-                "Let's begin with the title of the recipe."
+                "Let's begin with the title of the recipe. Don't use any font styles"
         val title = generativeModel.generateContent(prompt).text.toString()
         history += "$prompt $title"
 
         // Image (String - URL)
         val image = repository.getAiImageForRecipeTitle("$title professional recipe picture")
-        Log.d("Generated Image URL", image)
 
         // Servings (Int)
-        prompt = "Give me the number of servings (only the number). History: $history"
-        val servingsResponse = generativeModel.generateContent(prompt)
-        val servings = servingsResponse.text!!.trim().toInt()
-
-        history += "$prompt $servings"
+        prompt = "Give me the number of servings (only the number) of this recipe:$history"
+        val servingsResponse = generativeModel.generateContent(prompt).text!!.trim().toInt()
 
         // Prep Time (Int - minutes)
-        prompt = "Give me the prep time (only the duration in minutes). History: $history"
-        val readyInMinutesResponse = generativeModel.generateContent(prompt)
-        val readyInMinutes = readyInMinutesResponse.text!!.trim().toInt()
+        prompt = "Give me the prep time (only the duration in minutes) of this recipe:$history"
+        val readyInMinutesResponse = generativeModel.generateContent(prompt).text!!.trim().toInt()
 
-        history += "$prompt $readyInMinutes"
+        // Ingredients (String separated by commas)
+        prompt = "Give me the ingredients of this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
+        val ingredientsResponse = generativeModel.generateContent(prompt).text
+        Log.d("Ingredients Tracing" , ingredientsResponse.toString())
 
-        // Ingredients (List<String>)
-        prompt = "Give me the ingredients in an array of Strings. History: $history"
-        val ingredientsResponse = generativeModel.generateContent(prompt)
-        val ingredients = parseListResponse(ingredientsResponse.text.toString())
+        history += "ingredients used: $ingredientsResponse"
 
-        history += "$prompt $ingredients"
+        // Steps (String separated by commas)
+        prompt = "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not in programming language. Start immediately with the steps."
+        val stepsResponse = generativeModel.generateContent(prompt).text
+        Log.d("Steps Tracing" , stepsResponse.toString())
 
-        // Steps (List<String>)
-        prompt = "Give me the instructions or steps in an array of Strings. History: $history"
-        val stepsResponse = generativeModel.generateContent(prompt)
-        val steps = parseListResponse(stepsResponse.text.toString())
-
-        history += "$prompt $steps"
-
-        // Tips (List<String>)
-        prompt = "Give me small tips to enhance the recipe in an array of Strings. History: $history"
-        val tipsResponse = generativeModel.generateContent(prompt)
-        val tips = parseListResponse(tipsResponse.text.toString())
-
-        history += "$prompt $tips"
-
-        // Opinion (String)
-        prompt = "Give me your opinion on this recipe based on my goal: ${user.goal} and diet type: ${user.dietType}. " +
-                "No bullet points, just a small paragraph evaluating the recipe. History: $history"
-        val opinion = generativeModel.generateContent(prompt).text
-
-        // Create AiRecipe object and store it in the database
         val aiRecipe = AiRecipe(
             0,
             title = title,
             image = image,
-            readyInMinutes = readyInMinutes,
-            servings = servings,
-            ingredients = ingredients.joinToString(separator = ", "),
-            steps = steps.joinToString(separator = ", "),
+            readyInMinutes = readyInMinutesResponse,
+            servings = servingsResponse,
+            ingredients = ingredientsResponse!!,
+            steps = stepsResponse!!,
             createdAt = System.currentTimeMillis()
         )
 
-        Log.d("Ai Recipe" , aiRecipe.toString())
         repository.insertAiRecipe(aiRecipe)
         return aiRecipe
     }
-
-    fun parseListResponse(response: String): List<String> {
-        return response
-            .removeSurrounding("[", "]")  // Remove brackets
-            .split(",")  // Split by commas
-            .map { it.trim().removeSurrounding("\"") }  // Clean up spaces and quotes
-    }
-
 
     suspend fun getRecipeOpinion(recipe:DetailedRecipeResponse):String {
         val generativeModel =
@@ -119,7 +88,5 @@ class ChatBotServiceViewModel (private val repository: Repository) : ViewModel()
         val response = generativeModel.generateContent(prompt)
         return response.text.toString()
     }
-
-
 
 }

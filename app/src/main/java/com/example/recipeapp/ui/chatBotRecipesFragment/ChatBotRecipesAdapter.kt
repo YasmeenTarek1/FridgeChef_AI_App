@@ -31,17 +31,17 @@ class ChatBotRecipesAdapter : RecyclerView.Adapter<ChatBotRecipesAdapter.ChatBot
     }
 
     override fun onBindViewHolder(holder: ChatBotViewHolder, position: Int) {
-        val cookedRecipe = differ.currentList[position]
+        val aiRecipe = differ.currentList[position]
         val binding = holder.itemBinding
 
         Glide.with(binding.root)
-            .load(cookedRecipe.image)
+            .load(aiRecipe.image)
             .into(binding.recipeImage)
 
-        binding.servings.text = "Servings: " + cookedRecipe.servings.toString()
+        binding.recipe = aiRecipe
 
         holder.itemView.setOnClickListener { view ->
-            val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(cookedRecipe.id , null)
+            val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(aiRecipe.id , null)
             view.findNavController().navigate(action)
         }
     }

@@ -40,7 +40,7 @@ class FavoriteRecipesAdapter : RecyclerView.Adapter<FavoriteRecipesAdapter.Favor
             .load(favRecipe.image)
             .into(binding.recipeImage)
 
-        binding.servings.text = "Servings: " + favRecipe.servings.toString()
+        binding.recipe = favRecipe
 
         holder.itemView.setOnClickListener { view ->
             val action = FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToRecipeDetailsFragment(favRecipe.id , null)

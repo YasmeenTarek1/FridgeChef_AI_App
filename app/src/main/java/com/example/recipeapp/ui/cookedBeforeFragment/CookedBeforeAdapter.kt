@@ -38,7 +38,7 @@ class CookedBeforeAdapter : RecyclerView.Adapter<CookedBeforeAdapter.CookedRecip
             .load(cookedRecipe.image)
             .into(binding.recipeImage)
 
-        binding.servings.text = "Servings: " + cookedRecipe.servings.toString()
+        binding.recipe = cookedRecipe
 
         holder.itemView.setOnClickListener { view ->
             val action = CookedRecipesFragmentDirections.actionCookedRecipesFragmentToRecipeDetailsFragment(cookedRecipe.id , null)
