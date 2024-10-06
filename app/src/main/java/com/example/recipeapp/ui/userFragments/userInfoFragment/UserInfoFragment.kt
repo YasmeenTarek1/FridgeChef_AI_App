@@ -1,12 +1,17 @@
 package com.example.recipeapp.ui.userFragments.userInfoFragment
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.recipeapp.AppUser
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
@@ -15,23 +20,59 @@ import com.example.recipeapp.databinding.FragmentUserInfoBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.room_DB.model.UserInfo
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
+import java.util.UUID
 
 class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
     private lateinit var binding: FragmentUserInfoBinding
     private lateinit var viewModel: UserInfoViewModel
     private lateinit var repository: Repository
-
+    private lateinit var storageReference: StorageReference
+    private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var uriImage:String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = FragmentUserInfoBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
+        uriImage = ""
+        storageReference = FirebaseStorage.getInstance().reference
+
         val factory = UserInfoViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(UserInfoViewModel::class.java)
+
+        lifecycleScope.launch {
+            binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)
+            withContext(Dispatchers.Main) {
+                Glide.with(this@UserInfoFragment) // to get the Fragment context
+                    .load(binding.user!!.image)
+                    .into(binding.userAvatar)
+            }
+        }
+
+        // Registers a photo picker activity launcher in single-select mode.
+        pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            // Callback is invoked after the user selects a media item or closes the photo picker.
+            if (uri != null) {
+                lifecycleScope.launch {
+                    uploadImageToFirebaseAndReturnDownloadURL(uri)
+                }
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
+
+        binding.userImage.setOnClickListener {
+            // Launch the photo picker and let the user choose only images.
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
 
         binding.buttonSave.setOnClickListener {
             val name = binding.usernameEditText.text.toString()
@@ -39,47 +80,70 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
             val height = binding.editTextHeight.text.toString().toInt()
             val goal = binding.spinnerGoal.selectedItem.toString()
             val dietType = binding.spinnerDiet.selectedItem.toString()
-            val age = binding.editTextAge.text.toString().toInt()
+
+            var age = 0
             var gender = ""
-
-            binding.radioGroup2.setOnCheckedChangeListener { _, checkedId ->
-                when(checkedId){
-                    R.id.female -> gender = "Female"
-                    R.id.male -> gender = "Male"
+            if (binding.user!!.age == 0) { // gender and age aren't tracked before
+                age = binding.editTextAge.text.toString().toInt()
+                binding.radioGroup2.setOnCheckedChangeListener { _, checkedId ->
+                    when (checkedId) {
+                        R.id.female -> gender = "Female"
+                        R.id.male -> gender = "Male"
+                    }
                 }
+            } else { // I already have the info
+                age = binding.user!!.age
+                gender = binding.user!!.gender
             }
 
-            var userInfo:UserInfo? = null
+            val userInfo = UserInfo(
+                id = AppUser.instance!!.userId!!,
+                name = name,
+                weight = weight,
+                height = height,
+                goal = goal,
+                age = age,
+                gender = gender,
+                dietType = dietType,
+                bmi = calculateBMI(weight, height),
+                image = uriImage
+            )
 
-            if (weight != null && height != null) {
-                userInfo = UserInfo(id = AppUser.instance!!.userId!! , name = name, weight = weight, height = height, goal = goal , age = age , gender = gender , dietType = dietType , bmi = calculateBMI(weight,height))
-                viewModel.insertUser(userInfo)
-            } else {
-                Toast.makeText(context, "Please enter valid data", Toast.LENGTH_SHORT).show()
-            }
-
-
-            saveUserInfoInFirestoreAndRoom(userInfo!!)
-            binding.buttonSave.setOnClickListener {
-                findNavController().navigate(R.id.action_userInfoFragment_to_feedFragment)
-            }
+            saveUserInfoInFirestoreAndRoom(userInfo)
+            findNavController().navigate(R.id.action_userInfoFragment_to_userProfileFragment)
         }
     }
 
-    private fun saveUserInfoInFirestoreAndRoom(userinfo:UserInfo) {
-        lifecycleScope.launch {
-            AppDatabase.getInstance(requireContext())!!.userDao().insertUser(userinfo)
-        }
+    private fun uploadImageToFirebaseAndReturnDownloadURL(imageUri: Uri) {
+        val fileName = UUID.randomUUID().toString()
+        val ref = storageReference.child("avatars/$fileName")
+        ref.putFile(imageUri)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener { uri ->
+                    uriImage = uri.toString()
 
+                    // Load the new image into ImageView after getting the download URL
+                    Glide.with(this@UserInfoFragment)
+                        .load(uriImage)
+                        .into(binding.userAvatar)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("User", "Error uploading image: ${exception.message}")
+            }
+    }
+
+    private fun saveUserInfoInFirestoreAndRoom(userinfo:UserInfo) {
+        viewModel.insertUser(userinfo)
         val firestore = FirebaseFirestore.getInstance()
 
         firestore.collection("users").document(userinfo.id)
             .set(userinfo)
             .addOnSuccessListener {
-                println("User profile added to Firestore successfully!")
+                Log.d("User" , "User profile added to Firestore successfully!")
             }
             .addOnFailureListener { exception ->
-                println("Error adding user profile to Firestore: ${exception.message}")
+                Log.d("User" , "Error adding user profile to Firestore: ${exception.message}")
             }
     }
 

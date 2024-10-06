@@ -102,10 +102,6 @@ dependencies {
     //Firestore
     implementation(libs.firebase.firestore.ktx)
 
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
     // Logging Interceptors
     implementation(libs.logging.interceptor)
 
@@ -125,17 +121,7 @@ dependencies {
     //Markdown Support
     implementation(libs.core)
 
-    // Image Labeling (ML Kit)
-    implementation(libs.play.services.mlkit.image.labeling)
-
-    // CameraX
-    implementation(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-    implementation(libs.androidx.camera.view)
-
-    // TensorFlow Lite
-    implementation(libs.tensorflow.lite)
-
+    //Firebase Storage
+    implementation(libs.firebase.storage)
 
 }

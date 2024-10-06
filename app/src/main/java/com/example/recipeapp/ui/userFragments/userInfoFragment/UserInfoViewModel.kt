@@ -14,4 +14,12 @@ class UserInfoViewModel (private val repository: Repository): ViewModel() {
         }
     }
 
+    fun getUserById(userID: String): UserInfo?{
+        var userInfo:UserInfo? = null
+        viewModelScope.launch {
+            userInfo = repository.getUserById(userID)
+        }
+        return userInfo
+    }
+
 }

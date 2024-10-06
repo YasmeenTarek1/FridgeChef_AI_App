@@ -94,8 +94,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
-                        AppUser.instance!!.userId = auth.currentUser?.uid
                         lifecycleScope.launch {
+                            AppUser.instance!!.userId = auth.currentUser?.uid
                             val userName = repository.getUserById(AppUser.instance!!.userId!!)!!.name
                             Toast.makeText(requireContext(), "Welcome Back, ${userName}", Toast.LENGTH_SHORT).show()
                         }
@@ -226,7 +226,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         userInfo?.let {
                             // Sync data with local Room database
                             lifecycleScope.launch {
-                                Log.d("BMI" , "${userInfo.bmi}")
                                 if (repository.getUserById(userId) == null) {
                                     // NOT saved before to my Room DB so insert it
                                     repository.insertUser(userInfo)

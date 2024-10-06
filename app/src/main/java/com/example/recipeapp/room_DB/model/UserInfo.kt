@@ -18,6 +18,7 @@ data class UserInfo(
     var age: Int,
     val gender: String,
     var bmi: Double,
+    var image: String? = null
 ): Parcelable{
-    constructor() : this("", "",0, 0, "", "", 0, "", 0.0)
+    constructor() : this("", "",0, 0, "", "", 0, "", 0.0 , null)
 }

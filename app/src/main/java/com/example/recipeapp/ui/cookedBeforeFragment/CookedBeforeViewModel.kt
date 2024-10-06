@@ -41,7 +41,7 @@ class CookedBeforeViewModel(private val repository: Repository) : ViewModel() {
             }
 
             val recipesToDelete = firestoreRecipes.filter { recipe ->
-                !roomRecipes.contains(recipe)  // Recipes that are removed in Room
+                !roomRecipes.contains(recipe)  // Recipes that are removed from Room
             }
 
             // 1. Add or update recipes

@@ -139,6 +139,9 @@
         <action
             android:id="@+id/action_userInfoFragment_to_feedFragment"
             app:destination="@id/feedFragment" />
+        <action
+            android:id="@+id/action_userInfoFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
@@ -146,8 +149,8 @@
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" >
         <action
-            android:id="@+id/action_userProfileFragment_to_userEditProfileFragment"
-            app:destination="@id/userEditProfileFragment" />
+            android:id="@+id/action_userProfileFragment_to_userInfoFragment"
+            app:destination="@id/userInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/toBuyIngredientsFragment"
@@ -165,14 +168,6 @@
         <argument
             android:name="ingredientID"
             app:argType="integer"/>
-    </fragment>
-    <fragment
-        android:id="@+id/userEditProfileFragment"
-        android:name="com.example.recipeapp.ui.userFragments.userEditProfileFragment.UserEditProfileFragment"
-        android:label="UserEditProfileFragment" >
-        <action
-            android:id="@+id/action_userEditProfileFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/specialRecipesFragment"
