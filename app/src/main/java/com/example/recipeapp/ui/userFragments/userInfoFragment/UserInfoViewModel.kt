@@ -10,9 +10,9 @@ import kotlinx.coroutines.withContext
 
 class UserInfoViewModel (private val repository: Repository): ViewModel() {
 
-    fun insertUser(userInfo:UserInfo){
+    fun updateUser(userInfo:UserInfo){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertUser(userInfo)
+            repository.updateUser(userInfo)
         }
     }
 

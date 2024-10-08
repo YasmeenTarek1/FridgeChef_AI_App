@@ -1,7 +1,6 @@
 package com.example.recipeapp.ui.specialRecipesFragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,11 +13,6 @@ import com.example.recipeapp.Repository
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentSpecialRecipesBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
-import com.example.recipeapp.room_DB.model.CookedRecipe
-import com.example.recipeapp.ui.chatBotRecipesFragment.ChatBotRecipesAdapter
-import com.example.recipeapp.ui.specialRecipesFragment.CookedRecipesAdapter
-import com.example.recipeapp.ui.specialRecipesFragment.FavRecipesAdapter
-import com.example.recipeapp.ui.feedFragment.FeedViewModelFactory
 import kotlinx.coroutines.launch
 
 class SpecialRecipesFragment : Fragment(R.layout.fragment_special_recipes) {
@@ -32,7 +26,6 @@ class SpecialRecipesFragment : Fragment(R.layout.fragment_special_recipes) {
     private lateinit var cookedAdapter: CookedRecipesAdapter
     private lateinit var favAdapter: FavRecipesAdapter
     private lateinit var aiAdapter: ChatBotAdapter
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

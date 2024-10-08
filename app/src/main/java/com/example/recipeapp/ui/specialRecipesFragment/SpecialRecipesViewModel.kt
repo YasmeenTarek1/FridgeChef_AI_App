@@ -13,4 +13,9 @@ class SpecialRecipesViewModel(private val repository: Repository): ViewModel() {
     val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
     val aiRecipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
+    init{
+        repository.listenForFirestoreChangesInFavoriteRecipes()
+        repository.listenForFirestoreChangesInCookedRecipes()
+        repository.listenForFirestoreChangesInAiRecipes()
+    }
 }

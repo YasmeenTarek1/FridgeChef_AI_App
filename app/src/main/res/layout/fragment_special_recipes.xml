@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,19 +19,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp">
 
-
                 <TextView
                     android:id="@+id/titleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="28dp"
                     android:text="Your Recipes"
                     android:textColor="#901431"
-                    android:textSize="30dp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.439"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="20dp"/>
+                    android:fontFamily="@font/font1"/>
 
                 <TextView
                     android:id="@+id/goCrazyTextView"
@@ -41,34 +41,33 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginBottom="200dp"
-                    android:text="Go Crazy Recipes"
+                    android:layout_marginTop="110dp"
+                    android:text="Go Crazy 🤯"
                     android:textColor="#FF5C67"
                     android:textSize="20dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/favoriteRecipesTextView"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.593" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/viewAll1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="124dp"
-                    android:text="View All"
+                    android:text="See all"
                     android:textColor="#FF5C67"
                     android:textSize="13dp"
                     android:textStyle="italic"
+                    app:layout_constraintBottom_toBottomOf="@+id/goCrazyTextView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.913"
                     app:layout_constraintStart_toEndOf="@+id/goCrazyTextView"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@+id/goCrazyTextView" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView1"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="14dp"
                     android:orientation="horizontal"
@@ -84,7 +83,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="83dp"
                     android:layout_marginBottom="160dp"
-                    android:text="Favorite Recipes"
+                    android:text="Loved ones 💌"
                     android:textColor="#FF5C67"
                     android:textSize="20dp"
                     android:textStyle="bold"
@@ -95,21 +94,21 @@
                     android:id="@+id/viewAll2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="428dp"
-                    android:text="View All"
+                    android:text="See all"
                     android:textColor="#FF5C67"
                     android:textSize="13dp"
                     android:textStyle="italic"
+                    app:layout_constraintBottom_toBottomOf="@+id/favoriteRecipesTextView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.917"
                     app:layout_constraintStart_toEndOf="@+id/favoriteRecipesTextView"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@+id/favoriteRecipesTextView" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView2"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="14dp"
                     android:orientation="horizontal"
@@ -125,7 +124,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="83dp"
                     android:layout_marginBottom="160dp"
-                    android:text="Cooked Before Recipes"
+                    android:text="Made it ⌛"
                     android:textColor="#FF5C67"
                     android:textSize="20dp"
                     android:textStyle="bold"
@@ -138,20 +137,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    android:text="View All"
+                    android:text="See all"
                     android:textColor="#FF5C67"
                     android:textSize="13dp"
                     android:textStyle="italic"
                     app:layout_constraintBottom_toTopOf="@id/recyclerView3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.878"
-                    app:layout_constraintStart_toEndOf="@+id/cookedRecipesTextView" />
+                    app:layout_constraintStart_toEndOf="@+id/cookedRecipesTextView"
+                    app:layout_constraintTop_toTopOf="@+id/cookedRecipesTextView" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView3"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="70dp"
                     android:orientation="horizontal"

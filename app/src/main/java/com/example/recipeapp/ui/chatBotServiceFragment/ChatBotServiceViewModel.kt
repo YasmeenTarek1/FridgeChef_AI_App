@@ -8,9 +8,12 @@ import com.example.recipeapp.api.model.DetailedRecipeResponse
 import com.example.recipeapp.room_DB.model.AiRecipe
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class ChatBotServiceViewModel (private val repository: Repository) : ViewModel() {
+
+    val recipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
     suspend fun getCrazyRecipe(ingredients: String): AiRecipe{
         return withContext(Dispatchers.IO) {
@@ -72,6 +75,14 @@ class ChatBotServiceViewModel (private val repository: Repository) : ViewModel()
         }
     }
 
+    suspend fun updateFirestore(){
+        withContext(Dispatchers.IO) {
+            recipes.collect { recipes ->
+                repository.updateAiRecipesInFirestore(recipes)
+            }
+        }
+    }
+
     suspend fun getRecipeOpinion(recipe:DetailedRecipeResponse):String {
         return withContext(Dispatchers.IO) {
             val generativeModel =
@@ -98,8 +109,7 @@ class ChatBotServiceViewModel (private val repository: Repository) : ViewModel()
                     apiKey = "AIzaSyBygUzMLk3xTKkiiyC407TXuxI08eWPFec"
                 )
 
-            val prompt =
-                "Give me a small Cooking tip that no one knows and will seem interesting and make it short and simple as far as you can and add emojis"
+            val prompt = "Give me a small Cooking tip that no one knows and will seem interesting and make it short and simple as far as you can and add emojis"
             val response = generativeModel.generateContent(prompt)
             response.text.toString()
         }

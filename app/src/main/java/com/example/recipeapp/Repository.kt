@@ -363,4 +363,94 @@ class Repository(
             }
         }
     }
+
+    fun updateFavRecipesInFirestore(roomRecipes: List<FavoriteRecipe>) {
+        val firestore = FirebaseFirestore.getInstance()
+        val userId = AppUser.instance?.userId!!
+        val favoriteRecipesCollection =  firestore.collection("users").document(userId).collection("Favorite Recipes")
+
+        favoriteRecipesCollection.get().addOnSuccessListener { snapshot ->
+            val firestoreRecipes = snapshot.documents.map { document ->
+                document.toObject(FavoriteRecipe::class.java)!!
+            }
+
+            val recipesToAddOrUpdate = roomRecipes.filter { recipe ->
+                !firestoreRecipes.contains(recipe)  // Recipes that are new or updated
+            }
+
+            val recipesToDelete = firestoreRecipes.filter { recipe ->
+                !roomRecipes.contains(recipe)  // Recipes that are removed in Room
+            }
+
+            // 1. Add or update recipes
+            recipesToAddOrUpdate.forEach { recipe ->
+                favoriteRecipesCollection.document(recipe.id.toString()).set(recipe)
+            }
+
+            // 2. Delete removed recipes
+            recipesToDelete.forEach { recipe ->
+                favoriteRecipesCollection.document(recipe.id.toString()).delete()
+            }
+        }
+    }
+
+    fun updateCookedRecipesInFirestore(roomRecipes: List<CookedRecipe>) {
+        val firestore = FirebaseFirestore.getInstance()
+        val userId = AppUser.instance?.userId!!
+        val cookedRecipesCollection =  firestore.collection("users").document(userId).collection("Cooked Recipes")
+
+        cookedRecipesCollection.get().addOnSuccessListener { snapshot ->
+            val firestoreRecipes = snapshot.documents.map { document ->
+                document.toObject(CookedRecipe::class.java)!!
+            }
+
+            val recipesToAddOrUpdate = roomRecipes.filter { recipe ->
+                !firestoreRecipes.contains(recipe)  // Recipes that are new or updated
+            }
+
+            val recipesToDelete = firestoreRecipes.filter { recipe ->
+                !roomRecipes.contains(recipe)  // Recipes that are removed from Room
+            }
+
+            // 1. Add or update recipes
+            recipesToAddOrUpdate.forEach { recipe ->
+                cookedRecipesCollection.document(recipe.id.toString()).set(recipe)
+            }
+
+            // 2. Delete removed recipes
+            recipesToDelete.forEach { recipe ->
+                cookedRecipesCollection.document(recipe.id.toString()).delete()
+            }
+        }
+    }
+
+    fun updateAiRecipesInFirestore(roomRecipes: List<AiRecipe>) {
+        val firestore = FirebaseFirestore.getInstance()
+        val userId = AppUser.instance?.userId!!
+        val aiRecipesCollection =  firestore.collection("users").document(userId).collection("Ai Recipes")
+
+        aiRecipesCollection.get().addOnSuccessListener { snapshot ->
+            val firestoreRecipes = snapshot.documents.map { document ->
+                document.toObject(AiRecipe::class.java)!!
+            }
+
+            val recipesToAddOrUpdate = roomRecipes.filter { recipe ->
+                !firestoreRecipes.contains(recipe)  // Recipes that are new or updated
+            }
+
+            val recipesToDelete = firestoreRecipes.filter { recipe ->
+                !roomRecipes.contains(recipe)  // Recipes that are removed in Room
+            }
+
+            // 1. Add or update recipes
+            recipesToAddOrUpdate.forEach { recipe ->
+                aiRecipesCollection.document(recipe.id.toString()).set(recipe)
+            }
+
+            // 2. Delete removed recipes
+            recipesToDelete.forEach { recipe ->
+                aiRecipesCollection.document(recipe.id.toString()).delete()
+            }
+        }
+    }
 }

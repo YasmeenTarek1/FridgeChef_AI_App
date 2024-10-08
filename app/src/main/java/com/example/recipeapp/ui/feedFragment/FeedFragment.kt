@@ -92,10 +92,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             LoginManager.getInstance().logOut()
 
             lifecycleScope.launch(Dispatchers.IO) {
-                feedViewModel.clearAllToFavoriteRecipes()
-                feedViewModel.clearAllCookedRecipes()
-                feedViewModel.clearAllToBuyIngredients()
-                feedViewModel.clearAllAiRecipes()
+                feedViewModel.clearAllInfo()
             }
 
             findNavController().navigate(R.id.action_feedFragment_to_loginFragment)

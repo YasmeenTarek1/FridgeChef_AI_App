@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recipeapp.room_DB.model.CookedRecipe
 import com.example.recipeapp.databinding.CookedRecipeItemBinding
+import com.example.recipeapp.room_DB.model.CookedRecipe
 
 class CookedBeforeAdapter : RecyclerView.Adapter<CookedBeforeAdapter.CookedRecipeViewHolder>() {
 

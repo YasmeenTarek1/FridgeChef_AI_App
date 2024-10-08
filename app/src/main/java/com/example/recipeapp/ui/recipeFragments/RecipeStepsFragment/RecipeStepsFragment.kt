@@ -44,7 +44,10 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
             if (idx < steps.size) {
                 showStep()
             } else {
-                viewModel.addToCookedRecipes(args.cookedRecipe)
+                lifecycleScope.launch {
+                    viewModel.addToCookedRecipes(args.cookedRecipe)
+                    viewModel.removeFromFavRecipes(args.cookedRecipe)
+                }
                 binding.stepText.text = "Congrats, Recipe is Finished"
                 stopAndSpeak(binding.stepText.text.toString()) // TTS for final message
                 binding.nextButton.text = "Return to Feed"

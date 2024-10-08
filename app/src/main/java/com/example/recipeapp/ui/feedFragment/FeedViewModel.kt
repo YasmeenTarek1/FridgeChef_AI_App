@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 class FeedViewModel(application: Application ,private val repository: Repository) : AndroidViewModel(application) {
 
     val recipes: Flow<PagingData<Recipe>> = repository.getSimilarRecipesForFavorites(repository).cachedIn(viewModelScope)
+    val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
 
     fun onLoveClick(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -28,6 +29,9 @@ class FeedViewModel(application: Application ,private val repository: Repository
                 healthScore = recipe.healthScore,
                 createdAt = System.currentTimeMillis()
             ))
+            favRecipes.collect { favRecipes ->
+                repository.updateFavRecipesInFirestore(favRecipes)
+            }
         }
     }
 
@@ -35,19 +39,11 @@ class FeedViewModel(application: Application ,private val repository: Repository
         return repository.isFavoriteRecipeExists(recipeId)
     }
 
-    suspend fun clearAllToFavoriteRecipes() {
-        return repository.clearAllToFavoriteRecipes()
+    suspend fun clearAllInfo() {
+        repository.clearAllToFavoriteRecipes()
+        repository.clearAllCookedRecipes()
+        repository.clearAllToBuyIngredients()
+        repository.clearAllAiRecipes()
     }
 
-    suspend fun clearAllCookedRecipes() {
-        return repository.clearAllCookedRecipes()
-    }
-
-    suspend fun clearAllToBuyIngredients() {
-        return repository.clearAllToBuyIngredients()
-    }
-
-    suspend fun clearAllAiRecipes() {
-        return repository.clearAllAiRecipes()
-    }
 }

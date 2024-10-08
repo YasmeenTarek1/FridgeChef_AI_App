@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="Explore"
-            android:textSize="25sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:gravity="center"
             android:textColor="#901431"
@@ -62,7 +61,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cookingTipButton"
             app:layout_constraintBottom_toTopOf="@id/recyclerView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:fontFamily="@font/font1"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

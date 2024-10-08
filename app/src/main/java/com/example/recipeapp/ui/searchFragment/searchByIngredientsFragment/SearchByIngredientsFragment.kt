@@ -5,7 +5,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
-import com.example.recipeapp.api.model.Ingredient
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentSearchByIngredientsBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
@@ -27,13 +25,9 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-
-import java.util.Timer
-import java.util.TimerTask
 
 class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredients) {
 

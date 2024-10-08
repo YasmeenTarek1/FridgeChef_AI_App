@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Spinner
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,7 +23,9 @@ import com.example.recipeapp.room_DB.model.UserInfo
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.UUID
 
@@ -40,7 +43,6 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
         binding = FragmentUserInfoBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
-        uriImage = ""
         storageReference = FirebaseStorage.getInstance().reference
 
         val factory = UserInfoViewModelFactory(repository)
@@ -48,9 +50,34 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)
-            Glide.with(requireContext())
-                .load(binding.user!!.image)
-                .into(binding.userAvatar)
+            withContext(Dispatchers.Main) {
+                Glide.with(requireContext())
+                    .load(binding.user!!.image)
+                    .into(binding.userAvatar)
+                uriImage = binding.user!!.image!!
+            }
+
+            if(binding.user!!.age != 0) { // Not a new Customer (Existing one)
+                val spinnerDiet: Spinner = binding.spinnerDiet
+                var adapter = spinnerDiet.adapter
+
+                for (i in 0 until adapter.count) {
+                    if (adapter.getItem(i) == binding.user!!.dietType) {
+                        spinnerDiet.setSelection(i)
+                        break
+                    }
+                }
+
+                val spinnerGoal: Spinner = binding.spinnerGoal
+                adapter = spinnerGoal.adapter
+
+                for (i in 0 until adapter.count) {
+                    if (adapter.getItem(i) == binding.user!!.goal) {
+                        spinnerGoal.setSelection(i)
+                        break
+                    }
+                }
+            }
         }
 
         // Registers a photo picker activity launcher in single-select mode.
@@ -63,7 +90,7 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
             }
         }
 
-        binding.userImage.setOnClickListener {
+        binding.editProfileImage.setOnClickListener {
             // Launch the photo picker and let the user choose only images.
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
@@ -128,7 +155,7 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
     }
 
     private fun saveUserInfoInFirestoreAndRoom(userinfo:UserInfo) {
-        viewModel.insertUser(userinfo)
+        viewModel.updateUser(userinfo)
         val firestore = FirebaseFirestore.getInstance()
 
         firestore.collection("users").document(userinfo.id)

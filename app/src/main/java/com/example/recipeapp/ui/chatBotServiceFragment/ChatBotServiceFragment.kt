@@ -14,7 +14,6 @@ import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentChatBotBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.room_DB.model.AiRecipe
-import io.noties.markwon.Markwon
 import kotlinx.coroutines.launch
 
 class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
@@ -89,6 +88,7 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
             val recipe:AiRecipe = viewModel.getCrazyRecipe(ingredients!!)
             val action = ChatBotServiceFragmentDirections.actionChatBotServiceFragmentToRecipeDetailsFragment(0 , recipe)
             findNavController().navigate(action)
+            viewModel.updateFirestore()
         }
     }
 

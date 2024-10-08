@@ -1,6 +1,5 @@
 package com.example.recipeapp.ui.feedFragment
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +8,8 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.Recipe
-import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FeedItemBinding
-import com.example.recipeapp.room_DB.database.AppDatabase
 
 class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLoveClick: (Recipe) -> Unit) : PagingDataAdapter<Recipe, FeedAdapter.RecipeViewHolder>(RECIPE_COMPARATOR) {
 

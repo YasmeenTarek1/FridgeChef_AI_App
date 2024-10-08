@@ -16,9 +16,7 @@ import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.room_DB.model.AiRecipe
 import com.example.recipeapp.room_DB.model.CookedRecipe
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
