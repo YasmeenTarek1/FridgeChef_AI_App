@@ -67,7 +67,9 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         recyclerView.adapter = adapter
 
         binding.search.setOnClickListener {
-            adapter.differ.submitList(viewModel.searchRecipesByIngredients(ingredients))
+            lifecycleScope.launch {
+                adapter.differ.submitList(viewModel.searchRecipesByIngredients(ingredients))
+            }
         }
 
         binding.chatBot.setOnClickListener {

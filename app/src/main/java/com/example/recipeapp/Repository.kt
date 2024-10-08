@@ -1,7 +1,6 @@
 package com.example.recipeapp
 
 import SimilarRecipesPagingSource
-import android.content.Context
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -91,10 +90,10 @@ class Repository(
     }
 
     // Implementing Paging for similar recipes
-    fun getSimilarRecipesForFavorites(context: Context): Flow<PagingData<Recipe>> {
+    fun getSimilarRecipesForFavorites(repository: Repository): Flow<PagingData<Recipe>> {
         return Pager(
             config = PagingConfig(pageSize = 5, enablePlaceholders = false),
-            pagingSourceFactory = { SimilarRecipesPagingSource(context) }
+            pagingSourceFactory = { SimilarRecipesPagingSource(repository) }
         ).flow
     }
 

@@ -21,7 +21,6 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentSignUpBinding.bind(view)
-        binding.lifecycleOwner = this
 
         auth = Firebase.auth
         binding.SignUpButton.setOnClickListener {

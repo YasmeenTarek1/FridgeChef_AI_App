@@ -8,16 +8,16 @@ import androidx.paging.cachedIn
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class FeedViewModel(application: Application ,private val repository: Repository) : AndroidViewModel(application) {
 
-    val context = getApplication<Application>().applicationContext
-    val recipes: Flow<PagingData<Recipe>> = repository.getSimilarRecipesForFavorites(context).cachedIn(viewModelScope)
+    val recipes: Flow<PagingData<Recipe>> = repository.getSimilarRecipesForFavorites(repository).cachedIn(viewModelScope)
 
     fun onLoveClick(recipe: Recipe) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.insertFavoriteRecipe(FavoriteRecipe(
                 id = recipe.id,
                 title = recipe.title,
@@ -31,11 +31,23 @@ class FeedViewModel(application: Application ,private val repository: Repository
         }
     }
 
-    fun checkFavorite(recipeId: Int) :Boolean {
-        var isFavorite = false
-        viewModelScope.launch {
-            isFavorite = repository.isFavoriteRecipeExists(recipeId)
-        }
-        return isFavorite
+    suspend fun checkFavorite(recipeId: Int): Boolean {
+        return repository.isFavoriteRecipeExists(recipeId)
+    }
+
+    suspend fun clearAllToFavoriteRecipes() {
+        return repository.clearAllToFavoriteRecipes()
+    }
+
+    suspend fun clearAllCookedRecipes() {
+        return repository.clearAllCookedRecipes()
+    }
+
+    suspend fun clearAllToBuyIngredients() {
+        return repository.clearAllToBuyIngredients()
+    }
+
+    suspend fun clearAllAiRecipes() {
+        return repository.clearAllAiRecipes()
     }
 }

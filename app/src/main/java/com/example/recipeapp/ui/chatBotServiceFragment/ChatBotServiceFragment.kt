@@ -28,8 +28,6 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = FragmentChatBotBinding.bind(view)
-        binding.lifecycleOwner = this
-
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         val factory = ChatBotServiceViewModelFactory(repository)

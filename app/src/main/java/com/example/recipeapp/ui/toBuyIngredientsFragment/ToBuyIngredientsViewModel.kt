@@ -6,6 +6,7 @@ import com.example.recipeapp.AppUser
 import com.example.recipeapp.Repository
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -19,7 +20,7 @@ class ToBuyIngredientsViewModel(private val repository: Repository) : ViewModel(
     }
 
     private fun observeRoomChangesAndSyncWithFirestore() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             ingredients.collect { ingredients ->
                 syncWithFirestore(ingredients)
             }

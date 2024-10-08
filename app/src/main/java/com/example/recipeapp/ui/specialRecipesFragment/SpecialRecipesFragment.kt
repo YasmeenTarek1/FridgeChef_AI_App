@@ -38,9 +38,6 @@ class SpecialRecipesFragment : Fragment(R.layout.fragment_special_recipes) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentSpecialRecipesBinding.bind(view)
-        binding.lifecycleOwner = this
-
-
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         val factory = SpecialRecipesViewModelFactory(repository)

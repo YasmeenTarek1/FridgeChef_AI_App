@@ -16,7 +16,6 @@ class SearchCategoryFragment : Fragment(R.layout.fragment_search_category) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentSearchCategoryBinding.bind(view)
-        binding.lifecycleOwner = this
 
         val radioGroup: RadioGroup = binding.radioGroup
         radioGroup.setOnCheckedChangeListener { _, checkedId ->

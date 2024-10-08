@@ -29,6 +29,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import io.noties.markwon.Markwon
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -58,10 +59,16 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         feedAdapter = FeedAdapter(
             checkFavorite = { recipeId ->
-                feedViewModel.checkFavorite(recipeId)} ,
+                var isFavorite = false
+                lifecycleScope.launch(Dispatchers.IO) {
+                    isFavorite = feedViewModel.checkFavorite(recipeId)
+                }
+                isFavorite }
+            ,
             onLoveClick = { recipe ->
                 feedViewModel.onLoveClick(recipe)
-        })
+            }
+        )
 
         recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)
@@ -84,11 +91,11 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             AppUser.instance?.userId = null
             LoginManager.getInstance().logOut()
 
-            lifecycleScope.launch {
-                repository.clearAllToFavoriteRecipes()
-                repository.clearAllCookedRecipes()
-                repository.clearAllToBuyIngredients()
-                repository.clearAllAiRecipes()
+            lifecycleScope.launch(Dispatchers.IO) {
+                feedViewModel.clearAllToFavoriteRecipes()
+                feedViewModel.clearAllCookedRecipes()
+                feedViewModel.clearAllToBuyIngredients()
+                feedViewModel.clearAllAiRecipes()
             }
 
             findNavController().navigate(R.id.action_feedFragment_to_loginFragment)

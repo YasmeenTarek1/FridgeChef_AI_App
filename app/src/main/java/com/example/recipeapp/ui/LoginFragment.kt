@@ -49,8 +49,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentLoginBinding.bind(view)
-        binding.lifecycleOwner = this
-
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         auth = FirebaseAuth.getInstance()

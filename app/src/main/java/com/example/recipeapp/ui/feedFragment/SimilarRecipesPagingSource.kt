@@ -1,4 +1,4 @@
-import android.content.Context
+
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -6,14 +6,12 @@ import com.example.recipeapp.AppUser
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.DetailedRecipeResponse
 import com.example.recipeapp.api.model.Recipe
-import com.example.recipeapp.api.service.RetrofitInstance
-import com.example.recipeapp.room_DB.database.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class SimilarRecipesPagingSource(private val context: Context) : PagingSource<Int, Recipe>() {
+class SimilarRecipesPagingSource(private val repository: Repository) : PagingSource<Int, Recipe>() {
 
     private val takenIDs = mutableSetOf<Int>() // to not repeat a fav recipe
     private val currentRecipes = mutableSetOf<Int>() // to not repeat a result recipe
@@ -23,8 +21,6 @@ class SimilarRecipesPagingSource(private val context: Context) : PagingSource<In
             val page = params.key ?: 1
             var taken = false
             var recipeId = 0
-
-            val repository = Repository(RetrofitInstance(), AppDatabase.getInstance(context))
 
             // Collect all favorite recipes (Cold Stream)
             val favoriteRecipes = repository.getAllFavoriteRecipes().first() // Ensure this collects all

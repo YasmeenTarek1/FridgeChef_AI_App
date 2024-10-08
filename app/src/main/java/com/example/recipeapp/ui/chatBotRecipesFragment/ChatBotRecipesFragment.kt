@@ -26,8 +26,6 @@ class ChatBotRecipesFragment : Fragment(R.layout.fragment_chat_bot_recipes) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentChatBotRecipesBinding.bind(view)
-        binding.lifecycleOwner = this
-
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         val factory = ChatBotRecipesViewModelFactory(repository)

@@ -51,6 +51,7 @@ class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLo
             .load(recipe!!.image)
             .into(binding.recipeImage)
 
+
         if(checkFavorite(recipe.id)) {
             binding.fullLove.visibility = View.VISIBLE
             binding.love.visibility = View.INVISIBLE

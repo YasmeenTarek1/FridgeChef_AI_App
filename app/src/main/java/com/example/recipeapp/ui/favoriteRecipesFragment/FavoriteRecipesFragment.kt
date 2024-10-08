@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
-import com.example.recipeapp.room_DB.database.AppDatabase
+import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentFavoriteRecipesBinding
+import com.example.recipeapp.room_DB.database.AppDatabase
 import kotlinx.coroutines.launch
 
 class FavoriteRecipesFragment : Fragment(R.layout.fragment_favorite_recipes) {
@@ -26,8 +26,6 @@ class FavoriteRecipesFragment : Fragment(R.layout.fragment_favorite_recipes) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentFavoriteRecipesBinding.bind(view)
-        binding.lifecycleOwner = this
-
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         val factory = FavoriteRecipesViewModelFactory(repository)

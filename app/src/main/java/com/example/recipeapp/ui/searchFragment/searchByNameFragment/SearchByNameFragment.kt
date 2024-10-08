@@ -29,6 +29,7 @@ class SearchByNameFragment : Fragment(R.layout.fragment_search_by_name) {
 
         binding = FragmentSearchByNameBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
+
         val factory = SearchByNameViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(SearchByNameViewModel::class.java)
 
@@ -42,12 +43,14 @@ class SearchByNameFragment : Fragment(R.layout.fragment_search_by_name) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    adapter.differ.submitList(viewModel.searchRecipesByName(query))
+                    lifecycleScope.launch {
+                        adapter.differ.submitList(viewModel.searchRecipesByName(query))
 
-                    searchView.clearFocus() // Remove focus from the SearchView
-                    searchView.onActionViewCollapsed() // Collapse the SearchView
+                        searchView.clearFocus() // Remove focus from the SearchView
+                        searchView.onActionViewCollapsed() // Collapse the SearchView
 
-                    binding.optionsRecyclerView.visibility = View.INVISIBLE
+                        binding.optionsRecyclerView.visibility = View.INVISIBLE
+                    }
                 }
                 return true
             }
@@ -66,11 +69,10 @@ class SearchByNameFragment : Fragment(R.layout.fragment_search_by_name) {
 
                 // Use Flows to handle ingredient input changes and fetch predictions
                 lifecycleScope.launch {
-                    viewModel.autocompleteRecipeSearch(newText.toString())
-                        .collect { options ->
-                            optionsAdapter.differ.submitList(options)
-                            Log.d("Error" , options.toString())
-                        }
+                    viewModel.autocompleteRecipeSearch(newText.toString()).collect { options ->
+                        optionsAdapter.differ.submitList(options)
+                        Log.d("Error" , options.toString())
+                    }
                 }
                 return true
             }

@@ -13,9 +13,7 @@ import com.example.recipeapp.Repository
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentUserProfileBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
@@ -34,11 +32,9 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)
-            withContext(Dispatchers.Main) {
-                Glide.with(this@UserProfileFragment) // to get the Fragment context
-                    .load(binding.user!!.image)
-                    .into(binding.userAvatar)
-            }
+            Glide.with(requireContext())
+                .load(binding.user!!.image)
+                .into(binding.userAvatar)
         }
 
         binding.editProfileInfo.setOnClickListener {

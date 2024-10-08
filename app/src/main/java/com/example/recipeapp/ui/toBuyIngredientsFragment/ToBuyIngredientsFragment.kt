@@ -27,8 +27,6 @@ class ToBuyIngredientsFragment : Fragment(R.layout.fragment_to_buy_ingredients) 
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentToBuyIngredientsBinding.bind(view)
-        binding.lifecycleOwner = this
-
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         val factory = ToBuyIngredientsViewModelFactory(repository)

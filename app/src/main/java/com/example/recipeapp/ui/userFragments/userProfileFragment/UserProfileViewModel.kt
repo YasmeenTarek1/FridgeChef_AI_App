@@ -10,7 +10,7 @@ class UserProfileViewModel (private val repository: Repository): ViewModel() {
 
     suspend fun getUserById(userID: String): UserInfo? {
         return withContext(Dispatchers.IO) {
-            repository.getUserById(userID) // This will suspend and wait for the result
+            repository.getUserById(userID)
         }
     }
 

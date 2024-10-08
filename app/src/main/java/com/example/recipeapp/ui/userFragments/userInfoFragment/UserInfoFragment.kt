@@ -22,9 +22,7 @@ import com.example.recipeapp.room_DB.model.UserInfo
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.UUID
 
@@ -50,20 +48,16 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)
-            withContext(Dispatchers.Main) {
-                Glide.with(this@UserInfoFragment) // to get the Fragment context
-                    .load(binding.user!!.image)
-                    .into(binding.userAvatar)
-            }
+            Glide.with(requireContext())
+                .load(binding.user!!.image)
+                .into(binding.userAvatar)
         }
 
         // Registers a photo picker activity launcher in single-select mode.
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             // Callback is invoked after the user selects a media item or closes the photo picker.
             if (uri != null) {
-                lifecycleScope.launch {
-                    uploadImageToFirebaseAndReturnDownloadURL(uri)
-                }
+                uploadImageToFirebaseAndReturnDownloadURL(uri)
             } else {
                 Log.d("PhotoPicker", "No media selected")
             }
@@ -123,7 +117,7 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
                     uriImage = uri.toString()
 
                     // Load the new image into ImageView after getting the download URL
-                    Glide.with(this@UserInfoFragment)
+                    Glide.with(requireContext())
                         .load(uriImage)
                         .into(binding.userAvatar)
                 }

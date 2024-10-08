@@ -29,8 +29,6 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentRecipeStepsBinding.bind(view)
-        binding.lifecycleOwner = this
-
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         val recipeId: Int = args.recipeID

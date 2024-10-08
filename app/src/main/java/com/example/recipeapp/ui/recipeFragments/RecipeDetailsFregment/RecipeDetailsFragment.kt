@@ -16,36 +16,36 @@ import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.room_DB.model.AiRecipe
 import com.example.recipeapp.room_DB.model.CookedRecipe
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
     private lateinit var binding: FragmentRecipeDetailsBinding
     private lateinit var repository: Repository
-    private lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
     private val args: RecipeDetailsFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentRecipeDetailsBinding.bind(view)
-        binding.lifecycleOwner = this
-
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
         val recipeId: Int = args.recipeID
         val aiRecipe = args.aiRecipe
 
-        val factory = RecipeViewModelFactory(recipeId , repository)
-        recipeViewModel = ViewModelProvider(this, factory).get(RecipeViewModel::class.java)
+        val factory = RecipeDetailsViewModelFactory(recipeId , repository)
+        recipeDetailsViewModel = ViewModelProvider(this, factory).get(RecipeDetailsViewModel::class.java)
 
         var cookedrecipe:CookedRecipe? = null
         var recipe:DetailedRecipeResponse? = null
 
-        lifecycleScope.launch {
-            if(aiRecipe == null) {
-                recipe = recipeViewModel.getRecipeInfo()
+        if(aiRecipe == null) {
+            lifecycleScope.launch{
+                recipe = recipeDetailsViewModel.getRecipeInfo()
                 displayRecipeInfo(recipe!!)
                 cookedrecipe = CookedRecipe(
                     recipe!!.id,
@@ -57,14 +57,14 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
                     createdAt = System.currentTimeMillis()
                 )
             }
-            else{
-                displayAiRecipeInfo(aiRecipe!!)
-                cookedrecipe = CookedRecipe(
-                    aiRecipe.id,
-                    aiRecipe.title,
-                    aiRecipe.image,
-                    aiRecipe.readyInMinutes,aiRecipe.servings,2 , createdAt = System.currentTimeMillis())
-            }
+        }
+        else{
+            displayAiRecipeInfo(aiRecipe!!)
+            cookedrecipe = CookedRecipe(
+                aiRecipe.id,
+                aiRecipe.title,
+                aiRecipe.image,
+                aiRecipe.readyInMinutes,aiRecipe.servings,2 , createdAt = System.currentTimeMillis())
         }
 
         binding.stepsButton.setOnClickListener {
@@ -80,13 +80,13 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
     private fun displayRecipeInfo(recipe: DetailedRecipeResponse) {
         Glide.with(binding.root)
-            .load(recipe!!.image)
+            .load(recipe.image)
             .into(binding.recipeImage)
     }
 
     private fun displayAiRecipeInfo(recipe: AiRecipe) {
         Glide.with(binding.root)
-            .load(recipe!!.image)
+            .load(recipe.image)
             .into(binding.recipeImage)
     }
 }

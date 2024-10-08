@@ -2,21 +2,20 @@ package com.example.recipeapp.ui.searchFragment.searchByNameFragment
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.Recipe
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 class SearchByNameViewModel(private val repository: Repository): ViewModel() {
 
-    fun searchRecipesByName(recipeName: String):List<Recipe>{
-        var recipe:List<Recipe> = emptyList()
-        viewModelScope.launch{
-            recipe = repository.searchRecipesByName(recipeName)
+    suspend fun searchRecipesByName(recipeName: String):List<Recipe>{
+        return withContext(Dispatchers.IO){
+            repository.searchRecipesByName(recipeName)
         }
-        return recipe
     }
 
     fun autocompleteRecipeSearch(query: String): Flow<List<Recipe>> = flow {
@@ -27,5 +26,5 @@ class SearchByNameViewModel(private val repository: Repository): ViewModel() {
             Log.d("Error" , "Error in auto complete ingredients")
             emit(emptyList())
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }
