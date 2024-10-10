@@ -15,6 +15,10 @@ class ChatBotServiceViewModel (private val repository: Repository) : ViewModel()
 
     val recipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
+    companion object{
+        var cookingTipHistory = ""
+    }
+
     suspend fun getCrazyRecipe(ingredients: String): AiRecipe{
         return withContext(Dispatchers.IO) {
             val generativeModel = GenerativeModel(
@@ -103,14 +107,20 @@ class ChatBotServiceViewModel (private val repository: Repository) : ViewModel()
 
     suspend fun getCookingTip():String {
         return withContext(Dispatchers.IO) {
+            val user = repository.getUserById(AppUser.instance!!.userId!!)
+
             val generativeModel =
                 GenerativeModel(
                     modelName = "gemini-1.5-flash",
                     apiKey = "AIzaSyBygUzMLk3xTKkiiyC407TXuxI08eWPFec"
                 )
 
-            val prompt = "Give me a small Cooking tip that no one knows and will seem interesting and make it short and simple as far as you can and add emojis"
+            val prompt = "Give me a very small Cooking or health tip related to my goal: ${user!!.goal} and follows my diet type: ${user!!.dietType} I didn't hear it before with relevant emojis with a title related to its content other than those tips $cookingTipHistory and start the tip immediately without writing tip is and don't ask any questions"
             val response = generativeModel.generateContent(prompt)
+
+            cookingTipHistory += response.text.toString()
+            cookingTipHistory = cookingTipHistory.takeLast(3000)
+
             response.text.toString()
         }
     }
