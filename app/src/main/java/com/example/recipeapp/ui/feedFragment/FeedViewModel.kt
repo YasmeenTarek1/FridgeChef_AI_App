@@ -1,7 +1,6 @@
 package com.example.recipeapp.ui.feedFragment
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -12,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class FeedViewModel(application: Application ,private val repository: Repository) : AndroidViewModel(application) {
+class FeedViewModel(private val repository: Repository) : ViewModel() {
 
     val recipes: Flow<PagingData<Recipe>> = repository.getSimilarRecipesForFavorites(repository).cachedIn(viewModelScope)
     val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()

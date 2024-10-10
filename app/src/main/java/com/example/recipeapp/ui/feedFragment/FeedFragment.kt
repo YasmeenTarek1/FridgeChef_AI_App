@@ -54,7 +54,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         binding = FragmentFeedBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
-        val factory = FeedViewModelFactory(requireActivity().application , repository)
+        val factory = FeedViewModelFactory(repository)
         feedViewModel = ViewModelProvider(this, factory).get(FeedViewModel::class.java)
 
         feedAdapter = FeedAdapter(

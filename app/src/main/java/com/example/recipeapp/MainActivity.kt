@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.toBuyIngredientsFragment)
                     true
                 }
-                // Add other fragments if necessary
                 else -> false
             }
         }

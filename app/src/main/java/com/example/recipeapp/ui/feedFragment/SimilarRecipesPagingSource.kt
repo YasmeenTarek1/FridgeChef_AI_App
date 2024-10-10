@@ -1,4 +1,3 @@
-
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -6,15 +5,14 @@ import com.example.recipeapp.AppUser
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.DetailedRecipeResponse
 import com.example.recipeapp.api.model.Recipe
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 class SimilarRecipesPagingSource(private val repository: Repository) : PagingSource<Int, Recipe>() {
 
-    private val takenIDs = mutableSetOf<Int>() // to not repeat a fav recipe
-    private val currentRecipes = mutableSetOf<Int>() // to not repeat a result recipe
+    companion object {
+        private val takenIDs = mutableSetOf<Int>() // to not repeat a fav recipe
+        private val currentRecipes = mutableSetOf<Int>() // to not repeat a result recipe
+    }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Recipe> {
         return try {
@@ -23,7 +21,7 @@ class SimilarRecipesPagingSource(private val repository: Repository) : PagingSou
             var recipeId = 0
 
             // Collect all favorite recipes (Cold Stream)
-            val favoriteRecipes = repository.getAllFavoriteRecipes().first() // Ensure this collects all
+            val favoriteRecipes = repository.getAllFavoriteRecipes().first()
             currentRecipes.addAll(favoriteRecipes.map { it.id })
 
             // Get another favorite recipe that wasn't handled before
@@ -42,29 +40,24 @@ class SimilarRecipesPagingSource(private val repository: Repository) : PagingSou
             var diet: String? = repository.getUserById(AppUser.instance!!.userId!!)?.dietType?.lowercase()
             if (diet == "balanced") diet = null
 
-            response = repository.getRandomRecipes(diet = diet).toMutableList()
-
-            // If a favorite recipe was found, fetch similar recipes
+            // If there is still a favorite recipe that isn't processed, fetch similar recipes
             if (taken) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    var recipes: List<Recipe> = repository.getSimilarRecipes(recipeId = recipeId)
+                val recipes = repository.getSimilarRecipes(recipeId = recipeId).toMutableList()
 
-                    // Filter out already present recipes
-                    recipes = recipes.filterNot { currentRecipes.contains(it.id) }.toMutableList()
-                    // Update current recipes to prevent duplicates
-                    currentRecipes.addAll(response.map { it.id })
+                // Filter out already present recipes
+                response = recipes.filterNot { currentRecipes.contains(it.id) }.toMutableList()
+                // Update current recipes to prevent duplicates
+                currentRecipes.addAll(response.map { it.id })
 
-                    recipes.forEach { recipe ->
-                        val detailedRecipe: DetailedRecipeResponse =
-                            repository.getRecipeInfo(recipe.id)
-                        recipe.image = detailedRecipe.image
-                        recipe.healthScore = detailedRecipe.healthScore.toDouble()
-                    }
-                    response = recipes.toMutableList()
+                response.forEach { recipe ->
+                    val detailedRecipe: DetailedRecipeResponse = repository.getRecipeInfo(recipe.id)
+                    recipe.image = detailedRecipe.image
+                    recipe.healthScore = detailedRecipe.healthScore.toDouble()
                 }
+            } else {
+                response = repository.getRandomRecipes(diet = diet).toMutableList()
             }
 
-            // Return page data
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 1) null else page - 1, // Handle first page

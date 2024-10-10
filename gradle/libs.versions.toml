@@ -33,6 +33,9 @@ navigationSafeArgsGradlePlugin = "2.8.0"
 navigationSafeArgsGradlePluginVersion = "1.0.0"
 pagingRuntime = "3.3.2"
 playServicesAuth = "21.2.0"
+playServicesAuthVersion = "20.5.0"
+playServicesBase = "18.5.0"
+playServicesMaps = "19.0.0"
 playServicesMlkitImageLabeling = "16.0.8"
 retrofit = "2.11.0"
 roomRuntime = "2.6.1"
@@ -88,6 +91,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+play-services-auth-v2050 = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuthVersion" }
+play-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBase" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 play-services-mlkit-image-labeling = { module = "com.google.android.gms:play-services-mlkit-image-labeling", version.ref = "playServicesMlkitImageLabeling" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }

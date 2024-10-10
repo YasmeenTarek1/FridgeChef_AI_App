@@ -123,5 +123,4 @@ dependencies {
 
     //Firebase Storage
     implementation(libs.firebase.storage)
-
 }
