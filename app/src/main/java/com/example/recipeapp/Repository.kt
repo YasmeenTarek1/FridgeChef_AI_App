@@ -1,6 +1,7 @@
 package com.example.recipeapp
 
 import SimilarRecipesPagingSource
+import android.content.Context
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -22,6 +23,7 @@ import com.example.recipeapp.room_DB.model.CookedRecipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
 import com.example.recipeapp.room_DB.model.UserInfo
+import com.example.recipeapp.sharedPrefrences.SharedPreferences
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -90,10 +92,10 @@ class Repository(
     }
 
     // Implementing Paging for similar recipes
-    fun getSimilarRecipesForFavorites(repository: Repository): Flow<PagingData<Recipe>> {
+    fun getSimilarRecipesForFavorites(repository: Repository , context: Context): Flow<PagingData<Recipe>> {
         return Pager(
             config = PagingConfig(pageSize = 5, enablePlaceholders = false),
-            pagingSourceFactory = { SimilarRecipesPagingSource(repository) }
+            pagingSourceFactory = { SimilarRecipesPagingSource(repository , SharedPreferences(context)) }
         ).flow
     }
 

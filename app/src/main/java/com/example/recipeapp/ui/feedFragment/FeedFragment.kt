@@ -23,6 +23,7 @@ import com.example.recipeapp.Repository
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentFeedBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
+import com.example.recipeapp.sharedPrefrences.SharedPreferences
 import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import com.facebook.login.LoginManager
 import com.google.firebase.Firebase
@@ -47,6 +48,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     private val runnable = Runnable {
         tooltipWindow?.dismiss()
     }
+    private var isFetchingTip = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,7 +56,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         binding = FragmentFeedBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
-        val factory = FeedViewModelFactory(repository)
+        val factory = FeedViewModelFactory(repository , requireActivity().application)
         feedViewModel = ViewModelProvider(this, factory).get(FeedViewModel::class.java)
 
         feedAdapter = FeedAdapter(
@@ -120,7 +122,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     }
 
     private fun showCookingTip() {
-        val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
+        val chatBotServiceViewModel = ChatBotServiceViewModel(repository , SharedPreferences(requireContext()))
 
         val inflater = LayoutInflater.from(context)
         val dialogView = inflater.inflate(R.layout.cooking_tip_dialog, null)
@@ -135,12 +137,18 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             dialog.show()
 
             tipTextView.text = "Loading..."
-            val tip:String = chatBotServiceViewModel.getCookingTip()
-            val markwon = Markwon.create(requireContext())
-            markwon.setMarkdown(tipTextView , tip)
+                try {
+                    isFetchingTip = true
+                    val tip: String = chatBotServiceViewModel.getCookingTip()
+                    val markwon = Markwon.create(requireContext())
+                    markwon.setMarkdown(tipTextView, tip)
+                } finally {
+                    isFetchingTip = false
+                }
 
             gotItButton.setOnClickListener {
-                dialog.dismiss()
+                if (!isFetchingTip)
+                    dialog.dismiss()
             }
         }
     }

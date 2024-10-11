@@ -1,3 +1,4 @@
+
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -5,14 +6,13 @@ import com.example.recipeapp.AppUser
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.DetailedRecipeResponse
 import com.example.recipeapp.api.model.Recipe
+import com.example.recipeapp.sharedPrefrences.SharedPreferences
 import kotlinx.coroutines.flow.first
 
-class SimilarRecipesPagingSource(private val repository: Repository) : PagingSource<Int, Recipe>() {
+class SimilarRecipesPagingSource(private val repository: Repository , private val sharedPreferences: SharedPreferences) : PagingSource<Int, Recipe>() {
 
-    companion object {
-        private val takenIDs = mutableSetOf<Int>() // to not repeat a fav recipe
-        private val currentRecipes = mutableSetOf<Int>() // to not repeat a result recipe
-    }
+    private val takenIDs: MutableSet<Int> = sharedPreferences.getTakenIDs().toMutableSet()
+    private val currentRecipesIDs: MutableSet<Int> = sharedPreferences.getCurrentRecipesIDs().toMutableSet()
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Recipe> {
         return try {
@@ -22,7 +22,7 @@ class SimilarRecipesPagingSource(private val repository: Repository) : PagingSou
 
             // Collect all favorite recipes (Cold Stream)
             val favoriteRecipes = repository.getAllFavoriteRecipes().first()
-            currentRecipes.addAll(favoriteRecipes.map { it.id })
+            currentRecipesIDs.addAll(favoriteRecipes.map { it.id })
 
             // Get another favorite recipe that wasn't handled before
             for (favorite in favoriteRecipes) {
@@ -45,9 +45,9 @@ class SimilarRecipesPagingSource(private val repository: Repository) : PagingSou
                 val recipes = repository.getSimilarRecipes(recipeId = recipeId).toMutableList()
 
                 // Filter out already present recipes
-                response = recipes.filterNot { currentRecipes.contains(it.id) }.toMutableList()
+                response = recipes.filterNot { currentRecipesIDs.contains(it.id) }.toMutableList()
                 // Update current recipes to prevent duplicates
-                currentRecipes.addAll(response.map { it.id })
+                currentRecipesIDs.addAll(response.map { it.id })
 
                 response.forEach { recipe ->
                     val detailedRecipe: DetailedRecipeResponse = repository.getRecipeInfo(recipe.id)
@@ -57,6 +57,10 @@ class SimilarRecipesPagingSource(private val repository: Repository) : PagingSou
             } else {
                 response = repository.getRandomRecipes(diet = diet).toMutableList()
             }
+
+            sharedPreferences.saveTakenIDs(takenIDs)
+            sharedPreferences.saveCurrentRecipesIDs(currentRecipesIDs)
+
 
             LoadResult.Page(
                 data = response,

@@ -14,6 +14,8 @@ import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentChatBotBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.room_DB.model.AiRecipe
+import com.example.recipeapp.sharedPrefrences.SharedPreferences
+import com.facebook.share.Share
 import kotlinx.coroutines.launch
 
 class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
@@ -29,7 +31,7 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
         binding = FragmentChatBotBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
-        val factory = ChatBotServiceViewModelFactory(repository)
+        val factory = ChatBotServiceViewModelFactory(repository , SharedPreferences(requireContext()))
         viewModel = ViewModelProvider(this, factory).get(ChatBotServiceViewModel::class.java)
 
         classification = args.classification

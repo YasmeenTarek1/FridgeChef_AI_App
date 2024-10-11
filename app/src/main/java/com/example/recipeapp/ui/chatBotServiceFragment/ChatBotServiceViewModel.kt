@@ -6,18 +6,15 @@ import com.example.recipeapp.AppUser
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.DetailedRecipeResponse
 import com.example.recipeapp.room_DB.model.AiRecipe
+import com.example.recipeapp.sharedPrefrences.SharedPreferences
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class ChatBotServiceViewModel (private val repository: Repository) : ViewModel() {
+class ChatBotServiceViewModel (private val repository: Repository , private val sharedPreferences: SharedPreferences) : ViewModel() {
 
     val recipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
-
-    companion object{
-        var cookingTipHistory = ""
-    }
 
     suspend fun getCrazyRecipe(ingredients: String): AiRecipe{
         return withContext(Dispatchers.IO) {
@@ -108,6 +105,7 @@ class ChatBotServiceViewModel (private val repository: Repository) : ViewModel()
     suspend fun getCookingTip():String {
         return withContext(Dispatchers.IO) {
             val user = repository.getUserById(AppUser.instance!!.userId!!)
+            var cookingTipHistory: String = sharedPreferences.getCookingTipsHistory().toString()
 
             val generativeModel =
                 GenerativeModel(
@@ -115,12 +113,13 @@ class ChatBotServiceViewModel (private val repository: Repository) : ViewModel()
                     apiKey = "AIzaSyBygUzMLk3xTKkiiyC407TXuxI08eWPFec"
                 )
 
-            val prompt = "Give me a very small Cooking or health tip related to my goal: ${user!!.goal} and follows my diet type: ${user!!.dietType} I didn't hear it before with relevant emojis with a title related to its content other than those tips $cookingTipHistory and start the tip immediately without writing tip is and don't ask any questions"
+            val prompt = "Give me a short unique professional cooking or health tip no one knows decorated with relevant emojis, follows my diet type: ${user!!.dietType}, excluding all tips similar to these $cookingTipHistory by choosing completely different ingredients, separate between the title and the content start the tip immediately without asking any questions"
             val response = generativeModel.generateContent(prompt)
 
-            cookingTipHistory += response.text.toString()
+            cookingTipHistory += ", ${response.text.toString()}"
             cookingTipHistory = cookingTipHistory.takeLast(3000)
 
+            sharedPreferences.saveCookingTipsHistory(cookingTipHistory)
             response.text.toString()
         }
     }

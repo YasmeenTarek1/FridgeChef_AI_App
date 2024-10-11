@@ -21,7 +21,7 @@ interface ApiService {
     // b6a39b82b408445f9100f6e8a7436249
     // e46d27c80c5c41948205811245e738f0
     companion object{
-        const val API_KEY = "a547ab5aeb1d4f48a8bb7345e388cfc8"
+        const val API_KEY = "e46d27c80c5c41948205811245e738f0"
     }
 
     @GET("recipes/{id}/similar")
@@ -84,7 +84,6 @@ interface ApiService {
         @Query("random") random: Boolean = true
     ) : List<Recipe>
 
-
     @GET("food/ingredients/search")
     suspend fun autocompleteIngredientSearch(
         @Query("apiKey") apiKey: String = API_KEY,
@@ -99,9 +98,6 @@ interface ApiService {
         @Query("number") number: Int = 5
     ): List<Recipe>
 
-
-    // GET  https://www.googleapis.com/
-
     @GET("customsearch/v1")
     suspend fun getAiImageForRecipeTitle(
         @Query("key") apiKey: String = "AIzaSyBXAW4Ybjb3iLqiOgC7-irQijjSczuWs90",
@@ -110,5 +106,4 @@ interface ApiService {
         @Query("cx") cx: String = "d7935696c02424683",
         @Query("searchType") searchType: String = "image"
     ): CustomSearchResponse
-
 }
