@@ -1,1 +1,1 @@
-# RecipeApp
+# FridgeChef AI App
