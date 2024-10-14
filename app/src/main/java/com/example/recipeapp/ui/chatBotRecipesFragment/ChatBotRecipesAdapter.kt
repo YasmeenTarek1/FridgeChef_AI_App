@@ -9,8 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeapp.databinding.AiRecipeItemBinding
 import com.example.recipeapp.room_DB.model.AiRecipe
+import com.example.recipeapp.ui.favoriteRecipesFragment.FavoriteRecipesViewModel
+import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
+import kotlinx.coroutines.runBlocking
 
-class ChatBotRecipesAdapter : RecyclerView.Adapter<ChatBotRecipesAdapter.ChatBotViewHolder>() {
+class ChatBotRecipesAdapter(private val viewModel: ChatBotRecipesViewModel): RecyclerView.Adapter<ChatBotRecipesAdapter.ChatBotViewHolder>() {
+
+    private val viewBinderHelper = ViewBinderHelper()
 
     val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<AiRecipe>() {
         override fun areItemsTheSame(oldItem: AiRecipe, newItem: AiRecipe): Boolean {
@@ -23,6 +28,7 @@ class ChatBotRecipesAdapter : RecyclerView.Adapter<ChatBotRecipesAdapter.ChatBot
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatBotViewHolder {
+        viewBinderHelper.setOpenOnlyOne(true) // Ensure only one swipe action is open at a time
         return ChatBotViewHolder(AiRecipeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
@@ -34,16 +40,33 @@ class ChatBotRecipesAdapter : RecyclerView.Adapter<ChatBotRecipesAdapter.ChatBot
         val aiRecipe = differ.currentList[position]
         val binding = holder.itemBinding
 
+        // Bind the swipe layout to ensure that each item has a unique identifier for swipe actions
+        viewBinderHelper.bind(binding.swipeLayout, aiRecipe.id.toString())
+
         Glide.with(binding.root)
             .load(aiRecipe.image)
             .into(binding.recipeImage)
 
         binding.recipe = aiRecipe
 
+        binding.delete.setOnClickListener {
+            runBlocking {
+                viewModel.deleteRecipe(aiRecipe)
+            }
+            removeItem(position)
+        }
+
+
         holder.itemView.setOnClickListener { view ->
             val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(aiRecipe.id , null)
             view.findNavController().navigate(action)
         }
+    }
+
+    private fun removeItem(position: Int) {
+        val currentList = differ.currentList.toMutableList()
+        currentList.removeAt(position)
+        differ.submitList(currentList)
     }
 
     inner class ChatBotViewHolder(val itemBinding: AiRecipeItemBinding) : RecyclerView.ViewHolder(itemBinding.root)

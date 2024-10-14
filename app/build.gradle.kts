@@ -40,7 +40,6 @@ android {
     }
     buildFeatures{
         dataBinding = true
-        mlModelBinding = true
     }
 }
 
@@ -53,9 +52,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.image.labeling.common)
-    implementation(libs.tensorflow.lite.support)
-    implementation(libs.tensorflow.lite.metadata)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -123,4 +120,7 @@ dependencies {
 
     //Firebase Storage
     implementation(libs.firebase.storage)
+
+    implementation(libs.swipereveallayout)
+
 }

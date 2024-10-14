@@ -6,7 +6,7 @@ import com.example.recipeapp.AppUser
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.DetailedRecipeResponse
 import com.example.recipeapp.room_DB.model.AiRecipe
-import com.example.recipeapp.sharedPrefrences.SharedPreferences
+import com.example.recipeapp.sharedPreferences.SharedPreferences
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

@@ -9,58 +9,129 @@
             type="com.example.recipeapp.room_DB.model.AiRecipe" />
     </data>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+    <io.github.rexmtorres.android.swipereveallayout.SwipeRevealLayout
+        android:id="@+id/swipeLayout"
         android:layout_width="380dp"
-        android:layout_height="125dp"
+        android:layout_height="90dp"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="15dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="2dp">
+        app:mode="normal"
+        app:dragEdge="right">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <!-- Your secondary layout here -->
+        <LinearLayout
+            android:layout_width="70dp"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/recipeImage"
-                android:layout_width="185dp"
-                android:layout_height="187dp"
-                android:layout_marginEnd="240dp"
-                android:layout_marginBottom="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.468" />
+            <ImageButton
+                android:id="@+id/delete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/trash"
+                android:background="#FEFFF8"/>
 
-            <TextView
-                android:id="@+id/recipeTitle"
-                android:layout_width="165dp"
-                android:layout_height="36dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="50dp"
-                android:textColor="#FF5C67"
-                android:textSize="14dp"
-                android:text = "@{recipe.title}"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/servings"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
-                android:textColor="#000000"
-                android:textSize="12dp"
-                android:text = "@{`Servings: ` + recipe.servings}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Your main layout here -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="380dp"
+            android:layout_height="90dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="2dp"
+            android:background="#e6e6e7">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#e6e6e7">
+
+                <ImageView
+                    android:id="@+id/recipeImage"
+                    android:layout_width="185dp"
+                    android:layout_height="187dp"
+                    android:layout_marginEnd="224dp"
+                    android:layout_marginBottom="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.469" />
+
+                <TextView
+                    android:id="@+id/recipeTitle"
+                    android:layout_width="190dp"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="10dp"
+                    android:text="@{recipe.title}"
+                    android:textColor="#ff5c67"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/recipeImage"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/readyInMinutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="3dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/clock"
+                    app:layout_constraintStart_toEndOf="@+id/clock"
+                    app:layout_constraintTop_toTopOf="@+id/clock"
+                    app:layout_constraintVertical_bias="1.0"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#ff5c67"
+                    android:text="@{recipe.readyInMinutes.toString()}"/>
 
-    </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/servings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="3dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/servingsImage"
+                    app:layout_constraintStart_toEndOf="@+id/servingsImage"
+                    app:layout_constraintTop_toTopOf="@+id/servingsImage"
+                    app:layout_constraintVertical_bias="0.666"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#ff5c67"
+                    android:text="@{recipe.servings.toString()}"/>
+
+                <ImageView
+                    android:id="@+id/clock"
+                    android:layout_width="22dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="320dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/clock_three"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/servingsImage"
+                    android:layout_width="21dp"
+                    android:layout_height="19dp"
+                    android:layout_marginStart="260dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/plate_eating"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+    </io.github.rexmtorres.android.swipereveallayout.SwipeRevealLayout>
+
+
+
 </layout>
+
+
 

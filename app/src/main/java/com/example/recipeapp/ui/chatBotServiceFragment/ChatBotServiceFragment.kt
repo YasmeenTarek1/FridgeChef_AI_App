@@ -14,8 +14,7 @@ import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentChatBotBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.room_DB.model.AiRecipe
-import com.example.recipeapp.sharedPrefrences.SharedPreferences
-import com.facebook.share.Share
+import com.example.recipeapp.sharedPreferences.SharedPreferences
 import kotlinx.coroutines.launch
 
 class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {

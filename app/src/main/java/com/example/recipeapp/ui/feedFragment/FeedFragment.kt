@@ -23,7 +23,7 @@ import com.example.recipeapp.Repository
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentFeedBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
-import com.example.recipeapp.sharedPrefrences.SharedPreferences
+import com.example.recipeapp.sharedPreferences.SharedPreferences
 import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import com.facebook.login.LoginManager
 import com.google.firebase.Firebase
@@ -137,14 +137,14 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             dialog.show()
 
             tipTextView.text = "Loading..."
-                try {
-                    isFetchingTip = true
-                    val tip: String = chatBotServiceViewModel.getCookingTip()
-                    val markwon = Markwon.create(requireContext())
-                    markwon.setMarkdown(tipTextView, tip)
-                } finally {
-                    isFetchingTip = false
-                }
+            try {
+                isFetchingTip = true
+                val tip: String = chatBotServiceViewModel.getCookingTip()
+                val markwon = Markwon.create(requireContext())
+                markwon.setMarkdown(tipTextView, tip)
+            } finally {
+                isFetchingTip = false
+            }
 
             gotItButton.setOnClickListener {
                 if (!isFetchingTip)

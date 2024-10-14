@@ -22,6 +22,7 @@ class FavoriteRecipesFragment : Fragment(R.layout.fragment_favorite_recipes) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var favoriteRecipesAdapter: FavoriteRecipesAdapter
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -31,13 +32,12 @@ class FavoriteRecipesFragment : Fragment(R.layout.fragment_favorite_recipes) {
         val factory = FavoriteRecipesViewModelFactory(repository)
         favViewModel = ViewModelProvider(this, factory).get(FavoriteRecipesViewModel::class.java)
 
-        favoriteRecipesAdapter = FavoriteRecipesAdapter()
+        favoriteRecipesAdapter = FavoriteRecipesAdapter(favViewModel)
 
         recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.setAdapter(favoriteRecipesAdapter)
-
+        recyclerView.adapter = favoriteRecipesAdapter
 
         lifecycleScope.launch {
             favViewModel.recipes.collect { recipes ->
@@ -45,4 +45,5 @@ class FavoriteRecipesFragment : Fragment(R.layout.fragment_favorite_recipes) {
             }
         }
     }
+
 }

@@ -23,7 +23,7 @@ import com.example.recipeapp.room_DB.model.CookedRecipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
 import com.example.recipeapp.room_DB.model.UserInfo
-import com.example.recipeapp.sharedPrefrences.SharedPreferences
+import com.example.recipeapp.sharedPreferences.SharedPreferences
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -200,7 +200,7 @@ class Repository(
 
     fun getAllAiRecipes(): Flow<List<AiRecipe>> = aiRecipesDao.getAllAiRecipes()
 
-    suspend fun deleteIngredient(aiRecipe: AiRecipe) = aiRecipesDao.deleteAiRecipe(aiRecipe)
+    suspend fun deleteAiRecipe(aiRecipe: AiRecipe) = aiRecipesDao.deleteAiRecipe(aiRecipe)
 
     // User-related functions
 
