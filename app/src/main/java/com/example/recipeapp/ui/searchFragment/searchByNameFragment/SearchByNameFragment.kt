@@ -9,12 +9,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentSearchByNameBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchByNameFragment : Fragment(R.layout.fragment_search_by_name) {
 
@@ -36,6 +39,18 @@ class SearchByNameFragment : Fragment(R.layout.fragment_search_by_name) {
         searchView = binding.searchView
         recyclerView = binding.recyclerView
 
+        searchView.isIconified = false
+        searchView.clearFocus()
+
+        lifecycleScope.launch {
+            binding.hello.text = "Hello, ${viewModel.getUserName()}"
+            withContext(Dispatchers.Main) {
+                Glide.with(requireContext())
+                    .load(viewModel.getUserImage())
+                    .into(binding.userAvatar)
+            }
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter = SearchByNameAdapter()
         recyclerView.adapter = adapter
@@ -44,12 +59,8 @@ class SearchByNameFragment : Fragment(R.layout.fragment_search_by_name) {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
                     lifecycleScope.launch {
-                        adapter.differ.submitList(viewModel.searchRecipesByName(query))
-
-                        searchView.clearFocus() // Remove focus from the SearchView
-                        searchView.onActionViewCollapsed() // Collapse the SearchView
-
                         binding.optionsRecyclerView.visibility = View.INVISIBLE
+                        adapter.differ.submitList(viewModel.searchRecipesByName(query))
                     }
                 }
                 return true
@@ -63,7 +74,7 @@ class SearchByNameFragment : Fragment(R.layout.fragment_search_by_name) {
                 optionRecyclerView.setHasFixedSize(true)
 
                 val optionsAdapter = RecipeSuggestionsAdapter(onOptionClick = { chosenOption ->
-                    searchView.setQuery(chosenOption, false)
+                    searchView.setQuery(chosenOption, true)
                 })
                 optionRecyclerView.adapter = optionsAdapter
 

@@ -38,9 +38,7 @@ class SearchByNutrientsAdapter : RecyclerView.Adapter<SearchByNutrientsAdapter.S
 
         Glide.with(binding.root)
             .load(recipe.image)
-            .into(binding.imageView2)
-
-        binding.servings.text = "Servings: " + recipe.servings.toString()
+            .into(binding.recipeImage)
 
         holder.itemView.setOnClickListener { view ->
             val action = SearchByNutrientsFragmentDirections.actionSearchByNutrientsFragmentToRecipeDetailsFragment(recipe.id , null)

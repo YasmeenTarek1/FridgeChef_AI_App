@@ -36,11 +36,11 @@ class SearchByNameAdapter : RecyclerView.Adapter<SearchByNameAdapter.SearchByNam
 
         val binding = holder.itemBinding
 
+        binding.recipe = recipe
+
         Glide.with(binding.root)
             .load(recipe.image)
-            .into(binding.imageView2)
-
-        binding.servings.text = "Servings: " + recipe.servings.toString()
+            .into(binding.recipeImage)
 
         holder.itemView.setOnClickListener { view ->
             val action = SearchByNameFragmentDirections.actionSearchByNameFragmentToRecipeDetailsFragment(recipe.id , null)

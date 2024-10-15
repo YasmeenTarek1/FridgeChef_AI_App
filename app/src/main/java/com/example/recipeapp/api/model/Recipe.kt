@@ -17,7 +17,9 @@ data class Recipe(
     var healthScore: Double? = null,
     val ingredients: String? = null,  // Stored as a comma-separated string
     val steps: String? = null         // Stored as a comma-separated string
-): Parcelable
+): Parcelable{
+    constructor() : this(0, "","" , 0, 0, 0, null, null, 0.0, "")
+}
 
 
 

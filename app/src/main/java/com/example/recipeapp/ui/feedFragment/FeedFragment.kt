@@ -21,11 +21,13 @@ import com.example.recipeapp.AppUser
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.service.RetrofitInstance
+import com.example.recipeapp.databinding.DialogSearchOptionsBinding
 import com.example.recipeapp.databinding.FragmentFeedBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.sharedPreferences.SharedPreferences
 import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import com.facebook.login.LoginManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -119,6 +121,18 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         binding.cookingTipButton.setOnClickListener {
             showCookingTip()
         }
+
+        // Find the BottomNavigationView and attach the search item click listener directly
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val searchMenuItem = bottomNavigationView.menu.findItem(R.id.searchCategoryFragment)
+
+        searchMenuItem?.let {
+            searchMenuItem.setOnMenuItemClickListener {
+                showSearchOptionsDialog()
+                true
+            }
+        }
+
     }
 
     private fun showCookingTip() {
@@ -133,7 +147,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             val dialog = AlertDialog.Builder(context)
                 .setView(dialogView)
                 .create()
-            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent) // Make the window background transparent
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
             dialog.show()
 
             tipTextView.text = "Loading..."
@@ -178,5 +192,33 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         handler.postDelayed(runnable, durationMillis)
     }
 
+    private fun showSearchOptionsDialog() {
+        val dialogViewBinding = DialogSearchOptionsBinding.inflate(LayoutInflater.from(requireContext()))
+
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+            .setView(dialogViewBinding.root)
+            .create()
+
+        dialogViewBinding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.SearchByIngredientsRadioButton -> {
+                    findNavController().navigate(R.id.action_feedFragment_to_searchByIngredientsFragment)
+                    dialogBuilder.dismiss()
+                }
+
+                R.id.SearchByNutrientsRadioButton -> {
+                    findNavController().navigate(R.id.action_feedFragment_to_searchByNutrientsFragment)
+                    dialogBuilder.dismiss()
+                }
+
+                R.id.SearchByRecipeNameRadioButton -> {
+                    findNavController().navigate(R.id.action_feedFragment_to_searchByNameFragment)
+                    dialogBuilder.dismiss()
+                }
+            }
+        }
+
+        dialogBuilder.show()
+    }
 
 }

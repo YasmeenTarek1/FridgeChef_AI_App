@@ -55,6 +55,15 @@
         <action
             android:id="@+id/action_feedFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_searchByNameFragment"
+            app:destination="@id/searchByNameFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_searchByNutrientsFragment"
+            app:destination="@id/searchByNutrientsFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_searchByIngredientsFragment"
+            app:destination="@id/searchByIngredientsFragment" />
     </fragment>
     <fragment
         android:id="@+id/recipeDetailsFragment"
@@ -89,21 +98,6 @@
         <action
             android:id="@+id/action_recipeStepsFragment_to_feedFragment"
             app:destination="@id/feedFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/searchCategoryFragment"
-        android:name="com.example.recipeapp.ui.searchFragment.SearchCategoryFragment"
-        android:label="fragment_search_category"
-        tools:layout="@layout/fragment_search_category" >
-        <action
-            android:id="@+id/action_searchCategoryFragment_to_searchByNameFragment"
-            app:destination="@id/searchByNameFragment" />
-        <action
-            android:id="@+id/action_searchCategoryFragment_to_searchByNutrientsFragment"
-            app:destination="@id/searchByNutrientsFragment" />
-        <action
-            android:id="@+id/action_searchCategoryFragment_to_searchByIngredientsFragment"
-            app:destination="@id/searchByIngredientsFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchByIngredientsFragment"
