@@ -35,7 +35,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -92,10 +94,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
-                        lifecycleScope.launch {
+                        lifecycleScope.launch(Dispatchers.IO) {
                             AppUser.instance!!.userId = auth.currentUser?.uid
                             val userName = repository.getUserById(AppUser.instance!!.userId!!)!!.name
-                            Toast.makeText(requireContext(), "Welcome Back, ${userName}", Toast.LENGTH_SHORT).show()
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Welcome Back, $userName",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                         fetchUserInfoFromFirestoreAndSyncWithRoom() // It's already collected before
                         goToHomePage()

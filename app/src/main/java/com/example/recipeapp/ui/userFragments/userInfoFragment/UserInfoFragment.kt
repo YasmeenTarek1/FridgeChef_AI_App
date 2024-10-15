@@ -155,7 +155,7 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
     }
 
     private fun saveUserInfoInFirestoreAndRoom(userinfo:UserInfo) {
-        viewModel.updateUser(userinfo)
+        viewModel.insertUser(userinfo)
         val firestore = FirebaseFirestore.getInstance()
 
         firestore.collection("users").document(userinfo.id)

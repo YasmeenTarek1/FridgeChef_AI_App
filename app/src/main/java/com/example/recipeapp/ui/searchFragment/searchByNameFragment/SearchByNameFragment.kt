@@ -62,6 +62,7 @@ class SearchByNameFragment : Fragment(R.layout.fragment_search_by_name) {
                         binding.optionsRecyclerView.visibility = View.INVISIBLE
                         adapter.differ.submitList(viewModel.searchRecipesByName(query))
                     }
+                    searchView.setQuery("", false)
                 }
                 return true
             }

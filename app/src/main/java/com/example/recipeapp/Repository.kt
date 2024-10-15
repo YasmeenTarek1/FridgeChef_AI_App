@@ -210,6 +210,8 @@ class Repository(
 
     suspend fun getUserById(userId: String): UserInfo? = userDao.getUserById(userId)
 
+    // Listening for Firestore changes
+
     fun listenForFirestoreChangesInCookedRecipes() {
         val firestore = FirebaseFirestore.getInstance()
         val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
@@ -365,6 +367,8 @@ class Repository(
             }
         }
     }
+
+    // Saving new info added in Room DB in firestore
 
     fun updateFavRecipesInFirestore(roomRecipes: List<FavoriteRecipe>) {
         val firestore = FirebaseFirestore.getInstance()

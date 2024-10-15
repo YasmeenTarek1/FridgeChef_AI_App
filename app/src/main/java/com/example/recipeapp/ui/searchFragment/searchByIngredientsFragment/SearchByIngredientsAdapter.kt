@@ -36,6 +36,8 @@ class SearchByIngredientsAdapter : RecyclerView.Adapter<SearchByIngredientsAdapt
 
         val binding = holder.itemBinding
 
+        binding.recipe = recipe
+
         Glide.with(binding.root)
             .load(recipe.image)
             .into(binding.recipeImage)

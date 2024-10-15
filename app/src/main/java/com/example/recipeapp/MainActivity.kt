@@ -1,12 +1,15 @@
 package com.example.recipeapp
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.recipeapp.databinding.ActivityMainBinding
+import com.example.recipeapp.databinding.DialogSearchOptionsBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 
@@ -14,7 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +34,6 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.feedFragment -> {
-                    binding.bottomNavigation.visibility = BottomNavigationView.VISIBLE
-                }
-                R.id.searchCategoryFragment -> {
                     binding.bottomNavigation.visibility = BottomNavigationView.VISIBLE
                 }
                 R.id.userProfileFragment -> {
@@ -62,12 +61,12 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.specialRecipesFragment)
                     true
                 }
-                R.id.searchCategoryFragment -> {
-                    navController.navigate(R.id.searchCategoryFragment)
-                    true
-                }
                 R.id.userProfileFragment -> {
                     navController.navigate(R.id.userProfileFragment)
+                    true
+                }
+                R.id.searchCategoryFragment -> {
+                    showSearchOptionsDialog()
                     true
                 }
                 R.id.toBuyIngredientsFragment -> {
@@ -77,7 +76,36 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
         FirebaseApp.initializeApp(this)
     }
+
+    private fun showSearchOptionsDialog() {
+        val dialogViewBinding = DialogSearchOptionsBinding.inflate(LayoutInflater.from(this))
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogViewBinding.root)
+            .create()
+
+        dialogViewBinding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.SearchByIngredientsRadioButton -> {
+                    navController.navigate(R.id.searchByIngredientsFragment)
+                    dialogBuilder.dismiss()
+                }
+
+                R.id.SearchByNutrientsRadioButton -> {
+                    navController.navigate(R.id.searchByNutrientsFragment)
+                    dialogBuilder.dismiss()
+                }
+
+                R.id.SearchByRecipeNameRadioButton -> {
+                    navController.navigate(R.id.searchByNameFragment)
+                    dialogBuilder.dismiss()
+                }
+            }
+        }
+
+        dialogBuilder.show()
+    }
+
 }
