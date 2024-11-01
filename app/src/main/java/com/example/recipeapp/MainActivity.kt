@@ -54,13 +54,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         bottomNavigationView.setOnItemSelectedListener { item ->
+            // Create NavOptions with launchSingleTop
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true) // Prevents reloading if already on the fragment
+                .build()
+
             when (item.itemId) {
                 R.id.feedFragment -> {
-                    // Create NavOptions with launchSingleTop
-                    val navOptions = NavOptions.Builder()
-                        .setLaunchSingleTop(true) // Prevents reloading if already on feedFragment
-                        .build()
-
                     // Navigate only if the current destination is not the feedFragment
                     if (navController.currentDestination?.id != R.id.feedFragment) {
                         navController.navigate(R.id.feedFragment, null, navOptions)
@@ -68,11 +68,17 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.specialRecipesFragment -> {
-                    navController.navigate(R.id.specialRecipesFragment)
+                    // Navigate only if the current destination is not the specialRecipesFragment
+                    if (navController.currentDestination?.id != R.id.specialRecipesFragment) {
+                        navController.navigate(R.id.specialRecipesFragment, null, navOptions)
+                    }
                     true
                 }
                 R.id.userProfileFragment -> {
-                    navController.navigate(R.id.userProfileFragment)
+                    // Navigate only if the current destination is not the userProfileFragment
+                    if (navController.currentDestination?.id != R.id.userProfileFragment) {
+                        navController.navigate(R.id.userProfileFragment, null, navOptions)
+                    }
                     true
                 }
                 R.id.searchFragment -> {
@@ -80,7 +86,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.toBuyIngredientsFragment -> {
-                    navController.navigate(R.id.toBuyIngredientsFragment)
+                    // Navigate only if the current destination is not the toBuyIngredientsFragment
+                    if (navController.currentDestination?.id != R.id.toBuyIngredientsFragment) {
+                        navController.navigate(R.id.toBuyIngredientsFragment, null, navOptions)
+                    }
                     true
                 }
                 else -> false
@@ -92,7 +101,12 @@ class MainActivity : AppCompatActivity() {
                 val currentDestination = navController.currentDestination?.id
                 when (currentDestination) {
                     R.id.recipeDetailsFragment -> {
-                        navController.navigate(R.id.feedFragment)
+                        if (navController.previousBackStackEntry?.destination?.id == R.id.chatBotServiceFragment) {
+                            navController.navigate(R.id.feedFragment)
+                        }
+                        else {
+                            navController.popBackStack()
+                        }
                     }
                     R.id.feedFragment -> {
                         finish()
@@ -121,6 +135,7 @@ class MainActivity : AppCompatActivity() {
             dialogBuilder.window?.decorView?.translationX = 60f // Center X, adjust if needed
         }
 
+        val pastFragment = navController.currentDestination?.id!!
         var checked:Int = -1
         dialogViewBinding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -146,7 +161,7 @@ class MainActivity : AppCompatActivity() {
 
         dialogBuilder.setOnDismissListener {
             if(checked == -1){
-                binding.bottomNavigation.selectedItemId = R.id.feedFragment
+                binding.bottomNavigation.selectedItemId = pastFragment
             }
         }
 

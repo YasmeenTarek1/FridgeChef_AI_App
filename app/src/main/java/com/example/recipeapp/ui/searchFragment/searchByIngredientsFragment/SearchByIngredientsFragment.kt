@@ -2,6 +2,7 @@ package com.example.recipeapp.ui.searchFragment.searchByIngredientsFragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
@@ -18,6 +19,7 @@ import com.example.recipeapp.R
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.DialogChatBotIngredientsBinding
+import com.example.recipeapp.databinding.DialogNewIngredientsBinding
 import com.example.recipeapp.databinding.FragmentSearchByIngredientsBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.ui.searchFragment.searchByNameFragment.IngredientSuggestionsAdapter
@@ -30,14 +32,14 @@ import kotlinx.coroutines.withContext
 class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredients) {
 
     private lateinit var binding: FragmentSearchByIngredientsBinding
-    private lateinit var chipGroup: ChipGroup
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SearchByIngredientsViewModel
     private lateinit var adapter: SearchByIngredientsAdapter
-    private val ingredients = mutableListOf<String>()
     private lateinit var repository: Repository
     private lateinit var searchView: SearchView
     private lateinit var searchButton: ImageButton
+    private lateinit var ingredients1: MutableList<String>
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,8 +58,11 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         searchButton = binding.submit
         binding.submit.visibility = View.INVISIBLE
 
-        chipGroup = binding.chipGroup
+        ingredients1 = mutableListOf()
+        val chipGroup: ChipGroup = binding.chipGroup
+
         searchView = binding.searchView
+        searchView.setQuery("", false)
         searchView.isIconified = false
         searchView.clearFocus()
 
@@ -73,14 +78,9 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    if (!ingredients.contains(query)) {  // Check if the ingredient is already in the list
-                        lifecycleScope.launch {
-                            binding.optionsRecyclerView.visibility = View.INVISIBLE
-                            addChip(query)
-                            ingredients.add(query)
-                        }
-                        searchView.setQuery("", false)
-                    }
+                    binding.optionsRecyclerView.visibility = View.INVISIBLE
+                    addChip(query , chipGroup , ingredients1 , binding.submit)
+                    searchView.setQuery("", false)
                 }
                 return true
             }
@@ -97,7 +97,7 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
                 })
                 optionRecyclerView.adapter = optionsAdapter
 
-                // Use Flows to handle ingredient input changes and fetch predictions
+                // Using Flows to handle ingredient input changes and fetch predictions
                 lifecycleScope.launch {
                     viewModel.autocompleteIngredientSearch(newText.toString()).collect { options ->
                         optionsAdapter.differ.submitList(options)
@@ -109,34 +109,40 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
 
         binding.submit.setOnClickListener {
             lifecycleScope.launch {
-                adapter.differ.submitList(viewModel.searchRecipesByIngredients(ingredients))
+                adapter.differ.submitList(viewModel.searchRecipesByIngredients(ingredients1))
             }
         }
 
         binding.chatBotButton.setOnClickListener {
-            if(ingredients.isNotEmpty())
-                showIngredientOptionsDialog()
+            if(ingredients1.isEmpty())
+                showNewIngredientsDialog()
             else
-                findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(null ,null, 0))
+                showIngredientOptionsDialog()
         }
     }
 
-    private fun addChip(ingredient: String) {
-        val chip = LayoutInflater.from(requireContext()).inflate(R.layout.custom_chip, null) as Chip
-        chip.text = ingredient
-        chip.isCloseIconVisible = true
+    private fun addChip(ingredient: String , chipGroup: ChipGroup , ingredients: MutableList<String> , submit: ImageButton) {
+        if (ingredients.contains(ingredient) || ingredient.isEmpty()) // Check if the ingredient is already in the list
+            return
+        else {
+            ingredients.add(ingredient)
 
-        chip.setOnCloseIconClickListener {
-            ingredients.remove(ingredient)
-            chipGroup.removeView(chip)
-            ingredients.remove(ingredient)
+            val chip = LayoutInflater.from(requireContext()).inflate(R.layout.custom_chip, null) as Chip
+            chip.text = ingredient
+            chip.isCloseIconVisible = true
+
+            chip.setOnCloseIconClickListener {
+                ingredients.remove(ingredient)
+                chipGroup.removeView(chip)
+                ingredients.remove(ingredient)
+            }
+            chipGroup.addView(chip)
+
+            if (chipGroup.isEmpty())
+                submit.visibility = View.INVISIBLE
+            else
+                submit.visibility = View.VISIBLE
         }
-        chipGroup.addView(chip)
-
-        if(chipGroup.isEmpty())
-            binding.submit.visibility = View.INVISIBLE
-        else
-            binding.submit.visibility = View.VISIBLE
     }
 
     private fun showIngredientOptionsDialog() {
@@ -147,7 +153,6 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
             .create()
         dialogBuilder.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialogBuilder.setOnShowListener {
-            // Set translations
             dialogBuilder.window?.decorView?.translationX = 140f // Center X
         }
         dialogBuilder.show()
@@ -155,16 +160,53 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         dialogViewBinding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.SearchByOtherIngredientsRadioButton -> {
-                    findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(null,null, 0))
+                    showNewIngredientsDialog()
                     dialogBuilder.dismiss()
                 }
 
                 R.id.SearchByEnteredIngredientsRadioButton -> {
-                    findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(ingredients.toString(), null, 0))
+                    findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(ingredients1.toString(), null, 0))
                     dialogBuilder.dismiss()
                 }
             }
         }
     }
 
+    private fun showNewIngredientsDialog() {
+        searchView.setQuery("", false)
+        searchView.clearFocus()
+
+        val ingredients2: MutableList<String> = mutableListOf()
+
+        val dialogViewBinding = DialogNewIngredientsBinding.inflate(LayoutInflater.from(requireContext()))
+
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+            .setView(dialogViewBinding.root)
+            .create()
+        dialogBuilder.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialogBuilder.setOnShowListener {
+            dialogBuilder.window?.decorView?.translationX = 60f // Center X
+        }
+        dialogBuilder.show()
+
+        dialogViewBinding.editText.setOnEditorActionListener { _, actionId, event ->
+            if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER) {
+                val inputText = dialogViewBinding.editText.text.toString()
+
+                addChip(inputText , dialogViewBinding.chipGroup , ingredients2 , dialogViewBinding.submit)
+
+                dialogViewBinding.editText.clearFocus()
+                dialogViewBinding.editText.text.clear()
+
+                true
+            } else {
+                false
+            }
+        }
+
+        dialogViewBinding.submit.setOnClickListener {
+            findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(ingredients2.toString(), null, 0))
+            dialogBuilder.dismiss()
+        }
+    }
 }

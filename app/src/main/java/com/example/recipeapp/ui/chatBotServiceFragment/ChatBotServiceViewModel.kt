@@ -27,9 +27,8 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             var history = ""
 
             // Title (String)
-            var prompt =
-                "Create a recipe no one has heard of using: $ingredients that matches my goal: ${user!!.goal} " +
-                        "and follows my diet type: ${user!!.dietType}. If any information is missing, just choose the option you want. " +
+            var prompt = "Create a recipe no one has heard of using: $ingredients that matches my goal: ${user!!.goal} " +
+                        "and follows my diet type: ${user!!.dietType}. If any information is missing, just guess the option you want. Don't ask any questions. " +
                         "Let's begin with the title of the recipe. Don't use any font styles"
             val title = generativeModel.generateContent(prompt).text.toString()
             history += "$prompt $title"
@@ -47,16 +46,14 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
                 generativeModel.generateContent(prompt).text!!.trim().toInt()
 
             // Ingredients (String separated by commas)
-            prompt =
-                "Give me the ingredients of this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
+            prompt = "Give me the ingredients of this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
             val ingredientsResponse = generativeModel.generateContent(prompt).text
             Log.d("Ingredients Tracing", ingredientsResponse.toString())
 
             history += "ingredients used: $ingredientsResponse"
 
             // Steps (String separated by commas)
-            prompt =
-                "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not in programming language. Start immediately with the steps."
+            prompt = "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not in programming language. Start immediately with the steps."
             val stepsResponse = generativeModel.generateContent(prompt).text
             Log.d("Steps Tracing", stepsResponse.toString())
 
@@ -94,8 +91,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
             val user = repository.getUserById(AppUser.instance!!.userId!!)
 
-            val prompt =
-                "Give me your summarized opinion in this recipe: $recipe and mention whether it matches the user's goal: ${user!!.goal}, the user's diet type: ${user!!.dietType} and if you have any small tweak to make it more related to user info given earlier, mention it"
+            val prompt = "Give me your summarized opinion in this recipe: $recipe and mention whether it matches the user's goal: ${user!!.goal}, the user's diet type: ${user!!.dietType} and if you have any small tweak to make it more related to user info given earlier, mention it"
             val response = generativeModel.generateContent(prompt)
             response.text.toString()
         }

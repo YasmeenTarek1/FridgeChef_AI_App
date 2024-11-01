@@ -121,6 +121,9 @@ dependencies {
     //Firebase Storage
     implementation(libs.firebase.storage)
 
+    // Swipe Reveal Layout
     implementation(libs.swipereveallayout)
 
+    // LottieFiles
+    implementation(libs.lottie)
 }

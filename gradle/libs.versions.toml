@@ -23,6 +23,7 @@ appcompat = "1.7.0"
 kotlinxCoroutinesAndroid = "1.8.1"
 ksp = "4.14.2"
 library = "1.2.0"
+lottie = "6.4.1"
 material = "1.12.0"
 activity = "1.9.2"
 constraintlayout = "2.1.4"
@@ -51,6 +52,7 @@ core = { module = "io.noties.markwon:core", version.ref = "core" }
 firebase-storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorage" }
 generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
 library = { module = "com.daimajia.swipelayout:library", version.ref = "library" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 navigation-safe-args-gradle-plugin = { module = "android.arch.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationSafeArgsGradlePluginVersion" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }

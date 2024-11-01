@@ -36,34 +36,16 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
 
         when(classification){
             0 -> {
-                generateRecipe(args.ingredients)
+                displayRecipe(args.ingredients)
             }
-            1 ->{
+            1 -> {
                 showRecipeOpinion(args.recipe!!)
             }
         }
     }
 
-    private fun generateRecipe(ingredients: String?) {
-        if(ingredients == null)
-            useNewIngredients()
-        else
-            displayRecipe(ingredients)
-    }
-
-    private fun useNewIngredients() {
-        binding.scrollView3.visibility = View.VISIBLE
-        binding.ingredientsInput.visibility = View.VISIBLE
-        binding.goCrazyButton.visibility = View.VISIBLE
-
-        binding.goCrazyButton.setOnClickListener {
-            displayRecipe(binding.ingredientsInput.text.toString())
-        }
-    }
-
     private fun displayRecipe(ingredients: String?){
-        binding.scrollView3.visibility = View.VISIBLE
-        binding.chatbotResponse.text = "Go Crazy Bot: Thinking..."
+        binding.lottieAnimationView.visibility = View.VISIBLE
 
         lifecycleScope.launch {
             val recipe:AiRecipe = viewModel.getCrazyRecipe(ingredients!!)
@@ -75,10 +57,10 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
 
     private fun showRecipeOpinion(recipe: DetailedRecipeResponse) {
         binding.scrollView3.visibility = View.VISIBLE
-        binding.chatbotResponse.text = "Go Crazy Bot: Thinking..."
+        binding.lottieAnimationView.visibility = View.VISIBLE
 
         lifecycleScope.launch {
-            val recipe:String = viewModel.getRecipeOpinion(recipe)
+            val recipe = viewModel.getRecipeOpinion(recipe)
             binding.chatbotResponse.text = recipe
         }
     }

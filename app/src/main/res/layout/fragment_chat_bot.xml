@@ -8,22 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="#FEFFF8"
         android:padding="8dp">
 
-
         <!-- Scrollable area for ChatGPT response -->
-
-        <EditText
-            android:id="@+id/ingredientsInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="24dp"
-            android:hint="Enter ingredients"
-            android:inputType="text"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="invisible" />
 
         <ScrollView
             android:id="@+id/scrollView3"
@@ -33,7 +21,6 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/ingredientsInput"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -50,20 +37,19 @@
                 android:textSize="16sp" />
         </ScrollView>
 
-        <Button
-            android:id="@+id/goCrazyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="13dp"
-            android:layout_marginBottom="26dp"
-            android:text="Go crazy"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieAnimationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/ingredientsInput"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView3"
-            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/chatbot"
             android:visibility="invisible"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
