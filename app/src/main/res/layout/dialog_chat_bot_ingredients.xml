@@ -6,61 +6,53 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="340dp"
-        android:background="@drawable/rounded_white_background"
-        android:paddingVertical="10dp">
+        android:maxWidth="275dp"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="5dp"
+        android:background="@drawable/rounded_white_background">
 
-        <TextView
+    <TextView
             android:id="@+id/tvDialogTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/font1"
-            android:text="Choose Search Option"
+            android:text="Search by"
             android:textColor="#901431"
-            android:textSize="16sp"
             android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:fontFamily="@font/font1"/>
 
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/tvDialogTitle"
-            app:layout_constraintStart_toStartOf="@+id/tvDialogTitle"
+            app:layout_constraintEnd_toEndOf="@id/tvDialogTitle"
+            app:layout_constraintStart_toStartOf="@id/tvDialogTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvDialogTitle">
 
             <RadioButton
-                android:id="@+id/SearchByIngredientsRadioButton"
+                android:id="@+id/SearchByEnteredIngredientsRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Search By Ingredients"
-                android:textSize="18sp"
+                android:text="Entered Ingredients"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="18sp"/>
 
             <RadioButton
-                android:id="@+id/SearchByNutrientsRadioButton"
+                android:id="@+id/SearchByOtherIngredientsRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Search By Nutrients"
-                android:textSize="18sp"
+                android:text="Other Ingredients"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <RadioButton
-                android:id="@+id/SearchByRecipeNameRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Search By Recipe Name"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="18sp"/>
 
         </RadioGroup>
 

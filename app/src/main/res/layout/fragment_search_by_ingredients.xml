@@ -65,6 +65,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.cardview.widget.CardView>
 
 
@@ -88,7 +89,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/searchView"
             app:layout_constraintStart_toStartOf="@+id/searchView"
-            app:layout_constraintTop_toBottomOf="@id/submit" />
+            app:layout_constraintTop_toBottomOf="@id/chipGroup" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/optionsRecyclerView"
@@ -101,14 +102,15 @@
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroup"
-            android:layout_width="370dp"
+            android:layout_width="340dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
+            app:layout_goneMarginStart="10dp"
             android:orientation="horizontal"
             app:chipSpacing="8dp"
+            android:layout_marginStart="17dp"
             app:chipSpacingVertical="-8dp"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchView"
             app:singleLine="false" />
@@ -117,14 +119,14 @@
             android:id="@+id/submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="21dp"
             android:src="@drawable/done"
             android:background="#FEFFF8"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/chipGroup"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroup"/>
+            app:layout_constraintTop_toBottomOf="@+id/searchView"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/chatBotButton"
@@ -138,7 +140,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:maxImageSize="38dp"
-            android:layout_marginBottom="10dp"
+            app:elevation="5dp"
+            android:padding="0dp"
+            android:layout_marginBottom="8dp"
             app:tint="@null" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

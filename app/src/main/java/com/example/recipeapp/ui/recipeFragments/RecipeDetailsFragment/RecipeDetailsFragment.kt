@@ -1,4 +1,4 @@
-package com.example.recipeapp.ui.recipeFragments.RecipeDetailsFregment
+package com.example.recipeapp.ui.recipeFragments.RecipeDetailsFragment
 
 import android.os.Bundle
 import android.view.View
@@ -66,12 +66,12 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         }
 
         binding.stepsButton.setOnClickListener {
-            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToRecipeStepsFragment(cookedrecipe!!.id , cookedrecipe)
+            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToRecipeStepsFragment(cookedrecipe!!.id , cookedrecipe!!)
             findNavController().navigate(action)
         }
 
         binding.aiOpinionButton.setOnClickListener {
-            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToChatBotServiceFragment(null , recipe, 2)
+            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToChatBotServiceFragment(null, recipe, 1)
             findNavController().navigate(action)
         }
     }

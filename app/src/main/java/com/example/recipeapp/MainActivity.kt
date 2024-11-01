@@ -3,9 +3,11 @@ package com.example.recipeapp
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.recipeapp.databinding.ActivityMainBinding
@@ -54,7 +56,15 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.feedFragment -> {
-                    navController.navigate(R.id.feedFragment)
+                    // Create NavOptions with launchSingleTop
+                    val navOptions = NavOptions.Builder()
+                        .setLaunchSingleTop(true) // Prevents reloading if already on feedFragment
+                        .build()
+
+                    // Navigate only if the current destination is not the feedFragment
+                    if (navController.currentDestination?.id != R.id.feedFragment) {
+                        navController.navigate(R.id.feedFragment, null, navOptions)
+                    }
                     true
                 }
                 R.id.specialRecipesFragment -> {
@@ -65,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.userProfileFragment)
                     true
                 }
-                R.id.searchCategoryFragment -> {
+                R.id.searchFragment -> {
                     showSearchOptionsDialog()
                     true
                 }
@@ -76,6 +86,27 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val currentDestination = navController.currentDestination?.id
+                when (currentDestination) {
+                    R.id.recipeDetailsFragment -> {
+                        navController.navigate(R.id.feedFragment)
+                    }
+                    R.id.feedFragment -> {
+                        finish()
+                    }
+                    else -> {
+                        // Pop the back stack
+                        if (navController.previousBackStackEntry != null) {
+                            navController.popBackStack()
+                        }
+                    }
+                }
+            }
+        })
+
         FirebaseApp.initializeApp(this)
     }
 
@@ -85,27 +116,40 @@ class MainActivity : AppCompatActivity() {
         val dialogBuilder = AlertDialog.Builder(this)
             .setView(dialogViewBinding.root)
             .create()
+        dialogBuilder.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialogBuilder.setOnShowListener {
+            dialogBuilder.window?.decorView?.translationX = 60f // Center X, adjust if needed
+        }
 
+        var checked:Int = -1
         dialogViewBinding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.SearchByIngredientsRadioButton -> {
+                    checked = checkedId
                     navController.navigate(R.id.searchByIngredientsFragment)
                     dialogBuilder.dismiss()
                 }
 
                 R.id.SearchByNutrientsRadioButton -> {
+                    checked = checkedId
                     navController.navigate(R.id.searchByNutrientsFragment)
                     dialogBuilder.dismiss()
                 }
 
                 R.id.SearchByRecipeNameRadioButton -> {
+                    checked = checkedId
                     navController.navigate(R.id.searchByNameFragment)
                     dialogBuilder.dismiss()
                 }
             }
         }
 
+        dialogBuilder.setOnDismissListener {
+            if(checked == -1){
+                binding.bottomNavigation.selectedItemId = R.id.feedFragment
+            }
+        }
+
         dialogBuilder.show()
     }
-
 }

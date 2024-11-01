@@ -51,26 +51,6 @@
         </ScrollView>
 
         <Button
-            android:id="@+id/enteredIngredientsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="284dp"
-            android:text="Use Entered Ingredients"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/otherIngredientsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="39dp"
-            android:text="Use Other Ingredients"
-            app:layout_constraintStart_toStartOf="@+id/enteredIngredientsButton"
-            app:layout_constraintTop_toBottomOf="@+id/enteredIngredientsButton" />
-
-        <Button
             android:id="@+id/goCrazyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

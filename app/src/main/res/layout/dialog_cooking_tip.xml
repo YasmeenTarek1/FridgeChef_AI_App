@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:padding="10dp"
     android:background="@drawable/rounded_white_background">
 
     <TextView
@@ -24,8 +25,9 @@
         android:text="Got it"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:backgroundTint="#FB6063"
+        android:backgroundTint="#901431"
         android:layout_gravity="end"
+        android:layout_marginEnd="5dp"
         android:layout_marginTop="16dp"/>
 
 </LinearLayout>

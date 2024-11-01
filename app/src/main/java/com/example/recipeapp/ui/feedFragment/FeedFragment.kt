@@ -87,7 +87,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         }, 100)
 
 
-        var auth: FirebaseAuth = Firebase.auth
+        val auth: FirebaseAuth = Firebase.auth
         binding.logOutButton.setOnClickListener{
             auth.signOut()
             AppUser.instance?.userId = null
@@ -126,7 +126,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         val chatBotServiceViewModel = ChatBotServiceViewModel(repository , SharedPreferences(requireContext()))
 
         val inflater = LayoutInflater.from(context)
-        val dialogView = inflater.inflate(R.layout.cooking_tip_dialog, null)
+        val dialogView = inflater.inflate(R.layout.dialog_cooking_tip, null)
         val tipTextView: TextView = dialogView.findViewById(R.id.cookingTipText)
         val gotItButton: Button = dialogView.findViewById(R.id.gotItButton)
 

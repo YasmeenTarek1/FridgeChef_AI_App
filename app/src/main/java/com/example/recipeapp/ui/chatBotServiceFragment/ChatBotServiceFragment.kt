@@ -22,8 +22,7 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
     private lateinit var repository: Repository
     private lateinit var viewModel: ChatBotServiceViewModel
     private val args: ChatBotServiceFragmentArgs by navArgs()
-    private var classification:Int? = null
-
+    private var classification:Int? = null // 0 -> Suggest a new Recipe      1 -> Give an Opinion
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -37,41 +36,22 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
 
         when(classification){
             0 -> {
-                showRecipe(args.ingredients)
+                generateRecipe(args.ingredients)
             }
-            2 ->{
-                binding.enteredIngredientsButton.visibility = View.INVISIBLE
-                binding.otherIngredientsButton.visibility = View.INVISIBLE
-                binding.scrollView3.visibility = View.VISIBLE
-                binding.chatbotResponse.text = "Go Crazy Bot: Thinking..."
-
+            1 ->{
                 showRecipeOpinion(args.recipe!!)
             }
         }
-
     }
 
-    private fun showRecipe(ingredients: String?) {
-        if(ingredients == null){
+    private fun generateRecipe(ingredients: String?) {
+        if(ingredients == null)
             useNewIngredients()
-        }
-        else{ // i have the 2 options
-            binding.otherIngredientsButton.setOnClickListener {
-                useNewIngredients()
-            }
-            binding.enteredIngredientsButton.setOnClickListener {
-                binding.otherIngredientsButton.visibility = View.INVISIBLE
-                binding.enteredIngredientsButton.visibility = View.INVISIBLE
-
-                displayRecipe(ingredients)
-            }
-        }
+        else
+            displayRecipe(ingredients)
     }
 
     private fun useNewIngredients() {
-        binding.enteredIngredientsButton.visibility = View.INVISIBLE
-        binding.otherIngredientsButton.visibility = View.INVISIBLE
-
         binding.scrollView3.visibility = View.VISIBLE
         binding.ingredientsInput.visibility = View.VISIBLE
         binding.goCrazyButton.visibility = View.VISIBLE
@@ -94,6 +74,9 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
     }
 
     private fun showRecipeOpinion(recipe: DetailedRecipeResponse) {
+        binding.scrollView3.visibility = View.VISIBLE
+        binding.chatbotResponse.text = "Go Crazy Bot: Thinking..."
+
         lifecycleScope.launch {
             val recipe:String = viewModel.getRecipeOpinion(recipe)
             binding.chatbotResponse.text = recipe

@@ -21,7 +21,7 @@ interface ApiService {
     // b6a39b82b408445f9100f6e8a7436249
     // e46d27c80c5c41948205811245e738f0
     companion object{
-        const val API_KEY = "e46d27c80c5c41948205811245e738f0"
+        const val API_KEY = "c5494363166246e185c7b8e837ba8c7a"
     }
 
     @GET("recipes/{id}/similar")
@@ -55,7 +55,7 @@ interface ApiService {
     suspend fun searchRecipesByIngredients(
         @Query("apiKey") apiKey: String = API_KEY,
         @Query("ingredients") ingredients: List<String>,       // A comma-separated list of ingredients
-        @Query("number") number: Int = 5,                        //The maximum number of recipes
+        @Query("number") number: Int = 15,                        //The maximum number of recipes
         @Query("ranking") ranking: Int = 2,                     // to maximize used ingredients (1) or minimize missing ingredients (2) first.
         @Query("ignorePantry") ignorePantry: Boolean = false
     ): List<Recipe>
