@@ -2,6 +2,7 @@ package com.example.recipeapp.ui.searchFragment.searchByIngredientsFragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -37,7 +38,6 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
     private lateinit var adapter: SearchByIngredientsAdapter
     private lateinit var repository: Repository
     private lateinit var searchView: SearchView
-    private lateinit var searchButton: ImageButton
     private lateinit var ingredients1: MutableList<String>
 
 
@@ -55,8 +55,7 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         adapter = SearchByIngredientsAdapter()
         recyclerView.adapter = adapter
 
-        searchButton = binding.submit
-        binding.submit.visibility = View.INVISIBLE
+        binding.submitButton.visibility = View.INVISIBLE
 
         ingredients1 = mutableListOf()
         val chipGroup: ChipGroup = binding.chipGroup
@@ -78,9 +77,14 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    binding.optionsRecyclerView.visibility = View.INVISIBLE
-                    addChip(query , chipGroup , ingredients1 , binding.submit)
-                    searchView.setQuery("", false)
+                    if (!ingredients1.contains(query) && query.isNotEmpty()) {  // Check if the ingredient is already in the list
+                        lifecycleScope.launch {
+                            binding.optionsRecyclerView.visibility = View.GONE
+                            addChip(query, chipGroup, ingredients1, binding.submitButton)
+                            ingredients1.add(query)
+                        }
+                        searchView.setQuery("", false)
+                    }
                 }
                 return true
             }
@@ -107,8 +111,9 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
             }
         })
 
-        binding.submit.setOnClickListener {
+        binding.submitButton.setOnClickListener {
             lifecycleScope.launch {
+                Log.d("ingredients" , ingredients1.toString())
                 adapter.differ.submitList(viewModel.searchRecipesByIngredients(ingredients1))
             }
         }
@@ -122,27 +127,20 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
     }
 
     private fun addChip(ingredient: String , chipGroup: ChipGroup , ingredients: MutableList<String> , submit: ImageButton) {
-        if (ingredients.contains(ingredient) || ingredient.isEmpty()) // Check if the ingredient is already in the list
-            return
-        else {
-            ingredients.add(ingredient)
+        val chip = LayoutInflater.from(requireContext()).inflate(R.layout.custom_chip, null) as Chip
+        chip.text = ingredient
+        chip.isCloseIconVisible = true
 
-            val chip = LayoutInflater.from(requireContext()).inflate(R.layout.custom_chip, null) as Chip
-            chip.text = ingredient
-            chip.isCloseIconVisible = true
-
-            chip.setOnCloseIconClickListener {
-                ingredients.remove(ingredient)
-                chipGroup.removeView(chip)
-                ingredients.remove(ingredient)
-            }
-            chipGroup.addView(chip)
-
-            if (chipGroup.isEmpty())
-                submit.visibility = View.INVISIBLE
-            else
-                submit.visibility = View.VISIBLE
+        chip.setOnCloseIconClickListener {
+            ingredients.remove(ingredient)
+            chipGroup.removeView(chip)
         }
+        chipGroup.addView(chip)
+
+        if (chipGroup.isEmpty())
+            submit.visibility = View.INVISIBLE
+        else
+            submit.visibility = View.VISIBLE
     }
 
     private fun showIngredientOptionsDialog() {
@@ -193,6 +191,9 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
             if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER) {
                 val inputText = dialogViewBinding.editText.text.toString()
 
+                if(!ingredients2.contains(inputText) && inputText.isNotEmpty()) {
+                    ingredients2.add(inputText)
+                }
                 addChip(inputText , dialogViewBinding.chipGroup , ingredients2 , dialogViewBinding.submit)
 
                 dialogViewBinding.editText.clearFocus()

@@ -173,7 +173,7 @@ class Repository(
 
     suspend fun clearAllToFavoriteRecipes() = favoriteRecipesDao.clearAll()
 
-    suspend fun deleteFavoriteRecipe(favoriteRecipe: FavoriteRecipe) = favoriteRecipesDao.deleteFavoriteRecipe(favoriteRecipe)
+    suspend fun deleteFavoriteRecipe(favoriteRecipeId: Int) = favoriteRecipesDao.deleteFavoriteRecipe(favoriteRecipeId)
 
     suspend fun isFavoriteRecipeExists(recipeId : Int) = favoriteRecipesDao.isFavoriteRecipeExists(recipeId)
 
@@ -277,7 +277,7 @@ class Repository(
                             // If a recipe is removed in Firestore, delete it from Room
                             val removedRecipe = documentChange.document.toObject(FavoriteRecipe::class.java)
                             CoroutineScope(Dispatchers.IO).launch {
-                                favoriteRecipesDao.deleteFavoriteRecipe(removedRecipe)
+                                favoriteRecipesDao.deleteFavoriteRecipe(removedRecipe.id)
                             }
                         }
                     }

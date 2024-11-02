@@ -29,7 +29,7 @@ class RecipeStepsViewModel(private val recipeId: Int, private val repository: Re
                 repository.updateCookedRecipesInFirestore(recipes)
             }
 
-            repository.deleteFavoriteRecipe(FavoriteRecipe(cookedRecipe.id , cookedRecipe.title , cookedRecipe.image , cookedRecipe.readyInMinutes , cookedRecipe.servings , cookedRecipe.likes , cookedRecipe.healthScore , createdAt = System.currentTimeMillis()))
+            repository.deleteFavoriteRecipe(cookedRecipe.id)
             favRecipes.collect { recipes ->
                 repository.updateFavRecipesInFirestore(recipes)
             }
@@ -38,7 +38,7 @@ class RecipeStepsViewModel(private val recipeId: Int, private val repository: Re
 
     fun removeFromFavRecipes(cookedRecipe: CookedRecipe){
         viewModelScope.launch(Dispatchers.IO){
-            repository.deleteFavoriteRecipe(FavoriteRecipe(cookedRecipe.id , cookedRecipe.title , cookedRecipe.image , cookedRecipe.readyInMinutes , cookedRecipe.servings , cookedRecipe.likes , cookedRecipe.healthScore , createdAt = System.currentTimeMillis()))
+            repository.deleteFavoriteRecipe(cookedRecipe.id)
             favRecipes.collect { recipes ->
                 repository.updateFavRecipesInFirestore(recipes)
             }

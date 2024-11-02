@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp.api.model.Recipe
-import com.example.recipeapp.databinding.RecipeSuggestionItemBinding
+import com.example.recipeapp.databinding.ItemSuggestionBinding
 
 
 class RecipeSuggestionsAdapter(private val onOptionClick: (String) -> Unit) : RecyclerView.Adapter<RecipeSuggestionsAdapter.RecipeSuggestionsViewHolder>() {
@@ -22,7 +22,7 @@ class RecipeSuggestionsAdapter(private val onOptionClick: (String) -> Unit) : Re
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeSuggestionsViewHolder {
-        return RecipeSuggestionsViewHolder(RecipeSuggestionItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return RecipeSuggestionsViewHolder(ItemSuggestionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -37,5 +37,5 @@ class RecipeSuggestionsAdapter(private val onOptionClick: (String) -> Unit) : Re
         }
     }
 
-    inner class RecipeSuggestionsViewHolder(val itemBinding: RecipeSuggestionItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class RecipeSuggestionsViewHolder(val itemBinding: ItemSuggestionBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

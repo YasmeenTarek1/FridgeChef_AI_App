@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.FeedItemBinding
 
-class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLoveClick: (Recipe) -> Unit) : PagingDataAdapter<Recipe, FeedAdapter.RecipeViewHolder>(RECIPE_COMPARATOR) {
+class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLoveClick: (Recipe) -> Unit , private val onDislikeClick: (Recipe) -> Unit) : PagingDataAdapter<Recipe, FeedAdapter.RecipeViewHolder>(RECIPE_COMPARATOR) {
 
 
     companion object {
@@ -38,6 +38,11 @@ class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLo
             binding.fullLove.visibility = View.VISIBLE
             binding.love.visibility = View.INVISIBLE
             onLoveClick(recipe!!)
+        }
+        binding.fullLove.setOnClickListener{
+            binding.love.visibility = View.VISIBLE
+            binding.fullLove.visibility = View.INVISIBLE
+            onDislikeClick(recipe!!)
         }
 
         binding.recipe = recipe

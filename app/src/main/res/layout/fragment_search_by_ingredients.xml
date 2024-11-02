@@ -16,7 +16,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:text="Hello, "
-            android:textColor="#ff5c67"
+            android:textColor="#000000"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -95,38 +95,10 @@
             android:id="@+id/optionsRecyclerView"
             android:layout_width="0dp"
             android:layout_height="120dp"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/searchView"
             app:layout_constraintStart_toStartOf="@+id/searchView"
             app:layout_constraintTop_toBottomOf="@id/searchView" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup"
-            android:layout_width="340dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_goneMarginStart="10dp"
-            android:orientation="horizontal"
-            app:chipSpacing="8dp"
-            android:layout_marginStart="17dp"
-            app:chipSpacingVertical="-8dp"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchView"
-            app:singleLine="false" />
-
-        <ImageButton
-            android:id="@+id/submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
-            android:layout_marginTop="21dp"
-            android:src="@drawable/done"
-            android:background="#FEFFF8"
-            android:visibility="invisible"
-            app:layout_constraintStart_toEndOf="@+id/chipGroup"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchView"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/chatBotButton"
@@ -144,6 +116,35 @@
             android:padding="0dp"
             android:layout_marginBottom="8dp"
             app:tint="@null" />
+
+        <ImageButton
+            android:id="@+id/submitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="27dp"
+            android:layout_marginTop="21dp"
+            android:scaleY="1.2"
+            android:scaleX="1.2"
+            android:src="@drawable/done"
+            android:background="#FEFFF8"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/chipGroup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchView"/>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="340dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:chipSpacing="8dp"
+            android:layout_marginStart="13dp"
+            app:chipSpacingVertical="-8dp"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchView"
+            app:singleLine="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

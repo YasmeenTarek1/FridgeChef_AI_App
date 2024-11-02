@@ -35,6 +35,15 @@ class FeedViewModel(private val repository: Repository , application: Applicatio
         }
     }
 
+    fun onDislikeClick(recipe: Recipe) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteFavoriteRecipe(recipe.id)
+            favRecipes.collect { favRecipes ->
+                repository.updateFavRecipesInFirestore(favRecipes)
+            }
+        }
+    }
+
     suspend fun checkFavorite(recipeId: Int): Boolean {
         return repository.isFavoriteRecipeExists(recipeId)
     }

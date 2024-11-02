@@ -69,6 +69,9 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             ,
             onLoveClick = { recipe ->
                 feedViewModel.onLoveClick(recipe)
+            } ,
+            onDislikeClick = { recipe ->
+                feedViewModel.onDislikeClick(recipe)
             }
         )
 

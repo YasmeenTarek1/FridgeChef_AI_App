@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp.api.model.Ingredient
-import com.example.recipeapp.databinding.IngredientSuggestionItemBinding
+import com.example.recipeapp.databinding.ItemSuggestionBinding
 
 
 class IngredientSuggestionsAdapter(private val onOptionClick: (String) -> Unit) : RecyclerView.Adapter<IngredientSuggestionsAdapter.IngredientSuggestionsViewHolder>() {
@@ -22,7 +22,7 @@ class IngredientSuggestionsAdapter(private val onOptionClick: (String) -> Unit) 
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientSuggestionsViewHolder {
-        return IngredientSuggestionsViewHolder(IngredientSuggestionItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return IngredientSuggestionsViewHolder(ItemSuggestionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -31,11 +31,12 @@ class IngredientSuggestionsAdapter(private val onOptionClick: (String) -> Unit) 
 
     override fun onBindViewHolder(holder: IngredientSuggestionsViewHolder, position: Int) {
         val option = differ.currentList[position]
+
         holder.itemBinding.suggestionTextView.text = option.name
         holder.itemView.setOnClickListener{
             onOptionClick(option.name)
         }
     }
 
-    inner class IngredientSuggestionsViewHolder(val itemBinding: IngredientSuggestionItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class IngredientSuggestionsViewHolder(val itemBinding: ItemSuggestionBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

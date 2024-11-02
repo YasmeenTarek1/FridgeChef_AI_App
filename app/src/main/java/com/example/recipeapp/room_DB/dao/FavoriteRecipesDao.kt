@@ -1,7 +1,6 @@
 package com.example.recipeapp.room_DB.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -21,11 +20,10 @@ interface FavoriteRecipesDao {
 
     // Retrieve all favorite recipes
     @Query("SELECT * FROM favorite_recipes ORDER BY createdAt DESC")
-
     fun getAllFavoriteRecipes(): Flow<List<FavoriteRecipe>>
 
-    @Delete
-    suspend fun deleteFavoriteRecipe(favoriteRecipe: FavoriteRecipe)
+    @Query("DELETE FROM favorite_recipes WHERE id = :recipeId")
+    suspend fun deleteFavoriteRecipe(recipeId: Int)
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_recipes WHERE id = :recipeId)")
     suspend fun isFavoriteRecipeExists(recipeId: Int): Boolean
