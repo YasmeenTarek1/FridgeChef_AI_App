@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeapp.api.model.Recipe
-import com.example.recipeapp.databinding.FeedItemBinding
+import com.example.recipeapp.databinding.ItemFeedBinding
 
 class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLoveClick: (Recipe) -> Unit , private val onDislikeClick: (Recipe) -> Unit) : PagingDataAdapter<Recipe, FeedAdapter.RecipeViewHolder>(RECIPE_COMPARATOR) {
 
@@ -27,7 +27,7 @@ class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLo
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        return RecipeViewHolder(FeedItemBinding.inflate(LayoutInflater.from(parent.context), parent, false) )
+        return RecipeViewHolder(ItemFeedBinding.inflate(LayoutInflater.from(parent.context), parent, false) )
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
@@ -70,5 +70,5 @@ class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLo
 
     }
 
-    inner class RecipeViewHolder(val itemBinding: FeedItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class RecipeViewHolder(val itemBinding: ItemFeedBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

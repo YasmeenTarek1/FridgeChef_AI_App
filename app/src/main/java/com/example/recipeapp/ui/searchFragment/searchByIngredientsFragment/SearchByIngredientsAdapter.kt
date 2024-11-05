@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeapp.api.model.Recipe
-import com.example.recipeapp.databinding.SearchResultItemBinding
+import com.example.recipeapp.databinding.ItemSearchResultBinding
 
 
 class SearchByIngredientsAdapter : RecyclerView.Adapter<SearchByIngredientsAdapter.SearchByIngredientsViewHolder>() {
@@ -24,7 +24,7 @@ class SearchByIngredientsAdapter : RecyclerView.Adapter<SearchByIngredientsAdapt
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchByIngredientsViewHolder {
-        return SearchByIngredientsViewHolder(SearchResultItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return SearchByIngredientsViewHolder(ItemSearchResultBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -48,5 +48,5 @@ class SearchByIngredientsAdapter : RecyclerView.Adapter<SearchByIngredientsAdapt
         }
     }
 
-    inner class SearchByIngredientsViewHolder(val itemBinding: SearchResultItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class SearchByIngredientsViewHolder(val itemBinding: ItemSearchResultBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

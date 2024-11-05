@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeapp.api.model.Recipe
-import com.example.recipeapp.databinding.SearchResultItemBinding
+import com.example.recipeapp.databinding.ItemSearchResultBinding
 
 
 class SearchByNutrientsAdapter : RecyclerView.Adapter<SearchByNutrientsAdapter.SearchByNutrientsViewHolder>() {
@@ -24,7 +24,7 @@ class SearchByNutrientsAdapter : RecyclerView.Adapter<SearchByNutrientsAdapter.S
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchByNutrientsViewHolder {
-        return SearchByNutrientsViewHolder(SearchResultItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return SearchByNutrientsViewHolder(ItemSearchResultBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -36,6 +36,8 @@ class SearchByNutrientsAdapter : RecyclerView.Adapter<SearchByNutrientsAdapter.S
 
         val binding = holder.itemBinding
 
+        binding.recipe = recipe
+
         Glide.with(binding.root)
             .load(recipe.image)
             .into(binding.recipeImage)
@@ -46,5 +48,5 @@ class SearchByNutrientsAdapter : RecyclerView.Adapter<SearchByNutrientsAdapter.S
         }
     }
 
-    inner class SearchByNutrientsViewHolder(val itemBinding: SearchResultItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class SearchByNutrientsViewHolder(val itemBinding: ItemSearchResultBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recipeapp.databinding.ChatBotRecipeOuterItemBinding
+import com.example.recipeapp.databinding.ItemChatBotRecipeOuterBinding
 import com.example.recipeapp.room_DB.model.AiRecipe
 
 class ChatBotAdapter : RecyclerView.Adapter<ChatBotAdapter.ChatBotRecipeViewHolder>() {
@@ -23,7 +23,7 @@ class ChatBotAdapter : RecyclerView.Adapter<ChatBotAdapter.ChatBotRecipeViewHold
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatBotRecipeViewHolder {
-        return ChatBotRecipeViewHolder(ChatBotRecipeOuterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ChatBotRecipeViewHolder(ItemChatBotRecipeOuterBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -46,5 +46,5 @@ class ChatBotAdapter : RecyclerView.Adapter<ChatBotAdapter.ChatBotRecipeViewHold
         }
     }
 
-    inner class ChatBotRecipeViewHolder(val itemBinding: ChatBotRecipeOuterItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class ChatBotRecipeViewHolder(val itemBinding: ItemChatBotRecipeOuterBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

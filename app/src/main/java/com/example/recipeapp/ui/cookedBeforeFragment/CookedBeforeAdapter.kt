@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recipeapp.databinding.CookedRecipeItemBinding
+import com.example.recipeapp.databinding.ItemCookedRecipeBinding
 import com.example.recipeapp.room_DB.model.CookedRecipe
-import com.example.recipeapp.ui.favoriteRecipesFragment.FavoriteRecipesViewModel
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
 import kotlinx.coroutines.runBlocking
 
@@ -29,7 +28,7 @@ class CookedBeforeAdapter(private val viewModel: CookedBeforeViewModel) : Recycl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CookedRecipeViewHolder {
         viewBinderHelper.setOpenOnlyOne(true) // Ensure only one swipe action is open at a time
-        return CookedRecipeViewHolder(CookedRecipeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return CookedRecipeViewHolder(ItemCookedRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -68,5 +67,5 @@ class CookedBeforeAdapter(private val viewModel: CookedBeforeViewModel) : Recycl
     }
 
 
-    inner class CookedRecipeViewHolder(val itemBinding: CookedRecipeItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class CookedRecipeViewHolder(val itemBinding: ItemCookedRecipeBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

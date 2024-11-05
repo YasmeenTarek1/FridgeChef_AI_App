@@ -84,6 +84,7 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
                             ingredients1.add(query)
                         }
                         searchView.setQuery("", false)
+                        searchView.clearFocus()
                     }
                 }
                 return true

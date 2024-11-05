@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recipeapp.databinding.FavoriteRecipeItemBinding
+import com.example.recipeapp.databinding.ItemFavoriteRecipeBinding
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
 import kotlinx.coroutines.runBlocking
@@ -28,7 +28,7 @@ class FavoriteRecipesAdapter(private val viewModel: FavoriteRecipesViewModel) :
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteRecipeViewHolder {
-        val binding = FavoriteRecipeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemFavoriteRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         viewBinderHelper.setOpenOnlyOne(true) // Ensure only one swipe action is open at a time
         return FavoriteRecipeViewHolder(binding)
     }
@@ -69,6 +69,6 @@ class FavoriteRecipesAdapter(private val viewModel: FavoriteRecipesViewModel) :
         differ.submitList(currentList)
     }
 
-    inner class FavoriteRecipeViewHolder(val itemBinding: FavoriteRecipeItemBinding) :
+    inner class FavoriteRecipeViewHolder(val itemBinding: ItemFavoriteRecipeBinding) :
         RecyclerView.ViewHolder(itemBinding.root)
 }

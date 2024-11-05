@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recipeapp.databinding.AiRecipeItemBinding
+import com.example.recipeapp.databinding.ItemAiRecipeBinding
 import com.example.recipeapp.room_DB.model.AiRecipe
-import com.example.recipeapp.ui.favoriteRecipesFragment.FavoriteRecipesViewModel
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
 import kotlinx.coroutines.runBlocking
 
@@ -29,7 +28,7 @@ class ChatBotRecipesAdapter(private val viewModel: ChatBotRecipesViewModel): Rec
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatBotViewHolder {
         viewBinderHelper.setOpenOnlyOne(true) // Ensure only one swipe action is open at a time
-        return ChatBotViewHolder(AiRecipeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ChatBotViewHolder(ItemAiRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -69,5 +68,5 @@ class ChatBotRecipesAdapter(private val viewModel: ChatBotRecipesViewModel): Rec
         differ.submitList(currentList)
     }
 
-    inner class ChatBotViewHolder(val itemBinding: AiRecipeItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class ChatBotViewHolder(val itemBinding: ItemAiRecipeBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

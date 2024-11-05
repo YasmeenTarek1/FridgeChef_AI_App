@@ -7,7 +7,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.recipeapp.databinding.ActivityMainBinding
@@ -54,31 +53,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         bottomNavigationView.setOnItemSelectedListener { item ->
-            // Create NavOptions with launchSingleTop
-            val navOptions = NavOptions.Builder()
-                .setLaunchSingleTop(true) // Prevents reloading if already on the fragment
-                .build()
-
             when (item.itemId) {
                 R.id.feedFragment -> {
-                    // Navigate only if the current destination is not the feedFragment
-                    if (navController.currentDestination?.id != R.id.feedFragment) {
-                        navController.navigate(R.id.feedFragment, null, navOptions)
-                    }
+                    if(navController.currentDestination?.id != R.id.feedFragment)
+                        navController.navigate(R.id.feedFragment)
                     true
                 }
                 R.id.specialRecipesFragment -> {
-                    // Navigate only if the current destination is not the specialRecipesFragment
-                    if (navController.currentDestination?.id != R.id.specialRecipesFragment) {
-                        navController.navigate(R.id.specialRecipesFragment, null, navOptions)
-                    }
+                    navController.navigate(R.id.specialRecipesFragment)
                     true
                 }
                 R.id.userProfileFragment -> {
-                    // Navigate only if the current destination is not the userProfileFragment
-                    if (navController.currentDestination?.id != R.id.userProfileFragment) {
-                        navController.navigate(R.id.userProfileFragment, null, navOptions)
-                    }
+                    navController.navigate(R.id.userProfileFragment)
                     true
                 }
                 R.id.searchFragment -> {
@@ -86,10 +72,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.toBuyIngredientsFragment -> {
-                    // Navigate only if the current destination is not the toBuyIngredientsFragment
-                    if (navController.currentDestination?.id != R.id.toBuyIngredientsFragment) {
-                        navController.navigate(R.id.toBuyIngredientsFragment, null, navOptions)
-                    }
+                    navController.navigate(R.id.toBuyIngredientsFragment)
                     true
                 }
                 else -> false
@@ -132,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             .create()
         dialogBuilder.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialogBuilder.setOnShowListener {
-            dialogBuilder.window?.decorView?.translationX = 60f // Center X, adjust if needed
+            dialogBuilder.window?.decorView?.translationX = 60f
         }
 
         val pastFragment = navController.currentDestination?.id!!

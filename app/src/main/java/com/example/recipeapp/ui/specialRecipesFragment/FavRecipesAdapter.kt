@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recipeapp.databinding.FavRecipeOuterItemBinding
+import com.example.recipeapp.databinding.ItemFavRecipeOuterBinding
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 
 
@@ -24,7 +24,7 @@ class FavRecipesAdapter : RecyclerView.Adapter<FavRecipesAdapter.FavRecipeViewHo
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavRecipeViewHolder {
-        return FavRecipeViewHolder(FavRecipeOuterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return FavRecipeViewHolder(ItemFavRecipeOuterBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -47,5 +47,5 @@ class FavRecipesAdapter : RecyclerView.Adapter<FavRecipesAdapter.FavRecipeViewHo
         }
     }
 
-    inner class FavRecipeViewHolder(val itemBinding: FavRecipeOuterItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class FavRecipeViewHolder(val itemBinding: ItemFavRecipeOuterBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

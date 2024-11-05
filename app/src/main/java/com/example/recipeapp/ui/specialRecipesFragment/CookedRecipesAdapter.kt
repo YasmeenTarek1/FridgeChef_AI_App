@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recipeapp.databinding.CookedRecipeOuterItemBinding
+import com.example.recipeapp.databinding.ItemCookedRecipeOuterBinding
 import com.example.recipeapp.room_DB.model.CookedRecipe
 
 class CookedRecipesAdapter : RecyclerView.Adapter<CookedRecipesAdapter.CookedRecipeViewHolder>() {
@@ -22,7 +22,7 @@ class CookedRecipesAdapter : RecyclerView.Adapter<CookedRecipesAdapter.CookedRec
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CookedRecipeViewHolder {
-        return CookedRecipeViewHolder(CookedRecipeOuterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return CookedRecipeViewHolder(ItemCookedRecipeOuterBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -45,5 +45,5 @@ class CookedRecipesAdapter : RecyclerView.Adapter<CookedRecipesAdapter.CookedRec
 //        }
     }
 
-    inner class CookedRecipeViewHolder(val itemBinding: CookedRecipeOuterItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class CookedRecipeViewHolder(val itemBinding: ItemCookedRecipeOuterBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

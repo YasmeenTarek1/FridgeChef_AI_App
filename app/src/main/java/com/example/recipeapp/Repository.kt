@@ -132,12 +132,10 @@ class Repository(
     }
 
     suspend fun searchRecipesByNutrients(
-        minCarbs: Int? = null, maxCarbs: Int? = null,minProtein: Int? = null,maxProtein: Int? = null,minFat: Int? = null,maxFat: Int? = null,
-        minCalories: Int? = null,maxCalories: Int? = null,minSugar: Int? = null, maxSugar: Int? = null)
+        maxCarbs: Int? = null, maxProtein: Int? = null, maxFat: Int? = null, maxCalories: Int? = null, maxSugar: Int? = null)
     : List<Recipe> {
-
         return try {
-            api.searchRecipesByNutrients(minCarbs = minCarbs, maxCarbs = maxCarbs , minProtein = minProtein, maxProtein = maxProtein, minSugar = minSugar, maxSugar = maxSugar, minFat = minFat, maxFat = maxFat, minCalories = minCalories, maxCalories = maxCalories)
+            api.searchRecipesByNutrients(maxCarbs = maxCarbs, maxProtein = maxProtein, maxSugar = maxSugar, maxFat = maxFat, maxCalories = maxCalories)
         } catch (e: Exception) {
             emptyList()
         }

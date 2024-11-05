@@ -6,7 +6,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipeapp.databinding.ToBuyIngredientItemBinding
+import com.example.recipeapp.databinding.ItemToBuyIngredientBinding
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
 
 
@@ -23,7 +23,7 @@ class ToBuyIngredientsAdapter : RecyclerView.Adapter<ToBuyIngredientsAdapter.toB
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): toBuyIngredientViewHolder {
-        return toBuyIngredientViewHolder(ToBuyIngredientItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return toBuyIngredientViewHolder(ItemToBuyIngredientBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -39,5 +39,5 @@ class ToBuyIngredientsAdapter : RecyclerView.Adapter<ToBuyIngredientsAdapter.toB
         }
     }
 
-    inner class toBuyIngredientViewHolder(val itemBinding: ToBuyIngredientItemBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class toBuyIngredientViewHolder(val itemBinding: ItemToBuyIngredientBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }
