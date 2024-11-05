@@ -5,7 +5,6 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
-    id("kotlin-kapt")
 }
 
 android {
@@ -78,9 +77,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     //Google Sign-In
-    implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
-    implementation(libs.androidx.credentials.play.services.auth.v130rc01)
     implementation(libs.googleid)
 
     //Facebook Sign-In

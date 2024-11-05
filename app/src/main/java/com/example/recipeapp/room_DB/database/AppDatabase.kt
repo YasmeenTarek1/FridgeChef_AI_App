@@ -15,7 +15,7 @@ import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
 import com.example.recipeapp.room_DB.model.UserInfo
 
-@Database(entities = [CookedRecipe::class, FavoriteRecipe::class, ToBuyIngredient::class , AiRecipe::class , UserInfo::class], version = 18 , exportSchema = false)
+@Database(entities = [CookedRecipe::class, FavoriteRecipe::class, ToBuyIngredient::class , AiRecipe::class , UserInfo::class], version = 21 , exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun cookedRecipesDao(): CookedRecipesDao

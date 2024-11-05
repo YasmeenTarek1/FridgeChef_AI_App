@@ -1,11 +1,14 @@
 package com.example.recipeapp.ui.specialRecipesFragment
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemCookedRecipeOuterBinding
 import com.example.recipeapp.room_DB.model.CookedRecipe
 
@@ -39,10 +42,20 @@ class CookedRecipesAdapter : RecyclerView.Adapter<CookedRecipesAdapter.CookedRec
 
         binding.textView.text = cookedRecipe.title
 
-//        holder.itemView.setOnClickListener { view ->
-//            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(cookedRecipe.id)
-//            view.findNavController().navigate(action)
-//        }
+        holder.itemView.setOnClickListener { view ->
+            val recipe = Recipe(
+                id = cookedRecipe.id,
+                title = cookedRecipe.title,
+                image = cookedRecipe.image,
+                readyInMinutes = cookedRecipe.readyInMinutes,
+                servings = cookedRecipe.servings,
+                ingredients = cookedRecipe.ingredients,
+                steps = cookedRecipe.steps,
+                summary = cookedRecipe.summary
+            )
+            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe)
+            view.findNavController().navigate(action)
+        }
     }
 
     inner class CookedRecipeViewHolder(val itemBinding: ItemCookedRecipeOuterBinding) : RecyclerView.ViewHolder(itemBinding.root)

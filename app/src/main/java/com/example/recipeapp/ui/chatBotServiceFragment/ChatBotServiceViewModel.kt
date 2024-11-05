@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.recipeapp.AppUser
 import com.example.recipeapp.Repository
-import com.example.recipeapp.api.model.DetailedRecipeResponse
+import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.room_DB.model.AiRecipe
 import com.example.recipeapp.sharedPreferences.SharedPreferences
 import com.google.ai.client.generativeai.GenerativeModel
@@ -42,8 +42,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
             // Prep Time (Int - minutes)
             prompt = "Give me the prep time (only the duration in minutes) of this recipe:$history"
-            val readyInMinutesResponse =
-                generativeModel.generateContent(prompt).text!!.trim().toInt()
+            val readyInMinutesResponse = generativeModel.generateContent(prompt).text!!.trim().toInt()
 
             // Ingredients (String separated by commas)
             prompt = "Give me the ingredients of this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
@@ -51,6 +50,12 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             Log.d("Ingredients Tracing", ingredientsResponse.toString())
 
             history += "ingredients used: $ingredientsResponse"
+
+            prompt = "Give me a quick summary of this recipe: $history"
+            val summaryResponse = generativeModel.generateContent(prompt).text
+            Log.d("Summary Tracing", summaryResponse.toString())
+
+            history += "quick summary: $summaryResponse"
 
             // Steps (String separated by commas)
             prompt = "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not in programming language. Start immediately with the steps."
@@ -65,6 +70,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
                 servings = servingsResponse,
                 ingredients = ingredientsResponse!!,
                 steps = stepsResponse!!,
+                summary = summaryResponse,
                 createdAt = System.currentTimeMillis()
             )
 
@@ -81,7 +87,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
         }
     }
 
-    suspend fun getRecipeOpinion(recipe:DetailedRecipeResponse):String {
+    suspend fun getRecipeOpinion(recipe: Recipe):String {
         return withContext(Dispatchers.IO) {
             val generativeModel =
                 GenerativeModel(

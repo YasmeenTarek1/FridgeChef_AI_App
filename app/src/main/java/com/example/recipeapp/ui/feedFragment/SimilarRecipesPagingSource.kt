@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.recipeapp.AppUser
 import com.example.recipeapp.Repository
-import com.example.recipeapp.api.model.DetailedRecipeResponse
+import com.example.recipeapp.api.model.ExtraDetailsResponse
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.sharedPreferences.SharedPreferences
 import kotlinx.coroutines.flow.first
@@ -50,9 +50,8 @@ class SimilarRecipesPagingSource(private val repository: Repository , private va
                 currentRecipesIDs.addAll(response.map { it.id })
 
                 response.forEach { recipe ->
-                    val detailedRecipe: DetailedRecipeResponse = repository.getRecipeInfo(recipe.id)
+                    val detailedRecipe: ExtraDetailsResponse = repository.getRecipeInfo(recipe.id)
                     recipe.image = detailedRecipe.image
-                    recipe.healthScore = detailedRecipe.healthScore.toDouble()
                 }
             } else {
                 response = repository.getRandomRecipes(diet = diet).toMutableList()

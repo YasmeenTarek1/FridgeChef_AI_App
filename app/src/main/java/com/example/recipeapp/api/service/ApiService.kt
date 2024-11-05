@@ -1,12 +1,12 @@
 package com.example.recipeapp.api.service
 
 import com.example.recipeapp.api.model.CustomSearchResponse
-import com.example.recipeapp.api.model.DetailedRecipeResponse
+import com.example.recipeapp.api.model.ExtraDetailsResponse
 import com.example.recipeapp.api.model.IngredientAutocompleteResponse
 import com.example.recipeapp.api.model.InstructionResponse
+import com.example.recipeapp.api.model.RandomRecipeResponse
 import com.example.recipeapp.api.model.Recipe
-import com.example.recipeapp.api.model.RecipeResponse
-import com.example.recipeapp.api.model.RecipeResponse2
+import com.example.recipeapp.api.model.SearchByNameResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -21,7 +21,7 @@ interface ApiService {
     // b6a39b82b408445f9100f6e8a7436249
     // e46d27c80c5c41948205811245e738f0
     companion object{
-        const val API_KEY = "e46d27c80c5c41948205811245e738f0"
+        const val API_KEY = "ad28d9e80f7c42219ce7dd5c918b9cb0"
     }
 
     @GET("recipes/{id}/similar")
@@ -36,13 +36,13 @@ interface ApiService {
         @Query("apiKey") apiKey: String = API_KEY,
         @Query("number") numberOfRecipes: Int = 3,
         @Query("include-tags") diet: String? = null
-    ): RecipeResponse
+    ): RandomRecipeResponse
 
-    @GET("recipes/{id}/information")
+    @GET("recipes/{id}/information") // take recipe id , give me the recipe image
     suspend fun getRecipeInfo(
         @Path("id") recipeId: Int,
         @Query("apiKey") apiKey: String = API_KEY,
-    ): DetailedRecipeResponse
+    ): ExtraDetailsResponse
 
     @GET("recipes/{id}/analyzedInstructions") // take recipe id, give me instructions
     suspend fun getInstructions(
@@ -65,7 +65,7 @@ interface ApiService {
         @Query("apiKey") apiKey: String = API_KEY,
         @Query("query") query: String,
         @Query("number") number: Int = 20
-    ) : RecipeResponse2
+    ) : SearchByNameResponse
 
     @GET("recipes/findByNutrients")
     suspend fun searchRecipesByNutrients(

@@ -73,12 +73,8 @@
             android:id="@+id/action_recipeDetailsFragment_to_recipeStepsFragment"
             app:destination="@id/recipeStepsFragment" />
         <argument
-            android:name="recipeID"
-            app:argType="integer"/>
-        <argument
-            android:name="aiRecipe"
-            app:argType="com.example.recipeapp.room_DB.model.AiRecipe"
-            app:nullable="true"/>
+            android:name="recipe"
+            app:argType="com.example.recipeapp.api.model.Recipe"/>
         <action
             android:id="@+id/action_recipeDetailsFragment_to_chatBotServiceFragment"
             app:destination="@id/chatBotServiceFragment" />
@@ -89,11 +85,8 @@
         android:label="fragment_recipe_steps"
         tools:layout="@layout/fragment_recipe_steps">
         <argument
-            android:name="recipeID"
-            app:argType="integer"/>
-        <argument
-            android:name="cookedRecipe"
-            app:argType="com.example.recipeapp.room_DB.model.CookedRecipe"/>
+            android:name="recipe"
+            app:argType="com.example.recipeapp.api.model.Recipe"/>
         <action
             android:id="@+id/action_recipeStepsFragment_to_feedFragment"
             app:destination="@id/feedFragment" />
@@ -201,7 +194,7 @@
             app:nullable="true"/>
         <argument
             android:name="recipe"
-            app:argType="com.example.recipeapp.api.model.DetailedRecipeResponse"
+            app:argType="com.example.recipeapp.api.model.Recipe"
             app:nullable="true"/>
         <argument
             android:name="classification"

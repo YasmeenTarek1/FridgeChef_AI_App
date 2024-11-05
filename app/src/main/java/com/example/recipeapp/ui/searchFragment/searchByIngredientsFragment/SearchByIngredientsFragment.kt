@@ -38,7 +38,7 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
     private lateinit var adapter: SearchByIngredientsAdapter
     private lateinit var repository: Repository
     private lateinit var searchView: SearchView
-    private lateinit var ingredients1: MutableList<String>
+    private var ingredients1: MutableList<String> = mutableListOf()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,7 +57,6 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
 
         binding.submitButton.visibility = View.INVISIBLE
 
-        ingredients1 = mutableListOf()
         val chipGroup: ChipGroup = binding.chipGroup
 
         searchView = binding.searchView
@@ -79,12 +78,12 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
                 query?.let {
                     if (!ingredients1.contains(query) && query.isNotEmpty()) {  // Check if the ingredient is already in the list
                         lifecycleScope.launch {
-                            binding.optionsRecyclerView.visibility = View.GONE
                             addChip(query, chipGroup, ingredients1, binding.submitButton)
                             ingredients1.add(query)
                         }
                         searchView.setQuery("", false)
                         searchView.clearFocus()
+                        binding.optionsRecyclerView.visibility = View.GONE
                     }
                 }
                 return true
@@ -135,13 +134,11 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         chip.setOnCloseIconClickListener {
             ingredients.remove(ingredient)
             chipGroup.removeView(chip)
+            if (chipGroup.isEmpty())
+                binding.submitButton.visibility = View.INVISIBLE
         }
         chipGroup.addView(chip)
-
-        if (chipGroup.isEmpty())
-            submit.visibility = View.INVISIBLE
-        else
-            submit.visibility = View.VISIBLE
+        binding.submitButton.visibility = View.VISIBLE
     }
 
     private fun showIngredientOptionsDialog() {

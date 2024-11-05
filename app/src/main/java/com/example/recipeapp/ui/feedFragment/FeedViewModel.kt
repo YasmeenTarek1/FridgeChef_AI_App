@@ -25,8 +25,6 @@ class FeedViewModel(private val repository: Repository , application: Applicatio
                 image = recipe.image,
                 readyInMinutes = recipe.readyInMinutes,
                 servings = recipe.servings,
-                likes = recipe.likes,
-                healthScore = recipe.healthScore,
                 createdAt = System.currentTimeMillis()
             ))
             favRecipes.collect { favRecipes ->

@@ -1,5 +1,5 @@
 package com.example.recipeapp.api.model
 
-data class RecipeResponse(
+data class RandomRecipeResponse(
     val recipes: List<Recipe>
 )

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemFavoriteRecipeBinding
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
@@ -58,7 +59,17 @@ class FavoriteRecipesAdapter(private val viewModel: FavoriteRecipesViewModel) :
         }
 
         holder.itemView.setOnClickListener { view ->
-            val action = FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToRecipeDetailsFragment(favRecipe.id, null)
+            val recipe = Recipe(
+                id = favRecipe.id,
+                title = favRecipe.title,
+                image = favRecipe.image,
+                readyInMinutes = favRecipe.readyInMinutes,
+                servings = favRecipe.servings,
+                ingredients = favRecipe.ingredients,
+                steps = favRecipe.steps,
+                summary = favRecipe.summary
+            )
+            val action = FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToRecipeDetailsFragment(recipe)
             view.findNavController().navigate(action)
         }
     }

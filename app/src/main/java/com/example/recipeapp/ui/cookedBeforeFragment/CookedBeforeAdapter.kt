@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemCookedRecipeBinding
 import com.example.recipeapp.room_DB.model.CookedRecipe
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
@@ -55,7 +56,17 @@ class CookedBeforeAdapter(private val viewModel: CookedBeforeViewModel) : Recycl
             removeItem(position)
         }
         holder.itemView.setOnClickListener { view ->
-            val action = CookedRecipesFragmentDirections.actionCookedRecipesFragmentToRecipeDetailsFragment(cookedRecipe.id , null)
+            val recipe = Recipe(
+                id = cookedRecipe.id,
+                title = cookedRecipe.title,
+                image = cookedRecipe.image,
+                readyInMinutes = cookedRecipe.readyInMinutes,
+                servings = cookedRecipe.servings,
+                ingredients = cookedRecipe.ingredients,
+                steps = cookedRecipe.steps,
+                summary = cookedRecipe.summary
+            )
+            val action = CookedRecipesFragmentDirections.actionCookedRecipesFragmentToRecipeDetailsFragment(recipe)
             view.findNavController().navigate(action)
         }
     }

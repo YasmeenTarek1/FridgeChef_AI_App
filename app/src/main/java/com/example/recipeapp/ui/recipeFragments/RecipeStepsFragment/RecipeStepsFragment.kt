@@ -13,6 +13,7 @@ import com.example.recipeapp.api.model.Step
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentRecipeStepsBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
+import com.example.recipeapp.room_DB.model.CookedRecipe
 import kotlinx.coroutines.launch
 class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
 
@@ -31,7 +32,8 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
         binding = FragmentRecipeStepsBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
-        val recipeId: Int = args.recipeID
+        val recipeId: Int = args.recipe.id
+        val recipe = args.recipe
         val factory = RecipeStepsViewModelFactory(recipeId, repository)
         viewModel = ViewModelProvider(this, factory).get(RecipeStepsViewModel::class.java)
 
@@ -45,8 +47,19 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
                 showStep()
             } else {
                 lifecycleScope.launch {
-                    viewModel.addToCookedRecipes(args.cookedRecipe)
-                    viewModel.removeFromFavRecipes(args.cookedRecipe)
+                    val cookedRecipe = CookedRecipe(
+                        id = recipe.id,
+                        title = recipe.title,
+                        image = recipe.image,
+                        readyInMinutes = recipe.readyInMinutes,
+                        servings = recipe.servings,
+                        steps = recipe.steps,
+                        summary = recipe.summary,
+                        ingredients = recipe.ingredients,
+                        createdAt = System.currentTimeMillis()
+                    )
+                    viewModel.addToCookedRecipes(cookedRecipe)
+                    viewModel.removeFromFavRecipes(cookedRecipe)
                 }
                 binding.stepText.text = "Congrats, Recipe is Finished"
                 stopAndSpeak(binding.stepText.text.toString()) // TTS for final message

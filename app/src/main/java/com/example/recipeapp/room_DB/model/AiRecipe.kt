@@ -12,13 +12,14 @@ data class AiRecipe(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val title: String,
-    val image: String?,
-    val readyInMinutes: Int? = null,
-    val servings: Int? = null,
+    val image: String,
+    val summary: String,
+    val readyInMinutes: Int,
+    val servings: Int,
     val ingredients: String,  // Stored as a comma-separated string
     val steps: String,        // Stored as a comma-separated string
-    val createdAt: Long
-): Parcelable{
-    constructor() : this(0, "","" , 0, 0, "" , "", 0)
+    var createdAt: Long,
+    ): Parcelable{
+    constructor() : this(0, "","" , "" , 0 , 0 , "" , "", 0)
 }
 

@@ -8,17 +8,16 @@ import kotlinx.parcelize.RawValue
 data class Recipe(
     val id: Int,
     val title: String,
-    var image: String?,
+    var image: String? = null,
     val readyInMinutes: Int? = null,
     val servings: Int? = null,
-    var likes: Int? = null,
     val missedIngredients: @RawValue List<Ingredient>? = null,
-    val usedIngredients: @RawValue List<Ingredient>? = null,
-    var healthScore: Double? = null,
+    var usedIngredients: @RawValue List<Ingredient>? = null,
     val ingredients: String? = null,  // Stored as a comma-separated string
-    val steps: String? = null         // Stored as a comma-separated string
+    val steps: String? = null,        // Stored as a comma-separated string
+    var summary: String? = null
 ): Parcelable{
-    constructor() : this(0, "","" , 0, 0, 0, null, null, 0.0, "")
+    constructor() : this(0, "")
 }
 
 

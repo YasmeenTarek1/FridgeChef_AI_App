@@ -2,7 +2,6 @@ package com.example.recipeapp.ui.chatBotRecipesFragment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -56,10 +55,10 @@ class ChatBotRecipesAdapter(private val viewModel: ChatBotRecipesViewModel): Rec
         }
 
 
-        holder.itemView.setOnClickListener { view ->
-            val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(aiRecipe.id , null)
-            view.findNavController().navigate(action)
-        }
+//        holder.itemView.setOnClickListener { view ->
+//            val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(aiRecipe , null)
+//            view.findNavController().navigate(action)
+//        }
     }
 
     private fun removeItem(position: Int) {

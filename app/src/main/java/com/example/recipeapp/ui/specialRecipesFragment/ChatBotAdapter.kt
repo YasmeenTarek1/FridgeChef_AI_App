@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemChatBotRecipeOuterBinding
 import com.example.recipeapp.room_DB.model.AiRecipe
 
@@ -41,7 +42,17 @@ class ChatBotAdapter : RecyclerView.Adapter<ChatBotAdapter.ChatBotRecipeViewHold
         binding.textView.text = aiRecipe.title
 
         holder.itemView.setOnClickListener { view ->
-            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(0 , aiRecipe)
+            val recipe = Recipe(
+                id = aiRecipe.id,
+                title = aiRecipe.title,
+                image = aiRecipe.image,
+                readyInMinutes = aiRecipe.readyInMinutes,
+                servings = aiRecipe.servings,
+                ingredients = aiRecipe.ingredients,
+                steps = aiRecipe.steps,
+                summary = aiRecipe.summary
+            )
+            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe)
             view.findNavController().navigate(action)
         }
     }

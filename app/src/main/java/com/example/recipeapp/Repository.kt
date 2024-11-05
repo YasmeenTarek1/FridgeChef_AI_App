@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.recipeapp.api.model.DetailedRecipeResponse
+import com.example.recipeapp.api.model.ExtraDetailsResponse
 import com.example.recipeapp.api.model.Ingredient
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.api.model.Step
@@ -107,7 +107,7 @@ class Repository(
         }
     }
 
-    suspend fun getRecipeInfo(recipeId: Int): DetailedRecipeResponse {
+    suspend fun getRecipeInfo(recipeId: Int): ExtraDetailsResponse {
         return try {
             api.getRecipeInfo(recipeId = recipeId)
         } catch (e: Exception) {

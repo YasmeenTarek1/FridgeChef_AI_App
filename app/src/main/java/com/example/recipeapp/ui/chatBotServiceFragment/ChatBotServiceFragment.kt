@@ -9,11 +9,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
-import com.example.recipeapp.api.model.DetailedRecipeResponse
+import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentChatBotBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
-import com.example.recipeapp.room_DB.model.AiRecipe
 import com.example.recipeapp.sharedPreferences.SharedPreferences
 import kotlinx.coroutines.launch
 
@@ -48,20 +47,30 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
         binding.lottieAnimationView.visibility = View.VISIBLE
 
         lifecycleScope.launch {
-            val recipe:AiRecipe = viewModel.getCrazyRecipe(ingredients!!)
-            val action = ChatBotServiceFragmentDirections.actionChatBotServiceFragmentToRecipeDetailsFragment(0 , recipe)
+            val aiRecipe = viewModel.getCrazyRecipe(ingredients!!)
+            val recipe = Recipe(
+                id = aiRecipe.id,
+                title = aiRecipe.title,
+                image = aiRecipe.image,
+                readyInMinutes = aiRecipe.readyInMinutes,
+                servings = aiRecipe.servings,
+                ingredients = aiRecipe.ingredients,
+                steps = aiRecipe.steps,
+                summary = aiRecipe.summary
+            )
+            val action = ChatBotServiceFragmentDirections.actionChatBotServiceFragmentToRecipeDetailsFragment(recipe)
             findNavController().navigate(action)
             viewModel.updateFirestore()
         }
     }
 
-    private fun showRecipeOpinion(recipe: DetailedRecipeResponse) {
+    private fun showRecipeOpinion(recipe: Recipe) {
         binding.scrollView3.visibility = View.VISIBLE
         binding.lottieAnimationView.visibility = View.VISIBLE
 
         lifecycleScope.launch {
-            val recipe = viewModel.getRecipeOpinion(recipe)
-            binding.chatbotResponse.text = recipe
+            val recipeOpinion = viewModel.getRecipeOpinion(recipe)
+            binding.chatbotResponse.text = recipeOpinion
         }
     }
 }

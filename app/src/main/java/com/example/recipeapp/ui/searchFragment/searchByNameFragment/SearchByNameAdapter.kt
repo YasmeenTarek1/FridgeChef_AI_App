@@ -43,7 +43,7 @@ class SearchByNameAdapter : RecyclerView.Adapter<SearchByNameAdapter.SearchByNam
             .into(binding.recipeImage)
 
         holder.itemView.setOnClickListener { view ->
-            val action = SearchByNameFragmentDirections.actionSearchByNameFragmentToRecipeDetailsFragment(recipe.id , null)
+            val action = SearchByNameFragmentDirections.actionSearchByNameFragmentToRecipeDetailsFragment(recipe)
             view.findNavController().navigate(action)
         }
     }

@@ -1,6 +1,7 @@
 package com.example.recipeapp.ui.recipeFragments.RecipeDetailsFragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -10,14 +11,11 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
-import com.example.recipeapp.api.model.DetailedRecipeResponse
+import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
-import com.example.recipeapp.room_DB.model.AiRecipe
-import com.example.recipeapp.room_DB.model.CookedRecipe
 import kotlinx.coroutines.launch
-
 
 class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
@@ -32,59 +30,37 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         binding = FragmentRecipeDetailsBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
-        val recipeId: Int = args.recipeID
-        val aiRecipe = args.aiRecipe
-
-        val factory = RecipeDetailsViewModelFactory(recipeId , repository)
+        val factory = RecipeDetailsViewModelFactory(repository)
         recipeDetailsViewModel = ViewModelProvider(this, factory).get(RecipeDetailsViewModel::class.java)
 
-        var cookedrecipe:CookedRecipe? = null
-        var recipe:DetailedRecipeResponse? = null
+        val currentRecipe = args.recipe
 
-        if(aiRecipe == null) {
-            lifecycleScope.launch{
-                recipe = recipeDetailsViewModel.getRecipeInfo()
-                displayRecipeInfo(recipe!!)
-                cookedrecipe = CookedRecipe(
-                    recipe!!.id,
-                    recipe!!.title,
-                    recipe!!.image,
-                    recipe!!.readyInMinutes,
-                    recipe!!.servings,
-                    recipe!!.healthScore,
-                    createdAt = System.currentTimeMillis()
-                )
+        lifecycleScope.launch {
+            // Retrieving the image & summary if not there (because Recipe has no image & no summary)
+            if (currentRecipe.image == null) {
+                currentRecipe.image = recipeDetailsViewModel.getRecipeInfo(currentRecipe.id).image
+                currentRecipe.summary = recipeDetailsViewModel.getRecipeInfo(currentRecipe.id).summary
             }
-        }
-        else{
-            displayAiRecipeInfo(aiRecipe!!)
-            cookedrecipe = CookedRecipe(
-                aiRecipe.id,
-                aiRecipe.title,
-                aiRecipe.image,
-                aiRecipe.readyInMinutes,aiRecipe.servings,2 , createdAt = System.currentTimeMillis())
+            displayRecipeImage(currentRecipe)
+            binding.recipe = currentRecipe
+            Log.d("Recipe" , currentRecipe.toString())
         }
 
         binding.stepsButton.setOnClickListener {
-            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToRecipeStepsFragment(cookedrecipe!!.id , cookedrecipe!!)
+            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToRecipeStepsFragment(currentRecipe!!)
             findNavController().navigate(action)
         }
 
         binding.aiOpinionButton.setOnClickListener {
-            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToChatBotServiceFragment(null, recipe, 1)
+            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToChatBotServiceFragment(null, currentRecipe, 1)
             findNavController().navigate(action)
         }
     }
 
-    private fun displayRecipeInfo(recipe: DetailedRecipeResponse) {
-        Glide.with(binding.root)
-            .load(recipe.image)
-            .into(binding.recipeImage)
-    }
-
-    private fun displayAiRecipeInfo(recipe: AiRecipe) {
+    private fun displayRecipeImage(recipe: Recipe) {
         Glide.with(binding.root)
             .load(recipe.image)
             .into(binding.recipeImage)
     }
 }
+
