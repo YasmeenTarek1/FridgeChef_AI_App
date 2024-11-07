@@ -31,15 +31,15 @@ class SearchByIngredientsViewModel(private val repository: Repository): ViewMode
     }.flowOn(Dispatchers.IO)
 
 
-    suspend fun getUserName():String{
+    suspend fun getUserName(): String{
         return withContext(Dispatchers.IO){
             repository.getUserById(AppUser.instance!!.userId!!)!!.name.substringBefore(" ")
         }
     }
 
-    suspend fun getUserImage():String{
+    suspend fun getUserImage(): String?{
         return withContext(Dispatchers.IO){
-            repository.getUserById(AppUser.instance!!.userId!!)!!.image!!
+            repository.getUserById(AppUser.instance!!.userId!!)!!.image
         }
     }
 }

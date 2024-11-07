@@ -59,11 +59,9 @@ class CookedBeforeAdapter(private val viewModel: CookedBeforeViewModel) : Recycl
             val recipe = Recipe(
                 id = cookedRecipe.id,
                 title = cookedRecipe.title,
-                image = cookedRecipe.image,
                 readyInMinutes = cookedRecipe.readyInMinutes,
                 servings = cookedRecipe.servings,
-                ingredients = cookedRecipe.ingredients,
-                steps = cookedRecipe.steps,
+                image = cookedRecipe.image,
                 summary = cookedRecipe.summary
             )
             val action = CookedRecipesFragmentDirections.actionCookedRecipesFragmentToRecipeDetailsFragment(recipe)

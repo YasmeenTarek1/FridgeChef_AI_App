@@ -7,6 +7,7 @@ import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.ExtraDetailsResponse
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.sharedPreferences.SharedPreferences
+import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import kotlinx.coroutines.flow.first
 
 class SimilarRecipesPagingSource(private val repository: Repository , private val sharedPreferences: SharedPreferences) : PagingSource<Int, Recipe>() {
@@ -51,10 +52,17 @@ class SimilarRecipesPagingSource(private val repository: Repository , private va
 
                 response.forEach { recipe ->
                     val detailedRecipe: ExtraDetailsResponse = repository.getRecipeInfo(recipe.id)
+                    val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
                     recipe.image = detailedRecipe.image
+                    recipe.summary = chatBotServiceViewModel.summarizeSummary(detailedRecipe.summary)
                 }
+
             } else {
                 response = repository.getRandomRecipes(diet = diet).toMutableList()
+                response.forEach { recipe ->
+                    val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
+                    recipe.summary = chatBotServiceViewModel.summarizeSummary(recipe.summary)
+                }
             }
 
             sharedPreferences.saveTakenIDs(takenIDs)

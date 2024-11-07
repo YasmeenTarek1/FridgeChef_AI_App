@@ -36,7 +36,7 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
     private lateinit var repository: Repository
     private lateinit var storageReference: StorageReference
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
-    private lateinit var uriImage:String
+    private var uriImage:String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -50,31 +50,33 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)
-            withContext(Dispatchers.Main) {
-                Glide.with(requireContext())
-                    .load(binding.user!!.image)
-                    .into(binding.userAvatar)
-                uriImage = binding.user!!.image!!
-            }
-
-            if(binding.user!!.age != 0) { // Not a new Customer (Existing one)
-                val spinnerDiet: Spinner = binding.spinnerDiet
-                var adapter = spinnerDiet.adapter
-
-                for (i in 0 until adapter.count) {
-                    if (adapter.getItem(i) == binding.user!!.dietType) {
-                        spinnerDiet.setSelection(i)
-                        break
-                    }
+            if(binding.user != null) {
+                withContext(Dispatchers.Main) {
+                    Glide.with(requireContext())
+                        .load(binding.user!!.image)
+                        .into(binding.userAvatar)
+                    uriImage = binding.user!!.image!!
                 }
 
-                val spinnerGoal: Spinner = binding.spinnerGoal
-                adapter = spinnerGoal.adapter
+                if (binding.user!!.age != 0) { // Not a new Customer (Existing one)
+                    val spinnerDiet: Spinner = binding.spinnerDiet
+                    var adapter = spinnerDiet.adapter
 
-                for (i in 0 until adapter.count) {
-                    if (adapter.getItem(i) == binding.user!!.goal) {
-                        spinnerGoal.setSelection(i)
-                        break
+                    for (i in 0 until adapter.count) {
+                        if (adapter.getItem(i) == binding.user!!.dietType) {
+                            spinnerDiet.setSelection(i)
+                            break
+                        }
+                    }
+
+                    val spinnerGoal: Spinner = binding.spinnerGoal
+                    adapter = spinnerGoal.adapter
+
+                    for (i in 0 until adapter.count) {
+                        if (adapter.getItem(i) == binding.user!!.goal) {
+                            spinnerGoal.setSelection(i)
+                            break
+                        }
                     }
                 }
             }
@@ -101,10 +103,10 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
             val height = binding.editTextHeight.text.toString().toInt()
             val goal = binding.spinnerGoal.selectedItem.toString()
             val dietType = binding.spinnerDiet.selectedItem.toString()
-
             var age = 0
             var gender = ""
-            if (binding.user!!.age == 0) { // gender and age aren't tracked before
+
+            if (binding.user == null || binding.user!!.age == 0) { // new User or gender and age aren't tracked before
                 age = binding.editTextAge.text.toString().toInt()
                 binding.radioGroup2.setOnCheckedChangeListener { _, checkedId ->
                     when (checkedId) {

@@ -103,15 +103,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             findNavController().navigate(R.id.action_feedFragment_to_loginFragment)
         }
 
-        // Custom Input
-//        val staticData = listOf(
-//            Recipe(id = 1, title = "Test Recipe 1", image = "", servings = 2, readyInMinutes = 30),
-//            Recipe(id = 2, title = "Test Recipe 2", image = "", servings = 3, readyInMinutes = 25)
-//        )
-//        lifecycleScope.launch {
-//            feedAdapter.submitData(PagingData.from(staticData))
-//        }
-
         lifecycleScope.launch {
             // collectLatest -> take the latest emitted value and cancels any ongoing processing of previous emissions.
             feedViewModel.recipes.collectLatest { pagingData ->

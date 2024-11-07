@@ -49,8 +49,6 @@ class FavRecipesAdapter : RecyclerView.Adapter<FavRecipesAdapter.FavRecipeViewHo
                 image = favRecipe.image,
                 readyInMinutes = favRecipe.readyInMinutes,
                 servings = favRecipe.servings,
-                ingredients = favRecipe.ingredients,
-                steps = favRecipe.steps,
                 summary = favRecipe.summary
             )
             val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe)

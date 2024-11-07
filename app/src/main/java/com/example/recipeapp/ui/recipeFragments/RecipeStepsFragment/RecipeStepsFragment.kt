@@ -53,9 +53,7 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
                         image = recipe.image,
                         readyInMinutes = recipe.readyInMinutes,
                         servings = recipe.servings,
-                        steps = recipe.steps,
                         summary = recipe.summary,
-                        ingredients = recipe.ingredients,
                         createdAt = System.currentTimeMillis()
                     )
                     viewModel.addToCookedRecipes(cookedRecipe)

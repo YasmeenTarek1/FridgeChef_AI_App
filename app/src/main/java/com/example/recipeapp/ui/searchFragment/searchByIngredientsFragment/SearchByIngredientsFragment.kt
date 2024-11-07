@@ -66,10 +66,13 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
 
         lifecycleScope.launch {
             binding.hello.text = "Hello, ${viewModel.getUserName()}"
-            withContext(Dispatchers.Main) {
-                Glide.with(requireContext())
-                    .load(viewModel.getUserImage())
-                    .into(binding.userAvatar)
+            val profileImage = viewModel.getUserImage()
+            if(profileImage != null) {
+                withContext(Dispatchers.Main) {
+                    Glide.with(requireContext())
+                        .load(viewModel.getUserImage())
+                        .into(binding.userAvatar)
+                }
             }
         }
 
@@ -126,19 +129,20 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         }
     }
 
-    private fun addChip(ingredient: String , chipGroup: ChipGroup , ingredients: MutableList<String> , submit: ImageButton) {
+    private fun addChip(query: String , chipGroup: ChipGroup , ingredients: MutableList<String> , submit: ImageButton) {
         val chip = LayoutInflater.from(requireContext()).inflate(R.layout.custom_chip, null) as Chip
-        chip.text = ingredient
         chip.isCloseIconVisible = true
+        chip.text = query
 
         chip.setOnCloseIconClickListener {
-            ingredients.remove(ingredient)
+            ingredients.remove(query)
             chipGroup.removeView(chip)
             if (chipGroup.isEmpty())
-                binding.submitButton.visibility = View.INVISIBLE
+                submit.visibility = View.INVISIBLE
         }
+
         chipGroup.addView(chip)
-        binding.submitButton.visibility = View.VISIBLE
+        submit.visibility = View.VISIBLE
     }
 
     private fun showIngredientOptionsDialog() {
@@ -171,6 +175,9 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
     private fun showNewIngredientsDialog() {
         searchView.setQuery("", false)
         searchView.clearFocus()
+        searchView.isEnabled = false
+        searchView.isFocusable = false
+        searchView.isClickable = false
 
         val ingredients2: MutableList<String> = mutableListOf()
 
@@ -187,15 +194,17 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
 
         dialogViewBinding.editText.setOnEditorActionListener { _, actionId, event ->
             if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER) {
-                val inputText = dialogViewBinding.editText.text.toString()
+                val query = dialogViewBinding.editText.text.toString()
 
-                if(!ingredients2.contains(inputText) && inputText.isNotEmpty()) {
-                    ingredients2.add(inputText)
+                if(!ingredients2.contains(query) && query.isNotEmpty()) {
+                    lifecycleScope.launch {
+                        addChip(query, dialogViewBinding.chipGroup , ingredients2, dialogViewBinding.submit)
+                        ingredients2.add(query)
+                    }
                 }
-                addChip(inputText , dialogViewBinding.chipGroup , ingredients2 , dialogViewBinding.submit)
 
-                dialogViewBinding.editText.clearFocus()
                 dialogViewBinding.editText.text.clear()
+                dialogViewBinding.editText.clearFocus()
 
                 true
             } else {

@@ -1,6 +1,5 @@
 package com.example.recipeapp.ui.specialRecipesFragment
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
@@ -49,8 +48,6 @@ class CookedRecipesAdapter : RecyclerView.Adapter<CookedRecipesAdapter.CookedRec
                 image = cookedRecipe.image,
                 readyInMinutes = cookedRecipe.readyInMinutes,
                 servings = cookedRecipe.servings,
-                ingredients = cookedRecipe.ingredients,
-                steps = cookedRecipe.steps,
                 summary = cookedRecipe.summary
             )
             val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe)

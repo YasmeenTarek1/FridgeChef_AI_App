@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class ChatBotServiceViewModel (private val repository: Repository , private val sharedPreferences: SharedPreferences) : ViewModel() {
+class ChatBotServiceViewModel (private val repository: Repository , private val sharedPreferences: SharedPreferences? = null) : ViewModel() {
 
     val recipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
@@ -34,7 +34,14 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             history += "$prompt $title"
 
             // Image (String - URL)
-            val image = repository.getAiImageForRecipeTitle("$title professional recipe picture")
+            val image = repository.getAiImageForRecipeTitle("$title recipe horizontal image")
+
+            // Summary (String)
+            prompt = "Give me a brief summary of this recipe: $history without mentioning its title or ingredients"
+            val summaryResponse = generativeModel.generateContent(prompt).text
+            history += "quick summary: $summaryResponse"
+
+            Log.d("Summary Tracing", summaryResponse.toString())
 
             // Servings (Int)
             prompt = "Give me the number of servings (only the number) of this recipe:$history"
@@ -47,19 +54,16 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             // Ingredients (String separated by commas)
             prompt = "Give me the ingredients of this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
             val ingredientsResponse = generativeModel.generateContent(prompt).text
-            Log.d("Ingredients Tracing", ingredientsResponse.toString())
-
             history += "ingredients used: $ingredientsResponse"
 
-            prompt = "Give me a quick summary of this recipe: $history"
-            val summaryResponse = generativeModel.generateContent(prompt).text
-            Log.d("Summary Tracing", summaryResponse.toString())
 
-            history += "quick summary: $summaryResponse"
+            Log.d("Ingredients Tracing", ingredientsResponse.toString())
 
             // Steps (String separated by commas)
-            prompt = "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not in programming language. Start immediately with the steps."
+            prompt = "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not in programming language." +
+                    " Start immediately with the steps."
             val stepsResponse = generativeModel.generateContent(prompt).text
+
             Log.d("Steps Tracing", stepsResponse.toString())
 
             val aiRecipe = AiRecipe(
@@ -70,7 +74,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
                 servings = servingsResponse,
                 ingredients = ingredientsResponse!!,
                 steps = stepsResponse!!,
-                summary = summaryResponse,
+                summary = summaryResponse!!,
                 createdAt = System.currentTimeMillis()
             )
 
@@ -107,7 +111,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
     suspend fun getCookingTip():String {
         return withContext(Dispatchers.IO) {
             val user = repository.getUserById(AppUser.instance!!.userId!!)
-            var cookingTipHistory: String = sharedPreferences.getCookingTipsHistory().toString()
+            var cookingTipHistory: String = sharedPreferences!!.getCookingTipsHistory().toString()
 
             val generativeModel =
                 GenerativeModel(
@@ -122,6 +126,23 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             cookingTipHistory = cookingTipHistory.takeLast(3000)
 
             sharedPreferences.saveCookingTipsHistory(cookingTipHistory)
+            response.text.toString()
+        }
+    }
+
+    suspend fun summarizeSummary(summary: String): String {
+        return withContext(Dispatchers.IO) {
+
+            val generativeModel =
+                GenerativeModel(
+                    modelName = "gemini-1.5-flash",
+                    apiKey = "AIzaSyBygUzMLk3xTKkiiyC407TXuxI08eWPFec"
+                )
+
+            val prompt = "summarize this paragraph $summary mentioning only the description of the recipe and its nutritional values if exist"
+            val response = generativeModel.generateContent(prompt)
+
+            Log.d("summary" , response.text.toString())
             response.text.toString()
         }
     }

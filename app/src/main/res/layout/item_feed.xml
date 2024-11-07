@@ -47,7 +47,7 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"
-                    android:text="@{recipe.readyInMinutes.toString()}"/>
+                    android:text="@{String.valueOf(recipe.readyInMinutes)}"/>
 
                 <TextView
                     android:id="@+id/servings"
@@ -62,7 +62,7 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"
-                    android:text="@{recipe.servings.toString()}"/>
+                    android:text="@{String.valueOf(recipe.servings)}"/>
 
 
                 <ImageButton

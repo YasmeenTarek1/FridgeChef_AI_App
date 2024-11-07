@@ -1,17 +1,11 @@
 package com.example.recipeapp.ui.specialRecipesFragment
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp.R
@@ -46,21 +40,20 @@ class SpecialRecipesFragment : Fragment(R.layout.fragment_special_recipes) {
         favAdapter = FavRecipesAdapter()
         aiAdapter = ChatBotAdapter()
 
-
         recyclerView1 = binding.recyclerView1
         recyclerView1.setHasFixedSize(true)
         recyclerView1.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        recyclerView1.setAdapter(aiAdapter)
+        recyclerView1.adapter = aiAdapter
 
         recyclerView2 = binding.recyclerView2
         recyclerView2.setHasFixedSize(true)
         recyclerView2.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        recyclerView2.setAdapter(favAdapter)
+        recyclerView2.adapter = favAdapter
 
         recyclerView3 = binding.recyclerView3
         recyclerView3.setHasFixedSize(true)
         recyclerView3.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        recyclerView3.setAdapter(cookedAdapter)
+        recyclerView3.adapter = cookedAdapter
 
         binding.viewAll1.setOnClickListener {
             val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToChatBotRecipesFragment()

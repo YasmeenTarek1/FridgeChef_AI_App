@@ -104,8 +104,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
+                            fetchUserInfoFromFirestoreAndSyncWithRoom() // It's already collected before
                         }
-                        fetchUserInfoFromFirestoreAndSyncWithRoom() // It's already collected before
                         goToHomePage()
                     } else {
                         Log.w("LoginFragment", "signInWithEmail:failure", task.exception)

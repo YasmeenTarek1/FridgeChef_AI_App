@@ -10,49 +10,200 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#FEFFF8"
+        android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/recipeImage"
-            android:layout_width="350dp"
-            android:layout_height="300dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="117dp"
-            app:layout_constraintEnd_toEndOf="parent"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:scrollbars="none">
 
-        <Button
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/recipeCardView"
+                    android:layout_width="375dp"
+                    android:layout_height="240dp"
+                    android:backgroundTint="#901431"
+                    app:cardCornerRadius="12dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="370dp"
+                    android:layout_height="235dp"
+                    android:backgroundTint="#ffffff"
+                    android:elevation="4dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_marginTop="12.5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/recipeImage"
+                        android:layout_width="430dp"
+                        android:layout_height="285dp"
+                        android:layout_marginStart="-30dp"
+                        android:layout_marginTop="-25dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                </androidx.cardview.widget.CardView>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/aiOpinionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:background="#FEFFF8"
+                    android:src="@drawable/chat_bot"
+                    app:backgroundTint="#901431"
+                    app:fabCustomSize="40dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recipeCardView"
+                    app:maxImageSize="34dp"
+                    app:tint="@null" />
+
+                <TextView
+                    android:id="@+id/titleTV"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="5dp"
+                    android:text="@{recipe.title}"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recipeCardView" />
+
+                <ImageView
+                    android:id="@+id/clock"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/clock_three"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleTV"/>
+
+                <ImageView
+                    android:id="@+id/servingsImage"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="115dp"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/plate_eating"
+                    app:layout_constraintTop_toBottomOf="@id/titleTV"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/readyInMinutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/clock"
+                    app:layout_constraintStart_toEndOf="@+id/clock"
+                    app:layout_constraintTop_toTopOf="@+id/clock"
+                    app:layout_constraintVertical_bias="1.0"
+                    android:textSize="14sp"
+                    android:textColor="#787878"
+                    android:text='@{recipe.readyInMinutes + " mins"}'/>
+
+                <TextView
+                    android:id="@+id/servings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/servingsImage"
+                    app:layout_constraintStart_toEndOf="@+id/servingsImage"
+                    app:layout_constraintTop_toTopOf="@+id/servingsImage"
+                    android:textSize="14sp"
+                    app:layout_constraintVertical_bias="1.0"
+                    android:textColor="#787878"
+                    android:text='@{recipe.servings > 1 &amp;&amp; recipe.servings &lt; 10 ? recipe.servings + " plates" : recipe.servings + " plate"}'/>
+
+                <TextView
+                    android:id="@+id/descriptionTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/titleTV"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/summaryTV"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:text="@{recipe.summary}"
+                    android:textColor="#787878"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/descriptionTV" />
+
+                <TextView
+                    android:id="@+id/ingredientsTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ingredients"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/summaryTV"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ingredientsRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ingredientsTV" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/stepsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="28dp"
-            android:layout_marginBottom="340dp"
-            android:text="Start"
+            android:src="@drawable/play"
+            app:backgroundTint="#901431"
+            android:background="#FEFFF8"
+            app:fabCustomSize="36dp"
+            app:maxImageSize="18dp"
+            app:tint="@null"
+            android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="268dp"
-            android:text="Description"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/aiOpinionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="AI Opinion"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

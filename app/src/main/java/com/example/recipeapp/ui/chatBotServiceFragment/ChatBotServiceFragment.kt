@@ -54,8 +54,6 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
                 image = aiRecipe.image,
                 readyInMinutes = aiRecipe.readyInMinutes,
                 servings = aiRecipe.servings,
-                ingredients = aiRecipe.ingredients,
-                steps = aiRecipe.steps,
                 summary = aiRecipe.summary
             )
             val action = ChatBotServiceFragmentDirections.actionChatBotServiceFragmentToRecipeDetailsFragment(recipe)

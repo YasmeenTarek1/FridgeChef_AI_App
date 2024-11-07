@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
@@ -35,19 +36,32 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
         val currentRecipe = args.recipe
 
+        val adapter = IngredientsListAdapter()
+        val recyclerView = binding.ingredientsRecyclerView
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+
+
         lifecycleScope.launch {
-            // Retrieving the image & summary if not there (because Recipe has no image & no summary)
-            if (currentRecipe.image == null) {
-                currentRecipe.image = recipeDetailsViewModel.getRecipeInfo(currentRecipe.id).image
-                currentRecipe.summary = recipeDetailsViewModel.getRecipeInfo(currentRecipe.id).summary
-            }
             displayRecipeImage(currentRecipe)
             binding.recipe = currentRecipe
             Log.d("Recipe" , currentRecipe.toString())
         }
 
+//        Custom Input
+//        val staticData = listOf(
+//            Ingredient(id = 1, name = "orange" , image = ""),
+//            Ingredient(id = 2, name = "apple" , image = "")
+//        )
+
+        lifecycleScope.launch {
+            val ingredients = recipeDetailsViewModel.getRecipeIngredients(currentRecipe.id)
+            adapter.differ.submitList(ingredients)
+        }
+
         binding.stepsButton.setOnClickListener {
-            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToRecipeStepsFragment(currentRecipe!!)
+            val action = RecipeDetailsFragmentDirections.actionRecipeDetailsFragmentToRecipeStepsFragment(currentRecipe)
             findNavController().navigate(action)
         }
 
@@ -63,4 +77,3 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
             .into(binding.recipeImage)
     }
 }
-

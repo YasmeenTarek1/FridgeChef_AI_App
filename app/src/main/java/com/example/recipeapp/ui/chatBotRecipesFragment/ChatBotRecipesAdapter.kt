@@ -2,10 +2,12 @@ package com.example.recipeapp.ui.chatBotRecipesFragment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemAiRecipeBinding
 import com.example.recipeapp.room_DB.model.AiRecipe
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
@@ -55,10 +57,18 @@ class ChatBotRecipesAdapter(private val viewModel: ChatBotRecipesViewModel): Rec
         }
 
 
-//        holder.itemView.setOnClickListener { view ->
-//            val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(aiRecipe , null)
-//            view.findNavController().navigate(action)
-//        }
+        holder.itemView.setOnClickListener { view ->
+            val recipe = Recipe(
+                id = aiRecipe.id,
+                title = aiRecipe.title,
+                image = aiRecipe.image,
+                readyInMinutes = aiRecipe.readyInMinutes,
+                servings = aiRecipe.servings,
+                summary = aiRecipe.summary
+            )
+            val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(recipe)
+            view.findNavController().navigate(action)
+        }
     }
 
     private fun removeItem(position: Int) {

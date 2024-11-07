@@ -13,8 +13,8 @@ import kotlinx.coroutines.withContext
 
 class RecipeStepsViewModel(private val recipeId: Int, private val repository: Repository): ViewModel() {
 
-    val cookedRecipes: Flow<List<CookedRecipe>> = repository.getAllCookedRecipes()
-    val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
+    private val cookedRecipes: Flow<List<CookedRecipe>> = repository.getAllCookedRecipes()
+    private val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
 
     suspend fun getSteps(): List<Step>{
         return withContext(Dispatchers.IO) {

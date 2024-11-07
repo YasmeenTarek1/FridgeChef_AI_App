@@ -48,8 +48,6 @@ class ChatBotAdapter : RecyclerView.Adapter<ChatBotAdapter.ChatBotRecipeViewHold
                 image = aiRecipe.image,
                 readyInMinutes = aiRecipe.readyInMinutes,
                 servings = aiRecipe.servings,
-                ingredients = aiRecipe.ingredients,
-                steps = aiRecipe.steps,
                 summary = aiRecipe.summary
             )
             val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe)

@@ -65,8 +65,6 @@ class FavoriteRecipesAdapter(private val viewModel: FavoriteRecipesViewModel) :
                 image = favRecipe.image,
                 readyInMinutes = favRecipe.readyInMinutes,
                 servings = favRecipe.servings,
-                ingredients = favRecipe.ingredients,
-                steps = favRecipe.steps,
                 summary = favRecipe.summary
             )
             val action = FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToRecipeDetailsFragment(recipe)

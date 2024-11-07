@@ -115,6 +115,14 @@ class Repository(
         }
     }
 
+    suspend fun getRecipeIngredients(recipeId: Int): List<Ingredient> {
+        return try {
+            api.getIngredients(recipeId = recipeId).ingredients
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     suspend fun autocompleteIngredientSearch(query: String): List<Ingredient> {
         return try {
             api.autocompleteIngredientSearch(query = query).results

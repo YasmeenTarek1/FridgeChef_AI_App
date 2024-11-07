@@ -7,6 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="350dp"
+        android:minHeight="170dp"
         android:background="@drawable/rounded_white_background"
         android:paddingHorizontal="5dp">
 
@@ -19,20 +20,6 @@
             android:layout_marginStart="20dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup"
-            android:layout_width="290dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:chipSpacing="8dp"
-            app:chipSpacingVertical="-8dp"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@id/editText"
-            app:layout_constraintEnd_toEndOf="@+id/editText"
-            app:layout_constraintTop_toBottomOf="@+id/editText"
-            app:singleLine="false" />
 
         <ImageButton
             android:id="@+id/submit"
@@ -47,9 +34,22 @@
             android:layout_marginTop="30dp"
             app:layout_constraintTop_toBottomOf="@id/chipGroup"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"/>
 
-
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:chipSpacing="8dp"
+            app:chipSpacingVertical="-8dp"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/editText"
+            app:layout_constraintEnd_toEndOf="@+id/editText"
+            app:layout_constraintTop_toBottomOf="@+id/editText"
+            app:singleLine="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

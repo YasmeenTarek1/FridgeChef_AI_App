@@ -32,9 +32,11 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)
-            Glide.with(requireContext())
-                .load(binding.user!!.image)
-                .into(binding.userAvatar)
+            if(binding.user != null) {
+                Glide.with(requireContext())
+                    .load(binding.user!!.image)
+                    .into(binding.userAvatar)
+            }
         }
 
         binding.editProfileInfo.setOnClickListener {

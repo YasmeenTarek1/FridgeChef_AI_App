@@ -11,13 +11,11 @@ data class FavoriteRecipe(
     @PrimaryKey
     val id: Int,
     val title: String,
-    val image: String?,
-    val readyInMinutes: Int? = null,
-    val servings: Int? = null,
+    val image: String,
+    val readyInMinutes: Int,
+    val servings: Int,
     val createdAt: Long,
-    val ingredients: String? = null,  // Stored as a comma-separated string
-    val steps: String? = null,        // Stored as a comma-separated string
-    var summary: String? = null
+    var summary: String
 ): Parcelable {
-    constructor() : this(0, "", "",0, 0 , 0)
+    constructor() : this(0, "", "",0, 0 , 0 , "")
 }

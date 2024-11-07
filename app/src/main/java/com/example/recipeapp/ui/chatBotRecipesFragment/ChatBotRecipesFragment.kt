@@ -43,7 +43,5 @@ class ChatBotRecipesFragment : Fragment(R.layout.fragment_chat_bot_recipes) {
                 chatBotRecipesAdapter.differ.submitList(recipes)
             }
         }
-
     }
-
 }

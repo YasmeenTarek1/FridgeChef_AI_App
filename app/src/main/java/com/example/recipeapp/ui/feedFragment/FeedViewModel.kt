@@ -25,8 +25,10 @@ class FeedViewModel(private val repository: Repository , application: Applicatio
                 image = recipe.image,
                 readyInMinutes = recipe.readyInMinutes,
                 servings = recipe.servings,
-                createdAt = System.currentTimeMillis()
+                createdAt = System.currentTimeMillis(),
+                summary = recipe.summary
             ))
+
             favRecipes.collect { favRecipes ->
                 repository.updateFavRecipesInFirestore(favRecipes)
             }
