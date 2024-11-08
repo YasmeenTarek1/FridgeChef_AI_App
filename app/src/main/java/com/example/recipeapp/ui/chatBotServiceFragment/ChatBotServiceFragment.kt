@@ -21,7 +21,6 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
     private lateinit var repository: Repository
     private lateinit var viewModel: ChatBotServiceViewModel
     private val args: ChatBotServiceFragmentArgs by navArgs()
-    private var classification:Int? = null // 0 -> Suggest a new Recipe      1 -> Give an Opinion
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -31,16 +30,8 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
         val factory = ChatBotServiceViewModelFactory(repository , SharedPreferences(requireContext()))
         viewModel = ViewModelProvider(this, factory).get(ChatBotServiceViewModel::class.java)
 
-        classification = args.classification
+        displayRecipe(args.ingredients)
 
-        when(classification){
-            0 -> {
-                displayRecipe(args.ingredients)
-            }
-            1 -> {
-                showRecipeOpinion(args.recipe!!)
-            }
-        }
     }
 
     private fun displayRecipe(ingredients: String?){
@@ -59,16 +50,6 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
             val action = ChatBotServiceFragmentDirections.actionChatBotServiceFragmentToRecipeDetailsFragment(recipe)
             findNavController().navigate(action)
             viewModel.updateFirestore()
-        }
-    }
-
-    private fun showRecipeOpinion(recipe: Recipe) {
-        binding.scrollView3.visibility = View.VISIBLE
-        binding.lottieAnimationView.visibility = View.VISIBLE
-
-        lifecycleScope.launch {
-            val recipeOpinion = viewModel.getRecipeOpinion(recipe)
-            binding.chatbotResponse.text = recipeOpinion
         }
     }
 }

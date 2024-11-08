@@ -11,9 +11,8 @@ import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemAiRecipeBinding
 import com.example.recipeapp.room_DB.model.AiRecipe
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
-import kotlinx.coroutines.runBlocking
 
-class ChatBotRecipesAdapter(private val viewModel: ChatBotRecipesViewModel): RecyclerView.Adapter<ChatBotRecipesAdapter.ChatBotViewHolder>() {
+class ChatBotRecipesAdapter(private val onDeleteClick: (AiRecipe) -> Unit): RecyclerView.Adapter<ChatBotRecipesAdapter.ChatBotViewHolder>() {
 
     private val viewBinderHelper = ViewBinderHelper()
 
@@ -50,12 +49,9 @@ class ChatBotRecipesAdapter(private val viewModel: ChatBotRecipesViewModel): Rec
         binding.recipe = aiRecipe
 
         binding.delete.setOnClickListener {
-            runBlocking {
-                viewModel.deleteRecipe(aiRecipe)
-            }
+            onDeleteClick(aiRecipe)
             removeItem(position)
         }
-
 
         holder.itemView.setOnClickListener { view ->
             val recipe = Recipe(

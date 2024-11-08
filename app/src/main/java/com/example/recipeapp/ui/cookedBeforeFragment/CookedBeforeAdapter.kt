@@ -11,9 +11,9 @@ import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemCookedRecipeBinding
 import com.example.recipeapp.room_DB.model.CookedRecipe
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
-import kotlinx.coroutines.runBlocking
 
-class CookedBeforeAdapter(private val viewModel: CookedBeforeViewModel) : RecyclerView.Adapter<CookedBeforeAdapter.CookedRecipeViewHolder>() {
+class CookedBeforeAdapter(private val  onDeleteClick: (CookedRecipe) -> Unit) :
+    RecyclerView.Adapter<CookedBeforeAdapter.CookedRecipeViewHolder>() {
 
     private val viewBinderHelper = ViewBinderHelper()
 
@@ -50,11 +50,10 @@ class CookedBeforeAdapter(private val viewModel: CookedBeforeViewModel) : Recycl
         binding.recipe = cookedRecipe
 
         binding.delete.setOnClickListener {
-            runBlocking {
-                viewModel.deleteRecipe(cookedRecipe)
-            }
+            onDeleteClick(cookedRecipe)
             removeItem(position)
         }
+
         holder.itemView.setOnClickListener { view ->
             val recipe = Recipe(
                 id = cookedRecipe.id,

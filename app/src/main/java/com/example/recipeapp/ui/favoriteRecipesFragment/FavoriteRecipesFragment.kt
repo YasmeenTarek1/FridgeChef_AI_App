@@ -32,7 +32,10 @@ class FavoriteRecipesFragment : Fragment(R.layout.fragment_favorite_recipes) {
         val factory = FavoriteRecipesViewModelFactory(repository)
         favViewModel = ViewModelProvider(this, factory).get(FavoriteRecipesViewModel::class.java)
 
-        favoriteRecipesAdapter = FavoriteRecipesAdapter(favViewModel)
+        favoriteRecipesAdapter = FavoriteRecipesAdapter(
+            onDeleteClick = { favRecipe ->
+            favViewModel.deleteRecipe(favRecipe)
+        })
 
         recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)

@@ -13,7 +13,7 @@ class IngredientSuggestionsAdapter(private val onOptionClick: (String) -> Unit) 
 
     val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Ingredient>() {
         override fun areItemsTheSame(oldItem: Ingredient, newItem: Ingredient): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.name == newItem.name
         }
 
         override fun areContentsTheSame(oldItem: Ingredient, newItem: Ingredient): Boolean {

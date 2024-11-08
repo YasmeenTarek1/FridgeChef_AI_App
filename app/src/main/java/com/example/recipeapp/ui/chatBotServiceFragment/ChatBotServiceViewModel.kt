@@ -91,7 +91,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
         }
     }
 
-    suspend fun getRecipeOpinion(recipe: Recipe):String {
+    suspend fun getRecipeOpinion(recipe: Recipe): String {
         return withContext(Dispatchers.IO) {
             val generativeModel =
                 GenerativeModel(
@@ -101,12 +101,21 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
             val user = repository.getUserById(AppUser.instance!!.userId!!)
 
-            val prompt = "Give me your summarized opinion in this recipe: $recipe and mention whether it matches the user's goal: ${user!!.goal}, the user's diet type: ${user!!.dietType} and if you have any small tweak to make it more related to user info given earlier, mention it"
+            val prompt = """
+            Please give your summarized opinion on this recipe in Markdown format with some emojis. 
+            
+            Include:
+            - Whether it matches the user's goal: ${user!!.goal} and diet type: ${user.dietType}
+            - Any small tweaks to better fit the user's profile, if applicable.
+            
+            Recipe Details:
+            $recipe
+            """.trimIndent()
+
             val response = generativeModel.generateContent(prompt)
             response.text.toString()
         }
     }
-
 
     suspend fun getCookingTip():String {
         return withContext(Dispatchers.IO) {
@@ -142,7 +151,6 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             val prompt = "summarize this paragraph $summary mentioning only the description of the recipe and its nutritional values if exist"
             val response = generativeModel.generateContent(prompt)
 
-            Log.d("summary" , response.text.toString())
             response.text.toString()
         }
     }

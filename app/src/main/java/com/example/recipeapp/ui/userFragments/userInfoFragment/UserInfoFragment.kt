@@ -51,11 +51,14 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)
             if(binding.user != null) {
-                withContext(Dispatchers.Main) {
-                    Glide.with(requireContext())
-                        .load(binding.user!!.image)
-                        .into(binding.userAvatar)
-                    uriImage = binding.user!!.image!!
+
+                if(binding.user!!.image != null) {
+                    withContext(Dispatchers.Main) {
+                        Glide.with(requireContext())
+                            .load(binding.user!!.image)
+                            .into(binding.userAvatar)
+                        uriImage = binding.user!!.image!!
+                    }
                 }
 
                 if (binding.user!!.age != 0) { // Not a new Customer (Existing one)

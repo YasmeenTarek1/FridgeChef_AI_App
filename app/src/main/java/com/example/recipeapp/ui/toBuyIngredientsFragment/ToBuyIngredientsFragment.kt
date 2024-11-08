@@ -32,12 +32,15 @@ class ToBuyIngredientsFragment : Fragment(R.layout.fragment_to_buy_ingredients) 
         val factory = ToBuyIngredientsViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(ToBuyIngredientsViewModel::class.java)
 
-        toBuyIngredientsAdapter = ToBuyIngredientsAdapter()
+        toBuyIngredientsAdapter = ToBuyIngredientsAdapter(
+            onDeleteClick = { ingredient ->
+                viewModel.deleteIngredient(ingredient)
+            }
+        )
 
         recyclerView = binding.recyclerView
-        recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.setAdapter(toBuyIngredientsAdapter)
+        recyclerView.adapter = toBuyIngredientsAdapter
 
 
         lifecycleScope.launch {

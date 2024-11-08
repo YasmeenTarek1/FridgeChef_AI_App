@@ -18,10 +18,13 @@ class CookedBeforeViewModel(private val repository: Repository) : ViewModel() {
 
     fun deleteRecipe(recipe: CookedRecipe){
         viewModelScope.launch (Dispatchers.IO) {
+
             repository.deleteCookedRecipe(recipe)
+
             recipes.collect { recipes ->
                 repository.updateCookedRecipesInFirestore(recipes)
             }
+
         }
     }
 }

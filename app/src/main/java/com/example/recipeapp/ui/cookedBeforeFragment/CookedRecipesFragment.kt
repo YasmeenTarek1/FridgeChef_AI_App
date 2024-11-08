@@ -31,7 +31,11 @@ class CookedRecipesFragment : Fragment(R.layout.fragment_cooked_recipes) {
         val factory = CookedBeforeViewModelFactory(repository)
         cookedViewModel = ViewModelProvider(this, factory).get(CookedBeforeViewModel::class.java)
 
-        cookedBeforeAdapter = CookedBeforeAdapter(cookedViewModel)
+        cookedBeforeAdapter = CookedBeforeAdapter(
+            onDeleteClick = { recipe ->
+                cookedViewModel.deleteRecipe(recipe)
+            }
+        )
 
         recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)

@@ -10,13 +10,13 @@ import com.example.recipeapp.api.model.Ingredient
 import com.example.recipeapp.databinding.ItemIngredientSmallBinding
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
 
-class IngredientsListAdapter : RecyclerView.Adapter<IngredientsListAdapter.IngredientsListAdapterViewHolder>() {
+class IngredientsListAdapter(private val onAddToCartClick: (Ingredient) -> Unit) : RecyclerView.Adapter<IngredientsListAdapter.IngredientsListAdapterViewHolder>() {
 
     private val viewBinderHelper = ViewBinderHelper()
 
     val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Ingredient>() {
         override fun areItemsTheSame(oldItem: Ingredient, newItem: Ingredient): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.name == newItem.name
         }
 
         override fun areContentsTheSame(oldItem: Ingredient, newItem: Ingredient): Boolean {
@@ -41,10 +41,17 @@ class IngredientsListAdapter : RecyclerView.Adapter<IngredientsListAdapter.Ingre
         binding.ingredient = ingredient
 
         // Bind the swipe layout to ensure that each item has a unique identifier for swipe actions
-        viewBinderHelper.bind(binding.swipeLayout, position.toString())
+        viewBinderHelper.bind(binding.swipeLayout, ingredient.name)
+
+        binding.addToCartButton.setOnClickListener {
+            onAddToCartClick(ingredient)
+            viewBinderHelper.closeLayout(ingredient.name)
+        }
+
+        ingredient.image = "https://img.spoonacular.com/ingredients_100x100/"+ingredient.image
 
         Glide.with(binding.root)
-            .load("https://img.spoonacular.com/ingredients_100x100/"+ingredient.image)
+            .load(ingredient.image)
             .into(binding.ingredientImage)
     }
 

@@ -1,7 +1,6 @@
 package com.example.recipeapp.api.model
 
 data class Ingredient(
-    val id: Int?,
-    val image: String?,
+    var image: String?,
     val name: String
 )

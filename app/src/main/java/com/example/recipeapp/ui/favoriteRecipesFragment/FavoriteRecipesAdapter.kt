@@ -11,9 +11,8 @@ import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemFavoriteRecipeBinding
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
-import kotlinx.coroutines.runBlocking
 
-class FavoriteRecipesAdapter(private val viewModel: FavoriteRecipesViewModel) :
+class FavoriteRecipesAdapter(private val onDeleteClick: (FavoriteRecipe) -> Unit) :
     RecyclerView.Adapter<FavoriteRecipesAdapter.FavoriteRecipeViewHolder>() {
 
     private val viewBinderHelper = ViewBinderHelper()
@@ -52,9 +51,7 @@ class FavoriteRecipesAdapter(private val viewModel: FavoriteRecipesViewModel) :
         binding.recipe = favRecipe
 
         binding.delete.setOnClickListener {
-            runBlocking {
-                viewModel.deleteRecipe(favRecipe)
-            }
+            onDeleteClick(favRecipe)
             removeItem(position)
         }
 

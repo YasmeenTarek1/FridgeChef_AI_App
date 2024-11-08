@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class FeedViewModel(private val repository: Repository , application: Application) : AndroidViewModel(application) {
 
     val recipes: Flow<PagingData<Recipe>> = repository.getSimilarRecipesForFavorites(repository , application.baseContext).cachedIn(viewModelScope)
-    val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
+    private val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
 
     fun onLoveClick(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {

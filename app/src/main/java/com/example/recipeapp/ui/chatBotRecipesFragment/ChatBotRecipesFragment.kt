@@ -31,7 +31,10 @@ class ChatBotRecipesFragment : Fragment(R.layout.fragment_chat_bot_recipes) {
         val factory = ChatBotRecipesViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(ChatBotRecipesViewModel::class.java)
 
-        chatBotRecipesAdapter = ChatBotRecipesAdapter(viewModel)
+        chatBotRecipesAdapter = ChatBotRecipesAdapter(
+            onDeleteClick = { recipe ->
+            viewModel.deleteRecipe(recipe)
+        })
 
         recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)

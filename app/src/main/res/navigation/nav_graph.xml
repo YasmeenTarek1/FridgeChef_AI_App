@@ -142,18 +142,6 @@
         android:id="@+id/toBuyIngredientsFragment"
         android:name="com.example.recipeapp.ui.toBuyIngredientsFragment.ToBuyIngredientsFragment"
         android:label="ToBuyIngredientsFragment" >
-        <action
-            android:id="@+id/action_toBuyIngredientsFragment_to_toBuyIngredientDetailsFragment"
-            app:destination="@id/toBuyIngredientDetailsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/toBuyIngredientDetailsFragment"
-        android:name="com.example.recipeapp.ui.toBuyIngredientsFragment.ToBuyIngredientDetailsFragment.ToBuyIngredientDetailsFragment"
-        android:label="fragment_to_buy_ingredient_details"
-        tools:layout="@layout/fragment_to_buy_ingredient_details">
-        <argument
-            android:name="ingredientID"
-            app:argType="integer"/>
     </fragment>
     <fragment
         android:id="@+id/specialRecipesFragment"
@@ -192,13 +180,6 @@
             android:name="ingredients"
             app:argType="string"
             app:nullable="true"/>
-        <argument
-            android:name="recipe"
-            app:argType="com.example.recipeapp.api.model.Recipe"
-            app:nullable="true"/>
-        <argument
-            android:name="classification"
-            app:argType="integer" />
     </fragment>
 
 </navigation>

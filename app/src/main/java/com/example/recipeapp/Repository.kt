@@ -465,4 +465,34 @@ class Repository(
             }
         }
     }
+
+    fun updateToBuyIngredientsInFirestore(roomIngredients: List<ToBuyIngredient>) {
+        val firestore = FirebaseFirestore.getInstance()
+        val userId = AppUser.instance?.userId!!
+        val toBuyIngredientsCollection =  firestore.collection("users").document(userId).collection("To-Buy Ingredients")
+
+        toBuyIngredientsCollection.get().addOnSuccessListener { snapshot ->
+            val firestoreIngredients = snapshot.documents.map { document ->
+                document.toObject(ToBuyIngredient::class.java)!!
+            }
+
+            val ingredientsToAddOrUpdate = roomIngredients.filter { ingredient ->
+                !firestoreIngredients.contains(ingredient)  // Ingredients that are new or updated
+            }
+
+            val ingredientsToDelete = firestoreIngredients.filter { ingredient ->
+                !roomIngredients.contains(ingredient)  // Ingredients that are removed in Room
+            }
+
+            // 1. Add or update ingredients
+            ingredientsToAddOrUpdate.forEach { ingredient ->
+                toBuyIngredientsCollection.document(ingredient.name.toString()).set(ingredient)
+            }
+
+            // 2. Delete removed ingredients
+            ingredientsToDelete.forEach { ingredient ->
+                toBuyIngredientsCollection.document(ingredient.name.toString()).delete()
+            }
+        }
+    }
 }

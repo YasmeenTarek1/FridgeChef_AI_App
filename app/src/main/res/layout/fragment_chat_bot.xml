@@ -11,32 +11,6 @@
         android:background="#FEFFF8"
         android:padding="8dp">
 
-        <!-- Scrollable area for ChatGPT response -->
-
-        <ScrollView
-            android:id="@+id/scrollView3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="invisible">
-
-            <TextView
-                android:id="@+id/chatbotResponse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="30dp"
-                android:text="Go Crazy Bot: Tell me your ingredients!"
-                android:textSize="16sp" />
-        </ScrollView>
-
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottieAnimationView"
             android:layout_width="match_parent"
@@ -48,8 +22,8 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/chatbot"
-            android:visibility="invisible"/>
-
+            android:visibility="gone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

@@ -165,7 +165,7 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
                 }
 
                 R.id.SearchByEnteredIngredientsRadioButton -> {
-                    findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(ingredients1.toString(), null, 0))
+                    findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(ingredients1.toString()))
                     dialogBuilder.dismiss()
                 }
             }
@@ -213,7 +213,7 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         }
 
         dialogViewBinding.submit.setOnClickListener {
-            findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(ingredients2.toString(), null, 0))
+            findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(ingredients2.toString()))
             dialogBuilder.dismiss()
         }
     }
