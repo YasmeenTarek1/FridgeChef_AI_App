@@ -78,7 +78,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-        recyclerView.setAdapter(feedAdapter)
+        recyclerView.adapter = feedAdapter
 
         ViewCompat.setTooltipText(binding.cookingTipButton, "Take a Cooking Tip")
 

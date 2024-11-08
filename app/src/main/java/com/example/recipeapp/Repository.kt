@@ -149,9 +149,9 @@ class Repository(
         }
     }
 
-    suspend fun getAiImageForRecipeTitle(title: String): String{
+    suspend fun getRecipeOrIngredientImage(title: String): String{
         return try {
-            customSearchApi.getAiImageForRecipeTitle(title = title).items!!.get(0).link
+            customSearchApi.getRecipeOrIngredientImage(title = title).items!!.get(0).link
         } catch (e: Exception) {
             throw e
         }
@@ -207,6 +207,12 @@ class Repository(
     fun getAllAiRecipes(): Flow<List<AiRecipe>> = aiRecipesDao.getAllAiRecipes()
 
     suspend fun deleteAiRecipe(aiRecipe: AiRecipe) = aiRecipesDao.deleteAiRecipe(aiRecipe)
+
+    suspend fun getAiRecipeIngredients(recipeId: Int) = aiRecipesDao.getAiRecipeIngredients(recipeId)
+
+    suspend fun getAiRecipeSteps(recipeId: Int) = aiRecipesDao.getAiRecipeSteps(recipeId)
+
+    suspend fun getLastInsertedAiRecipeID() = aiRecipesDao.getLastInsertedAiRecipeID()
 
     // User-related functions
 

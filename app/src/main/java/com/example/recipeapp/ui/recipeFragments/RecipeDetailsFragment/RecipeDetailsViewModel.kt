@@ -20,6 +20,18 @@ class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
         }
     }
 
+    suspend fun getAiRecipeIngredients(recipeId: Int): String {
+        return repository.getAiRecipeIngredients(recipeId)
+    }
+
+    suspend fun getAiRecipeSteps(recipeId: Int): String {
+        return repository.getAiRecipeSteps(recipeId)
+    }
+
+    suspend fun getAiIngredientImage(title: String): String {
+        return repository.getRecipeOrIngredientImage(title)
+    }
+
     fun onAddToCartClick(ingredient: Ingredient) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertToBuyIngredient(

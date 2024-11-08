@@ -50,7 +50,7 @@ class CookedRecipesAdapter : RecyclerView.Adapter<CookedRecipesAdapter.CookedRec
                 servings = cookedRecipe.servings,
                 summary = cookedRecipe.summary
             )
-            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe)
+            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)
         }
     }

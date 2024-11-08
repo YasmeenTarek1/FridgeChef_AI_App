@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
+import com.example.recipeapp.api.model.Ingredient
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.api.service.RetrofitInstance
 import com.example.recipeapp.databinding.DialogRecipeOpinionBinding
@@ -42,6 +43,7 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         viewModel = ViewModelProvider(this, factory).get(RecipeDetailsViewModel::class.java)
 
         val currentRecipe = args.recipe
+        val classification = args.classification
 
         val adapter = IngredientsListAdapter(onAddToCartClick = { ingredient ->
             viewModel.onAddToCartClick(ingredient)
@@ -64,8 +66,25 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 //        )
 
         lifecycleScope.launch {
-            val ingredients = viewModel.getRecipeIngredients(currentRecipe.id)
-            adapter.differ.submitList(ingredients)
+            if(classification == 0){
+                val ingredientsResponse = viewModel.getAiRecipeIngredients(currentRecipe.id)
+                val ingredientStrings = ingredientsResponse.split(",")
+                val ingredientsList = mutableListOf<Ingredient>()
+
+                ingredientStrings.forEach{ ingredientName ->
+                    val trimmedName = ingredientName.trim(' ', '"')
+                    ingredientsList.add(Ingredient(name = trimmedName , image = viewModel.getAiIngredientImage(trimmedName)))
+                }
+
+                adapter.differ.submitList(ingredientsList)
+            }
+            else {
+                val ingredients = viewModel.getRecipeIngredients(currentRecipe.id)
+                ingredients.forEach{ ingredient ->
+                    ingredient.image = "https://img.spoonacular.com/ingredients_100x100/"+ ingredient.image
+                }
+                adapter.differ.submitList(ingredients)
+            }
         }
 
         binding.stepsButton.setOnClickListener {

@@ -55,14 +55,14 @@ class ChatBotRecipesAdapter(private val onDeleteClick: (AiRecipe) -> Unit): Recy
 
         holder.itemView.setOnClickListener { view ->
             val recipe = Recipe(
-                id = aiRecipe.id,
+                id = aiRecipe.id.toInt(),
                 title = aiRecipe.title,
                 image = aiRecipe.image,
                 readyInMinutes = aiRecipe.readyInMinutes,
                 servings = aiRecipe.servings,
                 summary = aiRecipe.summary
             )
-            val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(recipe)
+            val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(recipe , 0)
             view.findNavController().navigate(action)
         }
     }

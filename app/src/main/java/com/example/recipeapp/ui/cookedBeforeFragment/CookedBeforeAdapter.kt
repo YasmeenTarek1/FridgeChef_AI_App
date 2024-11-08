@@ -63,7 +63,7 @@ class CookedBeforeAdapter(private val  onDeleteClick: (CookedRecipe) -> Unit) :
                 image = cookedRecipe.image,
                 summary = cookedRecipe.summary
             )
-            val action = CookedRecipesFragmentDirections.actionCookedRecipesFragmentToRecipeDetailsFragment(recipe)
+            val action = CookedRecipesFragmentDirections.actionCookedRecipesFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)
         }
     }

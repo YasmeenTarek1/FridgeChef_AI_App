@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ExtraDetailsResponse(
-    val image: String,
+    val image: String?,
     val summary: String
 ):Parcelable
 

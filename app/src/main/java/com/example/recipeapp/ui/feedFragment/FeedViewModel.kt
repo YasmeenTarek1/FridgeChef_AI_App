@@ -22,7 +22,7 @@ class FeedViewModel(private val repository: Repository , application: Applicatio
             repository.insertFavoriteRecipe(FavoriteRecipe(
                 id = recipe.id,
                 title = recipe.title,
-                image = recipe.image,
+                image = recipe.image!!,
                 readyInMinutes = recipe.readyInMinutes,
                 servings = recipe.servings,
                 createdAt = System.currentTimeMillis(),

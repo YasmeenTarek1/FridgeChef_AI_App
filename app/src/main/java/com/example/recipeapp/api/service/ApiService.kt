@@ -22,7 +22,7 @@ interface ApiService {
     // b6a39b82b408445f9100f6e8a7436249
     // e46d27c80c5c41948205811245e738f0
     companion object{
-        const val API_KEY = "ad28d9e80f7c42219ce7dd5c918b9cb0"
+        const val API_KEY = "b6a39b82b408445f9100f6e8a7436249"
     }
 
     @GET("recipes/{id}/similar")
@@ -102,11 +102,12 @@ interface ApiService {
     ): List<Recipe>
 
     @GET("customsearch/v1")
-    suspend fun getAiImageForRecipeTitle(
+    suspend fun getRecipeOrIngredientImage(
         @Query("key") apiKey: String = "AIzaSyBXAW4Ybjb3iLqiOgC7-irQijjSczuWs90",
         @Query("q") title: String,
         @Query("num") number: Int = 1,
         @Query("cx") cx: String = "d7935696c02424683",
         @Query("searchType") searchType: String = "image"
     ): CustomSearchResponse
+
 }

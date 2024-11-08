@@ -48,8 +48,6 @@ class IngredientsListAdapter(private val onAddToCartClick: (Ingredient) -> Unit)
             viewBinderHelper.closeLayout(ingredient.name)
         }
 
-        ingredient.image = "https://img.spoonacular.com/ingredients_100x100/"+ingredient.image
-
         Glide.with(binding.root)
             .load(ingredient.image)
             .into(binding.ingredientImage)

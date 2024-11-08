@@ -9,15 +9,12 @@ data class Recipe(
     val title: String,
     val readyInMinutes: Int,
     val servings: Int,
-    var image: String,                                               // retrieved when getting similar(using ExtraDetailsResponse) or random recipes & Gemini
-    var summary: String                                              // retrieved when getting similar(using ExtraDetailsResponse) or random recipes & Gemini
+    var image: String?,                                       // retrieved when getting similar(using ExtraDetailsResponse) or random recipes & Gemini
+    var summary: String                                      // retrieved when getting similar(using ExtraDetailsResponse) or random recipes & Gemini
 
-//    val missedIngredients: List<Int>? = null,       // will be available in case search by ingredients
-//    var usedIngredients: @RawValue List<Ingredient>? = null,         // will be available in case search by ingredients
-//
-//    var ingredients: @RawValue List<Ingredient>? = null,             // Ai Recipe --> Stored ,otherwise retrieved in recipeDetailsFragment using recipe ID and stored
-//    val steps: @RawValue List<Step>? = null,                         // Ai Recipe --> Stored ,otherwise retrieved in recipeStepsFragment using recipe ID and stored
-//
+//    var ingredients: List<Ingredient>? = null,             // Ai Recipe --> retrieved from gemini & google search api for images, otherwise --> retrieved in recipeDetailsFragment using spoonacular api
+//    val steps: List<Step>? = null,                         // Ai Recipe --> retrieved from gemini, otherwise --> retrieved in recipeStepsFragment using spoonacular api
+
 ): Parcelable{
     constructor() : this(0, "" ,0 , 0 , "" ,"")
 }

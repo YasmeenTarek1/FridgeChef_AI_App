@@ -50,12 +50,16 @@ class SimilarRecipesPagingSource(private val repository: Repository , private va
                 // Update current recipes to prevent duplicates
                 currentRecipesIDs.addAll(response.map { it.id })
 
+
                 response.forEach { recipe ->
                     val detailedRecipe: ExtraDetailsResponse = repository.getRecipeInfo(recipe.id)
                     val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
-                    recipe.image = detailedRecipe.image
+                    if(detailedRecipe.image != null)
+                        recipe.image = detailedRecipe.image
                     recipe.summary = chatBotServiceViewModel.summarizeSummary(detailedRecipe.summary)
                 }
+
+                response = response.filterNot { it.image == null }.toMutableList()
 
             } else {
                 response = repository.getRandomRecipes(diet = diet).toMutableList()

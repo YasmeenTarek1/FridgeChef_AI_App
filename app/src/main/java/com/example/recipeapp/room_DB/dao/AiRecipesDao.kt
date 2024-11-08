@@ -25,4 +25,13 @@ interface AiRecipesDao {
 
     @Delete
     suspend fun deleteAiRecipe(aiRecipe: AiRecipe)
+
+    @Query("SELECT ingredients FROM AI_RECIPES WHERE id = :recipeId")
+    suspend fun getAiRecipeIngredients(recipeId: Int): String
+
+    @Query("SELECT steps FROM AI_RECIPES WHERE id = :recipeId")
+    suspend fun getAiRecipeSteps(recipeId: Int): String
+
+    @Query("SELECT id FROM ai_recipes ORDER BY id DESC LIMIT 1")
+    suspend fun getLastInsertedAiRecipeID(): Int
 }

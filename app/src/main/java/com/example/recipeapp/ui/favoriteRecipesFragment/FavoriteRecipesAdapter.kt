@@ -64,7 +64,7 @@ class FavoriteRecipesAdapter(private val onDeleteClick: (FavoriteRecipe) -> Unit
                 servings = favRecipe.servings,
                 summary = favRecipe.summary
             )
-            val action = FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToRecipeDetailsFragment(recipe)
+            val action = FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)
         }
     }

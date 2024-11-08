@@ -16,7 +16,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
     val recipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
-    suspend fun getCrazyRecipe(ingredients: String): AiRecipe{
+    suspend fun getCrazyRecipe(ingredients: String): Recipe{
         return withContext(Dispatchers.IO) {
             val generativeModel = GenerativeModel(
                 modelName = "gemini-1.5-flash",
@@ -33,38 +33,40 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             val title = generativeModel.generateContent(prompt).text.toString()
             history += "$prompt $title"
 
+
             // Image (String - URL)
-            val image = repository.getAiImageForRecipeTitle("$title recipe horizontal image")
+            val image = repository.getRecipeOrIngredientImage("$title recipe horizontal image")
+
 
             // Summary (String)
             prompt = "Give me a brief summary of this recipe: $history without mentioning its title or ingredients"
             val summaryResponse = generativeModel.generateContent(prompt).text
             history += "quick summary: $summaryResponse"
 
-            Log.d("Summary Tracing", summaryResponse.toString())
 
             // Servings (Int)
             prompt = "Give me the number of servings (only the number) of this recipe:$history"
             val servingsResponse = generativeModel.generateContent(prompt).text!!.trim().toInt()
 
+
             // Prep Time (Int - minutes)
             prompt = "Give me the prep time (only the duration in minutes) of this recipe:$history"
             val readyInMinutesResponse = generativeModel.generateContent(prompt).text!!.trim().toInt()
 
-            // Ingredients (String separated by commas)
-            prompt = "Give me the ingredients of this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
+
+            // Ingredients
+            prompt = "Give me only the names of the ingredients of this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
             val ingredientsResponse = generativeModel.generateContent(prompt).text
             history += "ingredients used: $ingredientsResponse"
 
 
-            Log.d("Ingredients Tracing", ingredientsResponse.toString())
-
-            // Steps (String separated by commas)
+            // Steps
             prompt = "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not in programming language." +
                     " Start immediately with the steps."
             val stepsResponse = generativeModel.generateContent(prompt).text
 
             Log.d("Steps Tracing", stepsResponse.toString())
+
 
             val aiRecipe = AiRecipe(
                 0,
@@ -79,7 +81,17 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             )
 
             repository.insertAiRecipe(aiRecipe)
-            aiRecipe
+
+            val recipe = Recipe(
+                id = repository.getLastInsertedAiRecipeID(),
+                title = aiRecipe.title,
+                image = aiRecipe.image,
+                readyInMinutes = aiRecipe.readyInMinutes,
+                servings = aiRecipe.servings,
+                summary = aiRecipe.summary
+            )
+
+            recipe
         }
     }
 

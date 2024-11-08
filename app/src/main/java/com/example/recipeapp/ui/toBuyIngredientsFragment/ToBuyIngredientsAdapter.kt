@@ -8,9 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeapp.databinding.ItemToBuyIngredientBinding
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
+import io.github.rexmtorres.android.swipereveallayout.ViewBinderHelper
 
 
 class ToBuyIngredientsAdapter(private val onDeleteClick: (ToBuyIngredient) -> Unit) : RecyclerView.Adapter<ToBuyIngredientsAdapter.toBuyIngredientViewHolder>() {
+
+    private val viewBinderHelper = ViewBinderHelper()
 
     val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<ToBuyIngredient>() {
         override fun areItemsTheSame(oldItem: ToBuyIngredient, newItem: ToBuyIngredient): Boolean {
@@ -23,7 +26,9 @@ class ToBuyIngredientsAdapter(private val onDeleteClick: (ToBuyIngredient) -> Un
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): toBuyIngredientViewHolder {
-        return toBuyIngredientViewHolder(ItemToBuyIngredientBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        val binding = ItemToBuyIngredientBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        viewBinderHelper.setOpenOnlyOne(true) // Ensure only one swipe action is open at a time
+        return toBuyIngredientViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -35,6 +40,9 @@ class ToBuyIngredientsAdapter(private val onDeleteClick: (ToBuyIngredient) -> Un
         val binding = holder.itemBinding
 
         binding.ingredient = ingredient
+
+        // Bind the swipe layout to ensure that each item has a unique identifier for swipe actions
+        viewBinderHelper.bind(binding.swipeLayout, ingredient.name)
 
         binding.delete.setOnClickListener {
             onDeleteClick(ingredient)

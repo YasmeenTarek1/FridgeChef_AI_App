@@ -50,7 +50,7 @@ class ChatBotAdapter : RecyclerView.Adapter<ChatBotAdapter.ChatBotRecipeViewHold
                 servings = aiRecipe.servings,
                 summary = aiRecipe.summary
             )
-            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe)
+            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe , 0)
             view.findNavController().navigate(action)
         }
     }

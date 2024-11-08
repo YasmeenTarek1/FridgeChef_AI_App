@@ -72,12 +72,15 @@
         <action
             android:id="@+id/action_recipeDetailsFragment_to_recipeStepsFragment"
             app:destination="@id/recipeStepsFragment" />
-        <argument
-            android:name="recipe"
-            app:argType="com.example.recipeapp.api.model.Recipe"/>
         <action
             android:id="@+id/action_recipeDetailsFragment_to_chatBotServiceFragment"
             app:destination="@id/chatBotServiceFragment" />
+        <argument
+            android:name="recipe"
+            app:argType="com.example.recipeapp.api.model.Recipe"/>
+        <argument
+            android:name="classification"
+            app:argType="integer"/>
     </fragment>
     <fragment
         android:id="@+id/recipeStepsFragment"

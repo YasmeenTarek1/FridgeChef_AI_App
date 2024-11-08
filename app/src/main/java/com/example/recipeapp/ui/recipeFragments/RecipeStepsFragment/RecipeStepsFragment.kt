@@ -50,7 +50,7 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
                     val cookedRecipe = CookedRecipe(
                         id = recipe.id,
                         title = recipe.title,
-                        image = recipe.image,
+                        image = recipe.image!!,
                         readyInMinutes = recipe.readyInMinutes,
                         servings = recipe.servings,
                         summary = recipe.summary,
