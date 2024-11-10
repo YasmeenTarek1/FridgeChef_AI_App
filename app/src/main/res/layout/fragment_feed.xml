@@ -8,17 +8,6 @@
         android:padding="5dp"
         android:background="#FEFFF8">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="55dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- TextView hint to the user -->
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/cookingTipButton"
             android:layout_width="wrap_content"
@@ -29,7 +18,7 @@
             app:elevation="12dp"
             android:background="#FEFFF8"
             app:fabCustomSize="40dp"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintBottom_toTopOf="@+id/swipeRefreshLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:maxImageSize="24dp"
@@ -43,7 +32,7 @@
             android:scaleX="-1"
             android:src="@drawable/logout"
             android:background="#FEFFF8"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintBottom_toTopOf="@+id/swipeRefreshLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
@@ -60,9 +49,24 @@
             app:layout_constraintStart_toEndOf="@id/logOutButton"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cookingTipButton"
-            app:layout_constraintBottom_toTopOf="@id/recyclerView"
+            app:layout_constraintBottom_toTopOf="@id/swipeRefreshLayout"
             app:layout_constraintVertical_bias="0.0"
             android:fontFamily="@font/font1"/>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="55dp"
+            android:layout_marginBottom="60dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

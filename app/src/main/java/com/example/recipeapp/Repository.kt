@@ -181,7 +181,7 @@ class Repository(
 
     suspend fun deleteFavoriteRecipe(favoriteRecipeId: Int) = favoriteRecipesDao.deleteFavoriteRecipe(favoriteRecipeId)
 
-    suspend fun isFavoriteRecipeExists(recipeId : Int) = favoriteRecipesDao.isFavoriteRecipeExists(recipeId)
+    fun isFavoriteRecipeExists(recipeId : Int) = favoriteRecipesDao.isFavoriteRecipeExists(recipeId)
 
     // Database-related functions for ToBuyIngredients
 

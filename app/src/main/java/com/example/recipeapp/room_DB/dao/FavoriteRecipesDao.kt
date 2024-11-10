@@ -26,5 +26,5 @@ interface FavoriteRecipesDao {
     suspend fun deleteFavoriteRecipe(recipeId: Int)
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_recipes WHERE id = :recipeId)")
-    suspend fun isFavoriteRecipeExists(recipeId: Int): Boolean
+    fun isFavoriteRecipeExists(recipeId: Int): Flow<Boolean>
 }

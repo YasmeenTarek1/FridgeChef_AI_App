@@ -1,4 +1,3 @@
-
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -10,7 +9,10 @@ import com.example.recipeapp.sharedPreferences.SharedPreferences
 import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import kotlinx.coroutines.flow.first
 
-class SimilarRecipesPagingSource(private val repository: Repository , private val sharedPreferences: SharedPreferences) : PagingSource<Int, Recipe>() {
+class SimilarRecipesPagingSource(
+    private val repository: Repository,
+    private val sharedPreferences: SharedPreferences
+) : PagingSource<Int, Recipe>() {
 
     private val takenIDs: MutableSet<Int> = sharedPreferences.getTakenIDs().toMutableSet()
     private val currentRecipesIDs: MutableSet<Int> = sharedPreferences.getCurrentRecipesIDs().toMutableSet()
@@ -21,11 +23,11 @@ class SimilarRecipesPagingSource(private val repository: Repository , private va
             var taken = false
             var recipeId = 0
 
-            // Collect all favorite recipes (Cold Stream)
+            // Collect all favorite recipes
             val favoriteRecipes = repository.getAllFavoriteRecipes().first()
             currentRecipesIDs.addAll(favoriteRecipes.map { it.id })
 
-            // Get another favorite recipe that wasn't handled before
+            // Get a new favorite recipe ID that hasn't been used
             for (favorite in favoriteRecipes) {
                 if (!takenIDs.contains(favorite.id)) {
                     takenIDs.add(favorite.id)
@@ -36,47 +38,57 @@ class SimilarRecipesPagingSource(private val repository: Repository , private va
             }
 
             var response: MutableList<Recipe> = mutableListOf()
+            var moreRecipesNeeded = false
 
-            // Fetch user's diet type, if balanced, treat it as null (no filter)
+            // Get user's diet type, ignore "balanced"
             var diet: String? = repository.getUserById(AppUser.instance!!.userId!!)?.dietType?.lowercase()
             if (diet == "balanced") diet = null
 
-            // If there is still a favorite recipe that isn't processed, fetch similar recipes
+            // Fetch similar recipes or fallback to random recipes if needed
             if (taken) {
                 val recipes = repository.getSimilarRecipes(recipeId = recipeId).toMutableList()
-
-                // Filter out already present recipes
                 response = recipes.filterNot { currentRecipesIDs.contains(it.id) }.toMutableList()
-                // Update current recipes to prevent duplicates
-                currentRecipesIDs.addAll(response.map { it.id })
 
-
+                // Fill recipe details
                 response.forEach { recipe ->
                     val detailedRecipe: ExtraDetailsResponse = repository.getRecipeInfo(recipe.id)
                     val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
-                    if(detailedRecipe.image != null)
+                    if (detailedRecipe.image != null) {
                         recipe.image = detailedRecipe.image
+                    }
                     recipe.summary = chatBotServiceViewModel.summarizeSummary(detailedRecipe.summary)
                 }
 
+                // Filter out recipes with missing images
                 response = response.filterNot { it.image == null }.toMutableList()
 
+                // Check if we have enough recipes, else fetch additional random ones
+                if (response.size < params.loadSize) {
+                    moreRecipesNeeded = true
+                }
             } else {
-                response = repository.getRandomRecipes(diet = diet).toMutableList()
-                response.forEach { recipe ->
+                moreRecipesNeeded = true
+            }
+
+            // Fetch random recipes if similar recipes are insufficient
+            if (moreRecipesNeeded) {
+                val additionalRecipes = repository.getRandomRecipes(diet = diet).toMutableList()
+                additionalRecipes.forEach { recipe ->
                     val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
                     recipe.summary = chatBotServiceViewModel.summarizeSummary(recipe.summary)
                 }
+                response.addAll(additionalRecipes)
             }
 
+            // Save the IDs in shared preferences
+            currentRecipesIDs.addAll(response.map { it.id })
             sharedPreferences.saveTakenIDs(takenIDs)
             sharedPreferences.saveCurrentRecipesIDs(currentRecipesIDs)
-
 
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 1) null else page - 1, // Handle first page
-                nextKey = if (response.isEmpty()) null else page + 1 // No more data if response is empty
+                nextKey = if (response.isEmpty()) null else page + 1 // Continue loading if non-empty response
             )
         } catch (e: Exception) {
             Log.e("PagingSource", "Error loading data", e)

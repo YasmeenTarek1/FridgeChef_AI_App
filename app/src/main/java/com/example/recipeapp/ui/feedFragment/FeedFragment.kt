@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.recipeapp.AppUser
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
@@ -42,6 +43,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     private lateinit var feedViewModel: FeedViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var feedAdapter: FeedAdapter
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private var tooltipWindow: PopupWindow? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -56,17 +58,16 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         binding = FragmentFeedBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
+        swipeRefreshLayout = binding.swipeRefreshLayout
+
         val factory = FeedViewModelFactory(repository , requireActivity().application)
         feedViewModel = ViewModelProvider(this, factory).get(FeedViewModel::class.java)
 
         feedAdapter = FeedAdapter(
+            lifecycleOwner = viewLifecycleOwner,
             checkFavorite = { recipeId ->
-                var isFavorite = false
-                lifecycleScope.launch(Dispatchers.IO) {
-                    isFavorite = feedViewModel.checkFavorite(recipeId)
-                }
-                isFavorite }
-            ,
+                feedViewModel.checkFavorite(recipeId)
+            },
             onLoveClick = { recipe ->
                 feedViewModel.onLoveClick(recipe)
             } ,
@@ -89,6 +90,21 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             }
         }, 100)
 
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
+                // Check if we're near the end of the list
+                if (lastVisibleItem + 5 >= totalItemCount) {
+                    feedAdapter.retry() // load more items if any errors happened during loading
+                }
+            }
+        })
+
 
         val auth: FirebaseAuth = Firebase.auth
         binding.logOutButton.setOnClickListener{
@@ -103,17 +119,32 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             findNavController().navigate(R.id.action_feedFragment_to_loginFragment)
         }
 
-        lifecycleScope.launch {
-            // collectLatest -> take the latest emitted value and cancels any ongoing processing of previous emissions.
-            feedViewModel.recipes.collectLatest { pagingData ->
-                feedAdapter.submitData(pagingData)
-            }
-        }
-
         binding.cookingTipButton.setOnClickListener {
             showCookingTip()
         }
 
+        swipeRefreshLayout.setOnRefreshListener {
+            refreshData()
+        }
+
+        observeData()
+    }
+
+    private fun observeData() {
+        lifecycleScope.launch {
+            // collectLatest -> take the latest emitted value and cancels any ongoing processing of previous emissions.
+            feedViewModel.recipes.collectLatest { pagingData ->
+                feedAdapter.submitData(pagingData)
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
+    }
+
+    private fun refreshData() {
+        lifecycleScope.launch {
+            feedAdapter.refresh()
+            observeData()
+        }
     }
 
     private fun showCookingTip() {

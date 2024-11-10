@@ -3,6 +3,8 @@ package com.example.recipeapp.ui.feedFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -10,8 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemFeedBinding
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
-class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLoveClick: (Recipe) -> Unit , private val onDislikeClick: (Recipe) -> Unit) : PagingDataAdapter<Recipe, FeedAdapter.RecipeViewHolder>(RECIPE_COMPARATOR) {
+class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
+                  private val checkFavorite: (Int) -> Flow<Boolean>,
+                  private val onLoveClick: (Recipe) -> Unit,
+                  private val onDislikeClick: (Recipe) -> Unit) : PagingDataAdapter<Recipe, FeedAdapter.RecipeViewHolder>(RECIPE_COMPARATOR) {
 
 
     companion object {
@@ -53,15 +60,17 @@ class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLo
             .into(binding.recipeImage)
 
 
-        if(checkFavorite(recipe.id)) {
-            binding.fullLove.visibility = View.VISIBLE
-            binding.love.visibility = View.INVISIBLE
+        lifecycleOwner.lifecycleScope.launch {
+            checkFavorite(recipe.id).collect { isFavorite ->
+                if (isFavorite) {
+                    binding.fullLove.visibility = View.VISIBLE
+                    binding.love.visibility = View.INVISIBLE
+                } else {
+                    binding.fullLove.visibility = View.INVISIBLE
+                    binding.love.visibility = View.VISIBLE
+                }
+            }
         }
-        else{
-            binding.fullLove.visibility = View.INVISIBLE
-            binding.love.visibility = View.VISIBLE
-        }
-
         holder.itemView.setOnClickListener { view ->
             val action = FeedFragmentDirections.actionFeedFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)
@@ -70,5 +79,9 @@ class FeedAdapter (private val checkFavorite: (Int) -> Boolean, private val onLo
 
     }
 
-    inner class RecipeViewHolder(val itemBinding: ItemFeedBinding) : RecyclerView.ViewHolder(itemBinding.root)
+    inner class RecipeViewHolder(val itemBinding: ItemFeedBinding) : RecyclerView.ViewHolder(itemBinding.root){
+        init {
+            itemBinding.lifecycleOwner = lifecycleOwner
+        }
+    }
 }
