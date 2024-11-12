@@ -86,7 +86,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         Handler(Looper.getMainLooper()).postDelayed({
             if (isAdded) {
                 // Show tooltip automatically when the fragment is first displayed
-                showCustomTooltip(binding.cookingTipButton, "Take a Cooking Tip", 4500)
+                showCustomTooltip()
             }
         }, 100)
 
@@ -180,14 +180,14 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     }
 
 
-    fun showCustomTooltip(view: View, message: String, durationMillis: Long) {
+    private fun showCustomTooltip() {
         // Dismiss any existing tooltip if present
         tooltipWindow?.dismiss()
 
-        val inflater = LayoutInflater.from(view.context)
+        val inflater = LayoutInflater.from(binding.cookingTipButton.context)
         val tooltipView = inflater.inflate(R.layout.tooltip, null)
         val tooltipText = tooltipView.findViewById<TextView>(R.id.tooltip_text)
-        tooltipText.text = message
+        tooltipText.text = "Take a Cooking Tip"
 
         tooltipWindow = PopupWindow(tooltipView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
         tooltipWindow?.isOutsideTouchable = true
@@ -195,13 +195,13 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         // Get the location of the view on screen
         val location = IntArray(2)
-        view.getLocationOnScreen(location)
+        binding.cookingTipButton.getLocationOnScreen(location)
 
         val xOffset = -247 // Horizontal offset
-        tooltipWindow?.showAtLocation(view, 0, location[0] + xOffset, location[1] + view.height)
+        tooltipWindow?.showAtLocation(view, 0, location[0] + xOffset, location[1] + binding.cookingTipButton.height)
 
         // Schedule dismissal of the tooltip
-        handler.postDelayed(runnable, durationMillis)
+        handler.postDelayed(runnable, 4000)
     }
 
 }

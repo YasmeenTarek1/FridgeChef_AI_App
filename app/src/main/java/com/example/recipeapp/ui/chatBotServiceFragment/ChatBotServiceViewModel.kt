@@ -1,6 +1,5 @@
 package com.example.recipeapp.ui.chatBotServiceFragment
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.recipeapp.AppUser
 import com.example.recipeapp.Repository
@@ -61,11 +60,10 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
 
             // Steps
-            prompt = "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not in programming language." +
-                    " Start immediately with the steps."
+            prompt = "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not lines and not in programming language or mark down." +
+                    " Start immediately with the steps without mentioning any titles" +
+                    " Every step is a complete sentence"
             val stepsResponse = generativeModel.generateContent(prompt).text
-
-            Log.d("Steps Tracing", stepsResponse.toString())
 
 
             val aiRecipe = AiRecipe(

@@ -77,22 +77,29 @@
             app:destination="@id/chatBotServiceFragment" />
         <argument
             android:name="recipe"
-            app:argType="com.example.recipeapp.api.model.Recipe"/>
+            app:argType="com.example.recipeapp.api.model.Recipe"
+            app:nullable="false"/>
         <argument
             android:name="classification"
-            app:argType="integer"/>
+            app:argType="integer"
+            app:nullable="false"/>
     </fragment>
     <fragment
         android:id="@+id/recipeStepsFragment"
         android:name="com.example.recipeapp.ui.recipeFragments.RecipeStepsFragment.RecipeStepsFragment"
         android:label="fragment_recipe_steps"
         tools:layout="@layout/fragment_recipe_steps">
-        <argument
-            android:name="recipe"
-            app:argType="com.example.recipeapp.api.model.Recipe"/>
         <action
             android:id="@+id/action_recipeStepsFragment_to_feedFragment"
             app:destination="@id/feedFragment" />
+        <argument
+            android:name="recipe"
+            app:argType="com.example.recipeapp.api.model.Recipe"
+            app:nullable="false"/>
+        <argument
+            android:name="classification"
+            app:argType="integer"
+            app:nullable="false"/>
     </fragment>
     <fragment
         android:id="@+id/searchByIngredientsFragment"

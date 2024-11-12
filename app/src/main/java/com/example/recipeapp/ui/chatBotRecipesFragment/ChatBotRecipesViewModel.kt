@@ -18,7 +18,7 @@ class ChatBotRecipesViewModel(private val repository: Repository) : ViewModel() 
 
     fun deleteRecipe(recipe: AiRecipe){
         viewModelScope.launch (Dispatchers.IO) {
-            repository.deleteAiRecipe(recipe)
+            repository.deleteAiRecipe(recipe.id)
             recipes.collect { recipes ->
                 repository.updateAiRecipesInFirestore(recipes)
             }

@@ -4,26 +4,103 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#FEFFF8"
+        android:padding="16dp">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:progressDrawable="@drawable/progress_bar"
+            android:layout_width="320dp"
+            android:layout_height="15dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:progressTint="#901431"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/stepsNumberTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/progressBar"
+            app:layout_constraintTop_toTopOf="@id/progressBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/progressBar"
+            android:layout_marginStart="10dp"/>
+
+        <TextView
+            android:id="@+id/stepNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/stepText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/stepText"
-            android:layout_width="wrap_content"
+            android:layout_width="340dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/nextButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="350dp"
+            android:textSize="20sp"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="@id/stepNumber"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/nextButton"
+        <TextView
+            android:id="@+id/nextStepTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="101dp"
-            android:text="Next"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/nextButton"
+            android:text="Next step"
+            android:layout_marginEnd="3dp"
+            android:layout_marginBottom="9dp"
+            android:textColor="#901431"
+            android:textSize="20sp"/>
+
+        <ImageButton
+            android:id="@+id/nextButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/next"
+            android:background="#FEFFF8"
+            android:layout_marginBottom="2dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@id/nextStepTV"/>
+
+        <TextView
+            android:id="@+id/previousStepTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Previous step"
+            android:layout_marginStart="3dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="#787878"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/previousButton"/>
+
+        <ImageButton
+            android:id="@+id/previousButton"
+            android:layout_width="18dp"
+            android:layout_height="15dp"
+            android:src="@drawable/next"
+            android:scaleX="-1"
+            android:background="#FEFFF8"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/previousStepTV"
+            app:tint="#787878" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

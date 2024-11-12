@@ -41,6 +41,9 @@ class FavoriteRecipesAdapter(private val onDeleteClick: (FavoriteRecipe) -> Unit
         val favRecipe = differ.currentList[position]
         val binding = holder.itemBinding
 
+        // Close any open swipe layouts before binding (avoids animations)
+        viewBinderHelper.closeLayout(favRecipe.id.toString())
+
         // Bind the swipe layout to ensure that each item has a unique identifier for swipe actions
         viewBinderHelper.bind(binding.swipeLayout, favRecipe.id.toString())
 
@@ -75,6 +78,5 @@ class FavoriteRecipesAdapter(private val onDeleteClick: (FavoriteRecipe) -> Unit
         differ.submitList(currentList)
     }
 
-    inner class FavoriteRecipeViewHolder(val itemBinding: ItemFavoriteRecipeBinding) :
-        RecyclerView.ViewHolder(itemBinding.root)
+    inner class FavoriteRecipeViewHolder(val itemBinding: ItemFavoriteRecipeBinding) : RecyclerView.ViewHolder(itemBinding.root)
 }

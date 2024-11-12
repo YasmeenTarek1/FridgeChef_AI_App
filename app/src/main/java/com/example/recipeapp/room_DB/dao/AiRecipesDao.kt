@@ -1,7 +1,6 @@
 package com.example.recipeapp.room_DB.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -23,8 +22,8 @@ interface AiRecipesDao {
     @Query("DELETE FROM ai_recipes")
     suspend fun clearAll()
 
-    @Delete
-    suspend fun deleteAiRecipe(aiRecipe: AiRecipe)
+    @Query("DELETE FROM ai_recipes WHERE id = :recipeId")
+    suspend fun deleteAiRecipe(recipeId: Int)
 
     @Query("SELECT ingredients FROM AI_RECIPES WHERE id = :recipeId")
     suspend fun getAiRecipeIngredients(recipeId: Int): String

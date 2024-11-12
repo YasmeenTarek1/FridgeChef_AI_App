@@ -24,10 +24,6 @@ class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
         return repository.getAiRecipeIngredients(recipeId)
     }
 
-    suspend fun getAiRecipeSteps(recipeId: Int): String {
-        return repository.getAiRecipeSteps(recipeId)
-    }
-
     suspend fun getAiIngredientImage(title: String): String {
         return repository.getRecipeOrIngredientImage(title)
     }

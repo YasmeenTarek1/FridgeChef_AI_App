@@ -41,6 +41,9 @@ class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
         val recipe = getItem(position)
         val binding = holder.itemBinding
 
+        binding.love.visibility = View.VISIBLE
+        binding.fullLove.visibility = View.INVISIBLE
+
         binding.love.setOnClickListener{
             binding.fullLove.visibility = View.VISIBLE
             binding.love.visibility = View.INVISIBLE

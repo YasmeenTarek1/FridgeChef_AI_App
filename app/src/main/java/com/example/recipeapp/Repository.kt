@@ -167,7 +167,7 @@ class Repository(
 
     fun getAllCookedRecipes(): Flow<List<CookedRecipe>> = cookedRecipesDao.getAllCookedRecipes()
 
-    suspend fun deleteCookedRecipe(cookedRecipe: CookedRecipe) = cookedRecipesDao.deleteCookedRecipe(cookedRecipe)
+    suspend fun deleteCookedRecipe(recipeID: Int) = cookedRecipesDao.deleteCookedRecipe(recipeID)
 
     // Database-related functions for FavoriteRecipes
 
@@ -195,7 +195,6 @@ class Repository(
 
     suspend fun deleteIngredient(toBuyIngredient: ToBuyIngredient) = toBuyIngredientsDao.deleteIngredient(toBuyIngredient)
 
-
     // Database-related functions for AiRecipes
 
     suspend fun insertAiRecipe(aiRecipe: AiRecipe) = aiRecipesDao.insertAiRecipe(aiRecipe)
@@ -206,7 +205,7 @@ class Repository(
 
     fun getAllAiRecipes(): Flow<List<AiRecipe>> = aiRecipesDao.getAllAiRecipes()
 
-    suspend fun deleteAiRecipe(aiRecipe: AiRecipe) = aiRecipesDao.deleteAiRecipe(aiRecipe)
+    suspend fun deleteAiRecipe(recipeID: Int) = aiRecipesDao.deleteAiRecipe(recipeID)
 
     suspend fun getAiRecipeIngredients(recipeId: Int) = aiRecipesDao.getAiRecipeIngredients(recipeId)
 
@@ -250,7 +249,7 @@ class Repository(
                             // If a recipe is removed in Firestore, delete it from Room
                             val removedRecipe = documentChange.document.toObject(CookedRecipe::class.java)
                             CoroutineScope(Dispatchers.IO).launch {
-                                cookedRecipesDao.deleteCookedRecipe(removedRecipe)
+                                cookedRecipesDao.deleteCookedRecipe(removedRecipe.id)
                             }
                         }
                     }
@@ -367,7 +366,7 @@ class Repository(
                             // If an ingredient is removed in Firestore, delete it from Room
                             val removedRecipe = documentChange.document.toObject(AiRecipe::class.java)
                             CoroutineScope(Dispatchers.IO).launch {
-                                aiRecipesDao.deleteAiRecipe(removedRecipe)
+                                aiRecipesDao.deleteAiRecipe(removedRecipe.id)
                             }
                         }
                     }

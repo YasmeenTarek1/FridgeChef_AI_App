@@ -18,7 +18,6 @@ class FavoriteRecipesViewModel(private val repository: Repository) : ViewModel()
 
     fun deleteRecipe(recipe: FavoriteRecipe){
         viewModelScope.launch (Dispatchers.IO) {
-
             repository.deleteFavoriteRecipe(recipe.id)
 
             recipes.collect { recipes ->
