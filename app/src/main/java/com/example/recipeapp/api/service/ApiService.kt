@@ -22,20 +22,20 @@ interface ApiService {
     // b6a39b82b408445f9100f6e8a7436249
     // e46d27c80c5c41948205811245e738f0
     companion object{
-        const val API_KEY = "ad28d9e80f7c42219ce7dd5c918b9cb0"
+        const val API_KEY = "488151604a9240598a2fa7c7189d2c0f"
     }
 
     @GET("recipes/{id}/similar")
     suspend fun getSimilarRecipes(
         @Path("id") recipeId: Int,
         @Query("apiKey") apiKey: String = API_KEY,
-        @Query("number") numberOfRecipes: Int = 4
+        @Query("number") numberOfRecipes: Int = 5
     ): List<Recipe>
 
     @GET("recipes/random")
     suspend fun getRandomRecipes(
         @Query("apiKey") apiKey: String = API_KEY,
-        @Query("number") numberOfRecipes: Int = 3,
+        @Query("number") numberOfRecipes: Int = 5,
         @Query("include-tags") diet: String? = null
     ): RandomRecipeResponse
 

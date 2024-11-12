@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -28,7 +29,6 @@ import com.example.recipeapp.sharedPreferences.SharedPreferences
 import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import com.facebook.login.LoginManager
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.Dispatchers
@@ -58,8 +58,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         binding = FragmentFeedBinding.bind(view)
         repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
 
-        swipeRefreshLayout = binding.swipeRefreshLayout
-
         val factory = FeedViewModelFactory(repository , requireActivity().application)
         feedViewModel = ViewModelProvider(this, factory).get(FeedViewModel::class.java)
 
@@ -81,6 +79,14 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = feedAdapter
 
+        feedAdapter.addLoadStateListener { loadStates ->
+            binding.loadingProgressBar.visibility = if (loadStates.refresh is LoadState.Loading) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
+
         ViewCompat.setTooltipText(binding.cookingTipButton, "Take a Cooking Tip")
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -90,60 +96,29 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             }
         }, 100)
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                val totalItemCount = layoutManager.itemCount
-                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-
-                // Check if we're near the end of the list
-                if (lastVisibleItem + 5 >= totalItemCount) {
-                    feedAdapter.retry() // load more items if any errors happened during loading
-                }
-            }
-        })
-
-
-        val auth: FirebaseAuth = Firebase.auth
         binding.logOutButton.setOnClickListener{
-            auth.signOut()
-            AppUser.instance?.userId = null
-            LoginManager.getInstance().logOut()
-
             lifecycleScope.launch(Dispatchers.IO) {
+                Firebase.auth.signOut()
+                AppUser.instance?.userId = null
+                LoginManager.getInstance().logOut()
                 feedViewModel.clearAllInfo()
+                findNavController().navigate(R.id.action_feedFragment_to_loginFragment)
             }
-
-            findNavController().navigate(R.id.action_feedFragment_to_loginFragment)
         }
 
         binding.cookingTipButton.setOnClickListener {
             showCookingTip()
         }
 
-        swipeRefreshLayout.setOnRefreshListener {
-            refreshData()
-        }
-
         observeData()
     }
 
-    private fun observeData() {
+    private fun observeData(){
         lifecycleScope.launch {
-            // collectLatest -> take the latest emitted value and cancels any ongoing processing of previous emissions.
             feedViewModel.recipes.collectLatest { pagingData ->
                 feedAdapter.submitData(pagingData)
                 swipeRefreshLayout.isRefreshing = false
             }
-        }
-    }
-
-    private fun refreshData() {
-        lifecycleScope.launch {
-            feedAdapter.refresh()
-            observeData()
         }
     }
 

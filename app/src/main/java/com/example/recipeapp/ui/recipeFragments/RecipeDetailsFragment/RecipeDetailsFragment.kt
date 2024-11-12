@@ -65,6 +65,9 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 //            Ingredient(id = 2, name = "apple" , image = "")
 //        )
 
+        if(adapter.itemCount == 0)
+            binding.loadingProgressBar.visibility = View.VISIBLE
+
         lifecycleScope.launch {
             if(classification == 0){
                 val ingredientsResponse = viewModel.getAiRecipeIngredients(currentRecipe.id)
@@ -77,6 +80,7 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
                 }
 
                 adapter.differ.submitList(ingredientsList)
+                binding.loadingProgressBar.visibility = View.GONE
             }
             else {
                 val ingredients = viewModel.getRecipeIngredients(currentRecipe.id)
@@ -84,6 +88,7 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
                     ingredient.image = "https://img.spoonacular.com/ingredients_100x100/"+ ingredient.image
                 }
                 adapter.differ.submitList(ingredients)
+                binding.loadingProgressBar.visibility = View.GONE
             }
         }
 

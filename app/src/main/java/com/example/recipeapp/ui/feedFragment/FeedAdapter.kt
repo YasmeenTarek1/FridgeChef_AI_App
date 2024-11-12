@@ -41,30 +41,8 @@ class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
         val recipe = getItem(position)
         val binding = holder.itemBinding
 
-        binding.love.visibility = View.VISIBLE
-        binding.fullLove.visibility = View.INVISIBLE
-
-        binding.love.setOnClickListener{
-            binding.fullLove.visibility = View.VISIBLE
-            binding.love.visibility = View.INVISIBLE
-            onLoveClick(recipe!!)
-        }
-        binding.fullLove.setOnClickListener{
-            binding.love.visibility = View.VISIBLE
-            binding.fullLove.visibility = View.INVISIBLE
-            onDislikeClick(recipe!!)
-        }
-
-        binding.recipe = recipe
-        binding.executePendingBindings()
-
-        Glide.with(binding.root)
-            .load(recipe!!.image)
-            .into(binding.recipeImage)
-
-
         lifecycleOwner.lifecycleScope.launch {
-            checkFavorite(recipe.id).collect { isFavorite ->
+            checkFavorite(recipe!!.id).collect { isFavorite ->
                 if (isFavorite) {
                     binding.fullLove.visibility = View.VISIBLE
                     binding.love.visibility = View.INVISIBLE
@@ -74,12 +52,29 @@ class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
                 }
             }
         }
+
+        binding.recipe = recipe
+        binding.executePendingBindings()
+
+        Glide.with(binding.root)
+            .load(recipe!!.image)
+            .into(binding.recipeImage)
+
+        binding.love.setOnClickListener{
+            binding.fullLove.visibility = View.VISIBLE
+            binding.love.visibility = View.INVISIBLE
+            onLoveClick(recipe)
+        }
+        binding.fullLove.setOnClickListener{
+            binding.love.visibility = View.VISIBLE
+            binding.fullLove.visibility = View.INVISIBLE
+            onDislikeClick(recipe)
+        }
+
         holder.itemView.setOnClickListener { view ->
             val action = FeedFragmentDirections.actionFeedFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)
         }
-
-
     }
 
     inner class RecipeViewHolder(val itemBinding: ItemFeedBinding) : RecyclerView.ViewHolder(itemBinding.root){

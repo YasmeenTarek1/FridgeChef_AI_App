@@ -15,14 +15,6 @@ class SharedPreferences(context: Context) {
         return sharedPreferences.getStringSet("taken_ids", emptySet())?.map { it.toInt() }?.toSet() ?: emptySet()
     }
 
-    fun saveCurrentRecipesIDs(takenIDs: Set<Int>) {
-        sharedPreferences.edit().putStringSet("current_recipes_ids", takenIDs.map { it.toString() }.toSet()).apply()
-    }
-
-    fun getCurrentRecipesIDs(): Set<Int> {
-        return sharedPreferences.getStringSet("current_recipes_ids", emptySet())?.map { it.toInt() }?.toSet() ?: emptySet()
-    }
-
     fun saveCookingTipsHistory(tipsHistory: String) {
         sharedPreferences.edit().putString("cooking_tips_history", tipsHistory).apply()
     }

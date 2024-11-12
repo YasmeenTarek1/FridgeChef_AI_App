@@ -1,6 +1,5 @@
 package com.example.recipeapp
 
-import SimilarRecipesPagingSource
 import android.content.Context
 import android.util.Log
 import androidx.paging.Pager
@@ -24,6 +23,7 @@ import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
 import com.example.recipeapp.room_DB.model.UserInfo
 import com.example.recipeapp.sharedPreferences.SharedPreferences
+import com.example.recipeapp.ui.feedFragment.SimilarRecipesPagingSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
