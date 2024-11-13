@@ -55,7 +55,7 @@ class ChatBotRecipesAdapter(private val onDeleteClick: (AiRecipe) -> Unit): Recy
 
         holder.itemView.setOnClickListener { view ->
             val recipe = Recipe(
-                id = aiRecipe.id.toInt(),
+                id = aiRecipe.id,
                 title = aiRecipe.title,
                 image = aiRecipe.image,
                 readyInMinutes = aiRecipe.readyInMinutes,

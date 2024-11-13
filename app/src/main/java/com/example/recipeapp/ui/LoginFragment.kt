@@ -73,6 +73,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun setupButtons() {
+
         binding.SignUpbutton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
@@ -81,7 +82,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             loginWithEmail()
         }
 
-        binding.Gmailbutton.setOnClickListener {
+        binding.gmailButton.setOnClickListener {
             loginWithGmail()
         }
     }
@@ -178,9 +179,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun initializeFacebookLogin() {
-        binding.facebutton.setPermissions("email")
+        binding.faceButton.setPermissions("email")
 
-        binding.facebutton.registerCallback(callbackManager,
+        binding.faceButton.registerCallback(callbackManager,
             object : FacebookCallback<LoginResult> {
                 override fun onSuccess(result: LoginResult) {
                     handleFacebookAccessToken(result.accessToken.token)

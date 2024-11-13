@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/introFragment">
     <fragment
         android:id="@+id/favoriteRecipesFragment"
         android:name="com.example.recipeapp.ui.favoriteRecipesFragment.FavoriteRecipesFragment"
@@ -77,12 +77,10 @@
             app:destination="@id/chatBotServiceFragment" />
         <argument
             android:name="recipe"
-            app:argType="com.example.recipeapp.api.model.Recipe"
-            app:nullable="false"/>
+            app:argType="com.example.recipeapp.api.model.Recipe"/>
         <argument
             android:name="classification"
-            app:argType="integer"
-            app:nullable="false"/>
+            app:argType="integer"/>
     </fragment>
     <fragment
         android:id="@+id/recipeStepsFragment"
@@ -94,12 +92,10 @@
             app:destination="@id/feedFragment" />
         <argument
             android:name="recipe"
-            app:argType="com.example.recipeapp.api.model.Recipe"
-            app:nullable="false"/>
+            app:argType="com.example.recipeapp.api.model.Recipe"/>
         <argument
             android:name="classification"
-            app:argType="integer"
-            app:nullable="false"/>
+            app:argType="integer"/>
     </fragment>
     <fragment
         android:id="@+id/searchByIngredientsFragment"
@@ -190,6 +186,14 @@
             android:name="ingredients"
             app:argType="string"
             app:nullable="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/introFragment"
+        android:name="com.example.recipeapp.ui.IntroFragment"
+        android:label="IntroFragment" >
+        <action
+            android:id="@+id/action_introFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 
 </navigation>
