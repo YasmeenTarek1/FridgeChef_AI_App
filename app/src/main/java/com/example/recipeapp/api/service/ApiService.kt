@@ -22,7 +22,7 @@ interface ApiService {
     // b6a39b82b408445f9100f6e8a7436249
     // e46d27c80c5c41948205811245e738f0
     companion object{
-        const val API_KEY = "488151604a9240598a2fa7c7189d2c0f"
+        const val API_KEY = "e46d27c80c5c41948205811245e738f0"
     }
 
     @GET("recipes/{id}/similar")

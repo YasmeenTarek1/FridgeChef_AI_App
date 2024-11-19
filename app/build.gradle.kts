@@ -73,14 +73,15 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
 
-    //Coroutines
+    // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
-    //Google Sign-In
+    // Google Sign-In
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.androidx.credentials)
 
-    //Facebook Sign-In
+    // Facebook Sign-In
     implementation(libs.facebook.login)
     implementation(libs.facebook.android.sdk)
 
@@ -94,7 +95,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
 
-    //Firestore
+    // Firestore
     implementation(libs.firebase.firestore.ktx)
 
     // Logging Interceptors
@@ -104,19 +105,19 @@ dependencies {
     implementation(libs.androidx.paging.common.android)
     implementation(libs.androidx.paging.runtime)
 
-    //Glide Library
+    // Glide Library
     implementation(libs.glide)
     ksp(libs.compiler)
     annotationProcessor(libs.compiler)
     ksp(libs.ksp)
 
-    //Gemini
+    // Gemini
     implementation(libs.generativeai)
 
-    //Markdown Support
+    // Markdown Support
     implementation(libs.core)
 
-    //Firebase Storage
+    // Firebase Storage
     implementation(libs.firebase.storage)
 
     // Swipe Reveal Layout

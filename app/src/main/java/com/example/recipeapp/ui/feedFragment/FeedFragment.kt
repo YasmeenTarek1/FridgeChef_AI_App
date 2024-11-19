@@ -34,6 +34,7 @@ import io.noties.markwon.Markwon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class FeedFragment : Fragment(R.layout.fragment_feed) {
@@ -102,7 +103,9 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 AppUser.instance?.userId = null
                 LoginManager.getInstance().logOut()
                 feedViewModel.clearAllInfo()
-                findNavController().navigate(R.id.action_feedFragment_to_loginFragment)
+                withContext(Dispatchers.Main) {
+                    findNavController().navigate(R.id.action_feedFragment_to_loginFragment)
+                }
             }
         }
 

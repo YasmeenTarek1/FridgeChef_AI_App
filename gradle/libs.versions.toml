@@ -11,7 +11,7 @@ firebaseStorage = "21.0.1"
 generativeai = "0.9.0"
 glide = "4.16.0"
 googleid = "1.1.1"
-firebaseBom = "33.5.1"
+firebaseBom = "33.6.0"
 fragmentKtx = "1.8.5"
 googleServices = "4.4.2"
 kotlin = "2.0.20"
@@ -25,21 +25,22 @@ lottie = "6.4.1"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
-navigationFragmentKtx = "2.8.3"
-navigationSafeArgsGradlePlugin = "2.8.3"
+navigationFragmentKtx = "2.8.4"
+navigationSafeArgsGradlePlugin = "2.8.4"
 navigationSafeArgsGradlePluginVersion = "1.0.0"
-pagingRuntime = "3.3.2"
+pagingRuntime = "3.3.4"
 playServicesAuth = "21.2.0"
 retrofit = "2.11.0"
 roomRuntime = "2.6.1"
 firebaseFirestoreKtx = "25.1.1"
 loggingInterceptor = "4.12.0"
-pagingCommonAndroid = "3.3.2"
+pagingCommonAndroid = "3.3.4"
 swipereveallayout = "0.0.1"
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }

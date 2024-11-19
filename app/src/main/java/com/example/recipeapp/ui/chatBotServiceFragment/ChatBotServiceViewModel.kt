@@ -19,7 +19,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
         return withContext(Dispatchers.IO) {
             val generativeModel = GenerativeModel(
                 modelName = "gemini-1.5-flash",
-                apiKey = "AIzaSyBygUzMLk3xTKkiiyC407TXuxI08eWPFec"
+                apiKey = "AIzaSyCTkZ0g5W7t243Ti6hFLWv0HL3vnGLSQKo"
             )
 
             val user = repository.getUserById(AppUser.instance!!.userId!!)

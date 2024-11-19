@@ -1,4 +1,4 @@
-package com.example.recipeapp.ui
+package com.example.recipeapp.ui.loginFragments
 
 import android.os.Bundle
 import android.util.Log
@@ -41,7 +41,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
                     findNavController().navigate(R.id.action_signUpFragment_to_userInfoFragment)
                 }
             } else {
-                Log.w("TAGY", "createUserWithEmail:failure", task.exception)
+                Log.w("SignUp Error", "createUserWithEmail:failure", task.exception)
                 Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT).show()
             }
         }

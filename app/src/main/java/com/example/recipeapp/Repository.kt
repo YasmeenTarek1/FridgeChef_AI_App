@@ -379,11 +379,11 @@ class Repository(
         }
     }
 
-    // Saving new info added in Room DB in firestore
+    // Saving new info added in Room DB to firestore
 
     fun updateFavRecipesInFirestore(roomRecipes: List<FavoriteRecipe>) {
         val firestore = FirebaseFirestore.getInstance()
-        val userId = AppUser.instance?.userId!!
+        val userId = AppUser.instance?.userId ?: return
         val favoriteRecipesCollection =  firestore.collection("users").document(userId).collection("Favorite Recipes")
 
         favoriteRecipesCollection.get().addOnSuccessListener { snapshot ->

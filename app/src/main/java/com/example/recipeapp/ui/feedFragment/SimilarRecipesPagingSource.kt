@@ -47,8 +47,7 @@ class SimilarRecipesPagingSource(
 
             // Fetch similar recipes to a fav one
             if (taken) {
-                val recipes = repository.getSimilarRecipes(recipeId = recipeId).toMutableList()
-                results = recipes.filterNot { currentFavRecipesIDs.contains(it.id) }.toMutableList()
+                results = repository.getSimilarRecipes(recipeId = recipeId).toMutableList()
 
                 // Fill recipe details
                 results.forEach { recipe ->
@@ -82,6 +81,7 @@ class SimilarRecipesPagingSource(
                     recipe.summary = chatBotServiceViewModel.summarizeSummary(recipe.summary)
                 }
                 results.addAll(additionalRecipes)
+                results.filterNot { currentFavRecipesIDs.contains(it.id) }.toMutableList()
             }
 
             // Save the IDs in shared preferences

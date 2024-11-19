@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.recipeapp.ui.LoginFragment"
+        android:name="com.example.recipeapp.ui.loginFragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.recipeapp.ui.SignUpFragment"
+        android:name="com.example.recipeapp.ui.loginFragments.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -189,11 +189,14 @@
     </fragment>
     <fragment
         android:id="@+id/introFragment"
-        android:name="com.example.recipeapp.ui.IntroFragment"
+        android:name="com.example.recipeapp.ui.loginFragments.IntroFragment"
         android:label="IntroFragment" >
         <action
             android:id="@+id/action_introFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_introFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
 
 </navigation>
