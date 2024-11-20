@@ -25,14 +25,14 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
         binding = FragmentSignUpBinding.bind(view)
 
         auth = Firebase.auth
-        binding.SignUpButton.setOnClickListener {
+        binding.signUpButton.setOnClickListener {
             createUser()
         }
     }
 
     private fun createUser() {
-        val email = binding.EmailEditText.text.toString()
-        val password = binding.PasswordEditText.text.toString()
+        val email = binding.emailEditText.text.toString()
+        val password = binding.passwordEditText.text.toString()
 
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) { task ->
             if (task.isSuccessful) {

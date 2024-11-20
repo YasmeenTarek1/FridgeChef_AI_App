@@ -40,11 +40,17 @@ class CookedRecipesFragment : Fragment(R.layout.fragment_cooked_recipes) {
         recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.setAdapter(cookedBeforeAdapter)
+        recyclerView.adapter = cookedBeforeAdapter
 
         lifecycleScope.launch {
             cookedViewModel.recipes.collect { recipes ->
                 cookedBeforeAdapter.differ.submitList(recipes)
+                if(cookedBeforeAdapter.itemCount == 0){
+                    binding.emptyImage.visibility = View.VISIBLE
+                }
+                else{
+                    binding.emptyImage.visibility = View.GONE
+                }
             }
         }
 

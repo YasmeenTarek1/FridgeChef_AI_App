@@ -66,11 +66,19 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
 
         lifecycleScope.launch {
             binding.hello.text = "Hello, ${viewModel.getUserName()}"
-            val profileImage = viewModel.getUserImage()
-            if(profileImage != null) {
-                withContext(Dispatchers.Main) {
+
+            withContext(Dispatchers.Main) {
+                if (viewModel.getUserImage() != null) {
+                    binding.userAvatar.scaleX = 1.0f
+                    binding.userAvatar.scaleY = 1.0f
                     Glide.with(requireContext())
                         .load(viewModel.getUserImage())
+                        .into(binding.userAvatar)
+                } else {
+                    binding.userAvatar.scaleX = 1.25f
+                    binding.userAvatar.scaleY = 1.25f
+                    Glide.with(requireContext())
+                        .load(R.drawable.no_avatar)
                         .into(binding.userAvatar)
                 }
             }
@@ -118,6 +126,12 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
             lifecycleScope.launch {
                 Log.d("ingredients" , ingredients1.toString())
                 adapter.differ.submitList(viewModel.searchRecipesByIngredients(ingredients1))
+                if(adapter.itemCount == 0){
+                    binding.emptyImage.visibility = View.VISIBLE
+                }
+                else{
+                    binding.emptyImage.visibility = View.GONE
+                }
             }
         }
 

@@ -45,6 +45,12 @@ class FavoriteRecipesFragment : Fragment(R.layout.fragment_favorite_recipes) {
         lifecycleScope.launch {
             favViewModel.recipes.collect { recipes ->
                 favoriteRecipesAdapter.differ.submitList(recipes)
+                if(favoriteRecipesAdapter.itemCount == 0){
+                    binding.emptyImage.visibility = View.VISIBLE
+                }
+                else{
+                    binding.emptyImage.visibility = View.GONE
+                }
             }
         }
     }

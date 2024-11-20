@@ -22,6 +22,7 @@ class CookedBeforeViewModel(private val repository: Repository) : ViewModel() {
 
             recipes.collect { recipes ->
                 repository.updateCookedRecipesInFirestore(recipes)
+
             }
 
         }

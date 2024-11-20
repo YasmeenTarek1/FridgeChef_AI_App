@@ -100,11 +100,24 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         binding.aiOpinionButton.setOnClickListener {
             showRecipeOpinionDialog(currentRecipe)
         }
+
+        binding.love.setOnClickListener{
+            binding.fullLove.visibility = View.VISIBLE
+            binding.love.visibility = View.INVISIBLE
+            viewModel.onLoveClick(currentRecipe)
+        }
+
+        binding.fullLove.setOnClickListener{
+            binding.love.visibility = View.VISIBLE
+            binding.fullLove.visibility = View.INVISIBLE
+            viewModel.onDislikeClick(currentRecipe)
+        }
     }
 
     private fun displayRecipeImage(recipe: Recipe) {
         Glide.with(binding.root)
             .load(recipe.image)
+            .error(R.drawable.dish)
             .into(binding.recipeImage)
     }
 

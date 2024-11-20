@@ -47,7 +47,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@{user != null ? user.image : ``}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -145,26 +144,28 @@
                     app:layout_constraintTop_toBottomOf="@id/editTextAge">
 
                     <RadioButton
-                        android:id="@+id/female"
+                        android:id="@+id/male"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="9dp"
                         android:layout_marginEnd="6dp"
-                        android:text="Female"
+                        android:text="Male"
+                        android:checked="true"
                         app:layout_constraintBottom_toTopOf="@+id/spinnerGoal"
                         app:layout_constraintEnd_toStartOf="@+id/male"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <RadioButton
-                        android:id="@+id/male"
+                        android:id="@+id/female"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="7dp"
-                        android:text="Male"
+                        android:text="Female"
                         app:layout_constraintBaseline_toBaselineOf="@+id/female"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/female" />
+                        app:layout_constraintStart_toEndOf="@+id/female"/>
+
                 </RadioGroup>
 
                 <Spinner

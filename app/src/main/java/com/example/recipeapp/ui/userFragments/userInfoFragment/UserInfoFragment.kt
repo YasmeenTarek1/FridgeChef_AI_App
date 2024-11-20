@@ -50,38 +50,51 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)
-            if(binding.user != null) {
 
-                if(binding.user!!.image != null) {
-                    withContext(Dispatchers.Main) {
+            // display existing info about the user
+            if (binding.user != null) {
+                withContext(Dispatchers.Main) {
+                    if (binding.user!!.image != null) {
+                        binding.userAvatar.scaleX = 1.0f
+                        binding.userAvatar.scaleY = 1.0f
                         Glide.with(requireContext())
                             .load(binding.user!!.image)
                             .into(binding.userAvatar)
-                        uriImage = binding.user!!.image!!
+                    } else {
+                        binding.userAvatar.scaleX = 1.25f
+                        binding.userAvatar.scaleY = 1.25f
+                        Glide.with(requireContext())
+                            .load(R.drawable.no_avatar)
+                            .into(binding.userAvatar)
+                    }
+                    uriImage = binding.user!!.image
+                }
+
+                val spinnerDiet: Spinner = binding.spinnerDiet
+                var adapter = spinnerDiet.adapter
+
+                for (i in 0 until adapter.count) {
+                    if (adapter.getItem(i) == binding.user!!.dietType) {
+                        spinnerDiet.setSelection(i)
+                        break
                     }
                 }
 
-                if (binding.user!!.age != 0) { // Not a new Customer (Existing one)
-                    val spinnerDiet: Spinner = binding.spinnerDiet
-                    var adapter = spinnerDiet.adapter
+                val spinnerGoal: Spinner = binding.spinnerGoal
+                adapter = spinnerGoal.adapter
 
-                    for (i in 0 until adapter.count) {
-                        if (adapter.getItem(i) == binding.user!!.dietType) {
-                            spinnerDiet.setSelection(i)
-                            break
-                        }
-                    }
-
-                    val spinnerGoal: Spinner = binding.spinnerGoal
-                    adapter = spinnerGoal.adapter
-
-                    for (i in 0 until adapter.count) {
-                        if (adapter.getItem(i) == binding.user!!.goal) {
-                            spinnerGoal.setSelection(i)
-                            break
-                        }
+                for (i in 0 until adapter.count) {
+                    if (adapter.getItem(i) == binding.user!!.goal) {
+                        spinnerGoal.setSelection(i)
+                        break
                     }
                 }
+            } else {
+                binding.userAvatar.scaleX = 1.25f
+                binding.userAvatar.scaleY = 1.25f
+                Glide.with(requireContext())
+                    .load(R.drawable.no_avatar)
+                    .into(binding.userAvatar)
             }
         }
 
@@ -107,14 +120,19 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
             val goal = binding.spinnerGoal.selectedItem.toString()
             val dietType = binding.spinnerDiet.selectedItem.toString()
             var age = 0
-            var gender = ""
+            var gender: String = when (binding.radioGroup2.checkedRadioButtonId) {
+                R.id.female -> "Female"
+                R.id.male -> "Male"
+                else -> ""
+            }
 
-            if (binding.user == null || binding.user!!.age == 0) { // new User or gender and age aren't tracked before
+            if (binding.user == null) { // new User
                 age = binding.editTextAge.text.toString().toInt()
                 binding.radioGroup2.setOnCheckedChangeListener { _, checkedId ->
-                    when (checkedId) {
-                        R.id.female -> gender = "Female"
-                        R.id.male -> gender = "Male"
+                    gender = when (checkedId) {
+                        R.id.female -> "Female"
+                        R.id.male -> "Male"
+                        else -> ""
                     }
                 }
             } else { // I already have the info
@@ -149,6 +167,8 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
                     uriImage = uri.toString()
 
                     // Load the new image into ImageView after getting the download URL
+                    binding.userAvatar.scaleX = 1.0f
+                    binding.userAvatar.scaleY = 1.0f
                     Glide.with(requireContext())
                         .load(uriImage)
                         .into(binding.userAvatar)

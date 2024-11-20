@@ -30,7 +30,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -60,11 +59,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun setupButtons() {
-        binding.SignUpbutton.setOnClickListener {
+        binding.signUpButton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
 
-        binding.Loginbutton.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             loginWithEmail()
         }
 
@@ -74,24 +73,20 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun loginWithEmail() {
-        val email = binding.EmailEditText.text.toString().trim()
-        val password = binding.PasswordEditText.text.toString().trim()
+        val email = binding.emailEditText.text.toString().trim()
+        val password = binding.passwordEditText.text.toString().trim()
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
-                        lifecycleScope.launch(Dispatchers.IO) {
+                        lifecycleScope.launch{
                             AppUser.instance!!.userId = auth.currentUser?.uid
-
                             // It's already collected before
                             viewModel.fetchUserInfoFromFirestoreAndInitializeRoom()
-                            val userName = repository.getUserById(AppUser.instance!!.userId!!)!!.name
-
-                            withContext(Dispatchers.Main) {
-                                goToHomePage()
-                                Toast.makeText(requireContext(), "Welcome Back, $userName", Toast.LENGTH_SHORT).show()
-                            }
+                            val userName = repository.getUserById(AppUser.instance!!.userId!!)!!.name.substringBefore(" ")
+                            goToHomePage()
+                            Toast.makeText(requireContext(), "Welcome Back, $userName", Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         Log.w("LoginFragment", "signInWithEmail:failure", task.exception)
@@ -151,13 +146,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    lifecycleScope.launch (Dispatchers.IO){
+                    lifecycleScope.launch{
                         AppUser.instance!!.userId = auth.currentUser?.uid
                         val success = viewModel.fetchUserInfoFromFirestoreAndInitializeRoom()
-                        withContext(Dispatchers.Main) {
-                            if (success) goToHomePage()
-                            else collectInfo()
-                        }
+                        if (success) goToHomePage()
+                        else collectInfo()
                     }
                 } else {
                     Log.w("LoginFragment", "signInWithCredential:failure", task.exception)
@@ -190,14 +183,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 lifecycleScope.launch (Dispatchers.IO) {
                     AppUser.instance!!.userId = auth.currentUser?.uid
                     val success = viewModel.fetchUserInfoFromFirestoreAndInitializeRoom()
-                    if(success) {
-                        withContext(Dispatchers.Main) {
-                            goToHomePage()
-                        }
-                    }
-                    else {
-                        collectInfo()
-                    }
+                    if (success) goToHomePage()
+                    else collectInfo()
                 }
             } else {
                 Log.w("LoginFragment", "signInWithCredential:failure", task.exception)

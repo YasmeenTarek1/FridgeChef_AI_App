@@ -7,7 +7,7 @@ import com.example.recipeapp.room_DB.model.CookedRecipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import kotlinx.coroutines.flow.Flow
 
-class SpecialRecipesViewModel(private val repository: Repository): ViewModel() {
+class SpecialRecipesViewModel(repository: Repository): ViewModel() {
 
     val cookedRecipes: Flow<List<CookedRecipe>> = repository.getAllCookedRecipes()
     val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()

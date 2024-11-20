@@ -46,6 +46,10 @@ class ToBuyIngredientsFragment : Fragment(R.layout.fragment_to_buy_ingredients) 
         lifecycleScope.launch {
             viewModel.ingredients.collect { ingredients ->
                 toBuyIngredientsAdapter.differ.submitList(ingredients)
+                if(toBuyIngredientsAdapter.itemCount == 0)
+                    binding.emptyImage.visibility = View.VISIBLE
+                else
+                    binding.emptyImage.visibility = View.GONE
             }
         }
     }

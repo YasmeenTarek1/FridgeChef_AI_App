@@ -42,49 +42,56 @@ class SpecialRecipesFragment : Fragment(R.layout.fragment_special_recipes) {
 
         recyclerView1 = binding.recyclerView1
         recyclerView1.setHasFixedSize(true)
-        recyclerView1.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recyclerView1.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView1.adapter = aiAdapter
 
         recyclerView2 = binding.recyclerView2
         recyclerView2.setHasFixedSize(true)
-        recyclerView2.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recyclerView2.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView2.adapter = favAdapter
 
         recyclerView3 = binding.recyclerView3
         recyclerView3.setHasFixedSize(true)
-        recyclerView3.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recyclerView3.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView3.adapter = cookedAdapter
 
         binding.viewAll1.setOnClickListener {
-            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToChatBotRecipesFragment()
+            val action =
+                SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToChatBotRecipesFragment()
             findNavController().navigate(action)
         }
 
         binding.viewAll2.setOnClickListener {
-            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToFavoriteRecipesFragment()
+            val action =
+                SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToFavoriteRecipesFragment()
             findNavController().navigate(action)
         }
 
         binding.viewAll3.setOnClickListener {
-            val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToCookedRecipesFragment()
+            val action =
+                SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToCookedRecipesFragment()
             findNavController().navigate(action)
         }
 
         lifecycleScope.launch {
+            viewModel.aiRecipes.collect { aiRecipes ->
+                aiAdapter.differ.submitList(aiRecipes)
+                binding.emptyText1.visibility = if (aiRecipes.isEmpty()) View.VISIBLE else View.GONE
+            }
+        }
+        lifecycleScope.launch {
             viewModel.favRecipes.collect { favRecipes ->
                 favAdapter.differ.submitList(favRecipes)
+                binding.emptyText2.visibility = if (favRecipes.isEmpty()) View.VISIBLE else View.GONE
             }
         }
-
         lifecycleScope.launch {
-            viewModel.cookedRecipes.collect{
-                cookedRecipes -> cookedAdapter.differ.submitList(cookedRecipes)
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.aiRecipes.collect{
-                aiRecipes -> aiAdapter.differ.submitList(aiRecipes)
+            viewModel.cookedRecipes.collect { cookedRecipes ->
+                cookedAdapter.differ.submitList(cookedRecipes)
+                binding.emptyText3.visibility = if (cookedRecipes.isEmpty()) View.VISIBLE else View.GONE
             }
         }
 

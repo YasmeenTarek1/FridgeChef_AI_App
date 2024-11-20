@@ -10,6 +10,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.recipeapp.R
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemFeedBinding
 import kotlinx.coroutines.flow.Flow
@@ -58,6 +59,7 @@ class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
 
         Glide.with(binding.root)
             .load(recipe!!.image)
+            .error(R.drawable.dish)
             .into(binding.recipeImage)
 
         binding.love.setOnClickListener{

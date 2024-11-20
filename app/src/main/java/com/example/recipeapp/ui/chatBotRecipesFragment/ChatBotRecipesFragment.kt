@@ -39,11 +39,17 @@ class ChatBotRecipesFragment : Fragment(R.layout.fragment_chat_bot_recipes) {
         recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.setAdapter(chatBotRecipesAdapter)
+        recyclerView.adapter = chatBotRecipesAdapter
 
         lifecycleScope.launch {
             viewModel.recipes.collect { recipes ->
                 chatBotRecipesAdapter.differ.submitList(recipes)
+            }
+            if(chatBotRecipesAdapter.itemCount == 0){
+                binding.emptyImage.visibility = View.VISIBLE
+            }
+            else{
+                binding.emptyImage.visibility = View.GONE
             }
         }
     }

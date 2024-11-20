@@ -32,9 +32,17 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)
-            if(binding.user != null) {
+            if (binding.user!!.image != null) {
+                binding.userAvatar.scaleX = 1.0f
+                binding.userAvatar.scaleY = 1.0f
                 Glide.with(requireContext())
                     .load(binding.user!!.image)
+                    .into(binding.userAvatar)
+            } else {
+                binding.userAvatar.scaleX = 1.3f
+                binding.userAvatar.scaleY = 1.3f
+                Glide.with(requireContext())
+                    .load(R.drawable.no_avatar)
                     .into(binding.userAvatar)
             }
         }

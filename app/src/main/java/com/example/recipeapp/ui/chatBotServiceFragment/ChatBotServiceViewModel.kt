@@ -106,7 +106,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             val generativeModel =
                 GenerativeModel(
                     modelName = "gemini-1.5-flash",
-                    apiKey = "AIzaSyBygUzMLk3xTKkiiyC407TXuxI08eWPFec"
+                    apiKey = "AIzaSyCTkZ0g5W7t243Ti6hFLWv0HL3vnGLSQKo"
                 )
 
             val user = repository.getUserById(AppUser.instance!!.userId!!)
@@ -135,7 +135,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             val generativeModel =
                 GenerativeModel(
                     modelName = "gemini-1.5-flash",
-                    apiKey = "AIzaSyBygUzMLk3xTKkiiyC407TXuxI08eWPFec"
+                    apiKey = "AIzaSyCTkZ0g5W7t243Ti6hFLWv0HL3vnGLSQKo"
                 )
 
             val prompt = "Give me a short unique professional cooking or health tip no one knows decorated with relevant emojis, follows my diet type: ${user!!.dietType}, excluding all tips similar to these $cookingTipHistory by choosing completely different ingredients, separate between the title and the content start the tip immediately without asking any questions"
@@ -155,7 +155,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             val generativeModel =
                 GenerativeModel(
                     modelName = "gemini-1.5-flash",
-                    apiKey = "AIzaSyBygUzMLk3xTKkiiyC407TXuxI08eWPFec"
+                    apiKey = "AIzaSyCTkZ0g5W7t243Ti6hFLWv0HL3vnGLSQKo"
                 )
 
             val prompt = "summarize this paragraph $summary mentioning only the description of the recipe and its nutritional values if exist"

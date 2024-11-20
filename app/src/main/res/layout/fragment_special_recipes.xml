@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:text="See all"
                     android:textColor="#FF5C67"
-                    android:textSize="13dp"
+                    android:textSize="13sp"
                     android:textStyle="italic"
                     app:layout_constraintBottom_toBottomOf="@+id/goCrazyTextView"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -75,6 +75,22 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/goCrazyTextView" />
 
+                <TextView
+                    android:id="@+id/emptyText1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="14dp"
+                    android:text="No Recipes Available"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#FF5C67"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@id/recyclerView1"
+                    app:layout_constraintBottom_toTopOf="@+id/recyclerView1"
+                    app:layout_constraintStart_toStartOf="@+id/recyclerView1"
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerView1" />
 
                 <TextView
                     android:id="@+id/favoriteRecipesTextView"
@@ -96,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:text="See all"
                     android:textColor="#FF5C67"
-                    android:textSize="13dp"
+                    android:textSize="13sp"
                     android:textStyle="italic"
                     app:layout_constraintBottom_toBottomOf="@+id/favoriteRecipesTextView"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -118,6 +134,23 @@
                     app:layout_constraintTop_toBottomOf="@+id/favoriteRecipesTextView" />
 
                 <TextView
+                    android:id="@+id/emptyText2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="14dp"
+                    android:text="No Recipes Available"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#FF5C67"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@id/recyclerView2"
+                    app:layout_constraintBottom_toTopOf="@+id/recyclerView2"
+                    app:layout_constraintStart_toStartOf="@+id/recyclerView2"
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerView2" />
+
+                <TextView
                     android:id="@+id/cookedRecipesTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -136,14 +169,14 @@
                     android:id="@+id/viewAll3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
                     android:text="See all"
                     android:textColor="#FF5C67"
-                    android:textSize="13dp"
+                    android:textSize="13sp"
                     android:textStyle="italic"
-                    app:layout_constraintBottom_toTopOf="@id/recyclerView3"
+                    android:layout_marginEnd="-5dp"
+                    app:layout_constraintBottom_toBottomOf="@id/cookedRecipesTextView"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.878"
+                    app:layout_constraintHorizontal_bias="0.913"
                     app:layout_constraintStart_toEndOf="@+id/cookedRecipesTextView"
                     app:layout_constraintTop_toTopOf="@+id/cookedRecipesTextView" />
 
@@ -159,6 +192,23 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cookedRecipesTextView" />
+
+                <TextView
+                    android:id="@+id/emptyText3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="14dp"
+                    android:text="No Recipes Available"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#FF5C67"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@id/recyclerView3"
+                    app:layout_constraintBottom_toTopOf="@+id/recyclerView3"
+                    app:layout_constraintStart_toStartOf="@+id/recyclerView3"
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerView3" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

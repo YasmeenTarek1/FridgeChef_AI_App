@@ -27,9 +27,9 @@ class SimilarRecipesPagingSource(
             var results: MutableList<Recipe> = mutableListOf()
             var moreRecipesNeeded = false
 
-            // Collect all favorite recipes
             val favoriteRecipes = repository.getAllFavoriteRecipes().first()
-            val currentFavRecipesIDs: MutableList<Int> = mutableListOf()
+            val cookedRecipes = repository.getAllCookedRecipes().first()
+            val usedBeforeRecipesIDs: MutableList<Int> = mutableListOf()
 
             // Get a new favorite recipe ID that hasn't been used
             for (favorite in favoriteRecipes) {
@@ -38,8 +38,12 @@ class SimilarRecipesPagingSource(
                     taken = true
                     recipeId = favorite.id
                 }
-                currentFavRecipesIDs.add(favorite.id)
+                usedBeforeRecipesIDs.add(favorite.id)
             }
+            for(cookedRecipe in cookedRecipes){
+                usedBeforeRecipesIDs.add(cookedRecipe.id)
+            }
+
 
             // Get user's diet type, ignore "balanced"
             var diet: String? = repository.getUserById(AppUser.instance!!.userId!!)?.dietType?.lowercase()
@@ -75,13 +79,13 @@ class SimilarRecipesPagingSource(
             // Fetch random recipes if no fav recipes available or similar recipes are insufficient
             if(moreRecipesNeeded){
                 var additionalRecipes = repository.getRandomRecipes(diet = diet).toMutableList()
-                additionalRecipes = additionalRecipes.filterNot { currentFavRecipesIDs.contains(it.id) }.toMutableList()
+                additionalRecipes = additionalRecipes.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
                 additionalRecipes.forEach { recipe ->
                     val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
                     recipe.summary = chatBotServiceViewModel.summarizeSummary(recipe.summary)
                 }
                 results.addAll(additionalRecipes)
-                results.filterNot { currentFavRecipesIDs.contains(it.id) }.toMutableList()
+                results.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
             }
 
             // Save the IDs in shared preferences

@@ -35,9 +35,7 @@ class SearchByNameViewModel(private val repository: Repository): ViewModel() {
         }
     }
 
-    suspend fun getUserImage():String{
-        return withContext(Dispatchers.IO){
-            repository.getUserById(AppUser.instance!!.userId!!)!!.image!!
-        }
+    suspend fun getUserImage():String?{
+        return repository.getUserById(AppUser.instance!!.userId!!)!!.image
     }
 }
