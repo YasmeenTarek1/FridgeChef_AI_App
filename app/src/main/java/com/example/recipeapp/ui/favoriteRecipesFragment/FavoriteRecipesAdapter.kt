@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.recipeapp.R
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemFavoriteRecipeBinding
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
@@ -47,9 +48,20 @@ class FavoriteRecipesAdapter(private val onDeleteClick: (FavoriteRecipe) -> Unit
         // Bind the swipe layout to ensure that each item has a unique identifier for swipe actions
         viewBinderHelper.bind(binding.swipeLayout, favRecipe.id.toString())
 
-        Glide.with(binding.root)
-            .load(favRecipe.image)
-            .into(binding.recipeImage)
+        if(favRecipe.image != null) {
+            binding.recipeImage.scaleX = 1.0f
+            binding.recipeImage.scaleY = 1.0f
+            Glide.with(binding.root)
+                .load(favRecipe.image)
+                .into(binding.recipeImage)
+        }
+        else{
+            binding.recipeImage.scaleX = 0.75f
+            binding.recipeImage.scaleY = 0.75f
+            Glide.with(binding.root)
+                .load(R.drawable.dish) // Fallback image in case of an error
+                .into(binding.recipeImage)
+        }
 
         binding.recipe = favRecipe
 

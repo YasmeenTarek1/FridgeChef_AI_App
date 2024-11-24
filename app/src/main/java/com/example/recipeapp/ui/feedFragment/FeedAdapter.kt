@@ -59,8 +59,9 @@ class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
 
         Glide.with(binding.root)
             .load(recipe!!.image)
-            .error(R.drawable.dish)
+            .error(R.drawable.dish_smaller) // Fallback image in case of an error
             .into(binding.recipeImage)
+
 
         binding.love.setOnClickListener{
             binding.fullLove.visibility = View.VISIBLE

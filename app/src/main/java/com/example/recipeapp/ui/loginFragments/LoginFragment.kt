@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -80,13 +81,14 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
-                        lifecycleScope.launch{
+                        lifecycleScope.launch(Dispatchers.IO) {
                             AppUser.instance!!.userId = auth.currentUser?.uid
-                            // It's already collected before
-                            viewModel.fetchUserInfoFromFirestoreAndInitializeRoom()
-                            val userName = repository.getUserById(AppUser.instance!!.userId!!)!!.name.substringBefore(" ")
-                            goToHomePage()
-                            Toast.makeText(requireContext(), "Welcome Back, $userName", Toast.LENGTH_SHORT).show()
+                            viewModel.fetchUserInfoFromFirestoreAndInitializeRoom() // It's already collected before
+                            val userName = viewModel.getUserName()
+                            withContext(Dispatchers.Main) {
+                                goToHomePage()
+                                Toast.makeText(requireContext(), "Welcome Back, $userName", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     } else {
                         Log.w("LoginFragment", "signInWithEmail:failure", task.exception)
@@ -149,8 +151,15 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     lifecycleScope.launch{
                         AppUser.instance!!.userId = auth.currentUser?.uid
                         val success = viewModel.fetchUserInfoFromFirestoreAndInitializeRoom()
-                        if (success) goToHomePage()
+                        if (success) {
+                            val userName = viewModel.getUserName()
+                            withContext(Dispatchers.Main) {
+                                goToHomePage()
+                                Toast.makeText(requireContext(), "Welcome Back, $userName", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                         else collectInfo()
+
                     }
                 } else {
                     Log.w("LoginFragment", "signInWithCredential:failure", task.exception)
@@ -183,7 +192,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 lifecycleScope.launch (Dispatchers.IO) {
                     AppUser.instance!!.userId = auth.currentUser?.uid
                     val success = viewModel.fetchUserInfoFromFirestoreAndInitializeRoom()
-                    if (success) goToHomePage()
+                    if (success) {
+                        val userName = viewModel.getUserName()
+                        withContext(Dispatchers.Main) {
+                            goToHomePage()
+                            Toast.makeText(requireContext(), "Welcome Back, $userName", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                     else collectInfo()
                 }
             } else {

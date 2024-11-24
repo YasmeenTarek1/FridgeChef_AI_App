@@ -44,12 +44,11 @@ class ChatBotRecipesFragment : Fragment(R.layout.fragment_chat_bot_recipes) {
         lifecycleScope.launch {
             viewModel.recipes.collect { recipes ->
                 chatBotRecipesAdapter.differ.submitList(recipes)
-            }
-            if(chatBotRecipesAdapter.itemCount == 0){
-                binding.emptyImage.visibility = View.VISIBLE
-            }
-            else{
-                binding.emptyImage.visibility = View.GONE
+                if (chatBotRecipesAdapter.itemCount == 0) {
+                    binding.emptyImage.visibility = View.VISIBLE
+                } else {
+                    binding.emptyImage.visibility = View.GONE
+                }
             }
         }
     }

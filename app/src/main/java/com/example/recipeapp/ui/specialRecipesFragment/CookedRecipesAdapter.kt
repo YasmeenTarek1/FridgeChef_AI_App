@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.recipeapp.R
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemCookedRecipeOuterBinding
 import com.example.recipeapp.room_DB.model.CookedRecipe
@@ -37,6 +38,7 @@ class CookedRecipesAdapter : RecyclerView.Adapter<CookedRecipesAdapter.CookedRec
 
         Glide.with(binding.root)
             .load(cookedRecipe.image)
+            .error(R.drawable.dish_smaller) // Fallback image in case of an error
             .into(binding.recipeImage)
 
         binding.textView.text = cookedRecipe.title

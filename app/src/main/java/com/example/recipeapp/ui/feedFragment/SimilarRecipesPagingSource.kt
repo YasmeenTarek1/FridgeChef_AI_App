@@ -63,8 +63,8 @@ class SimilarRecipesPagingSource(
                     recipe.summary = chatBotServiceViewModel.summarizeSummary(detailedRecipe.summary)
                 }
 
-                // Filter out recipes with missing images
-                results = results.filterNot { it.image == null }.toMutableList()
+                // Filter out recipes with repeated recipes
+                results.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
 
                 // Check if we have enough recipes, else fetch additional random ones
                 if (results.size < 8) {

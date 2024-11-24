@@ -23,12 +23,12 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             )
 
             val user = repository.getUserById(AppUser.instance!!.userId!!)
-            var history = ""
+            var history = "Response History: "
 
             // Title (String)
-            var prompt = "Create a recipe no one has heard of using: $ingredients that matches my goal: ${user!!.goal} " +
-                        "and follows my diet type: ${user!!.dietType}. If any information is missing, just guess the option you want. Don't ask any questions. " +
-                        "Let's begin with the title of the recipe. Don't use any font styles"
+            var prompt = "Mention only the title of a recipe no one has heard of using: $ingredients that matches my goal: ${user!!.goal} " +
+                         "and follows my diet type: ${user!!.dietType}. If any information is missing, just guess the option you want. Don't ask any questions. " +
+                         "Don't use any font styles"
             val title = generativeModel.generateContent(prompt).text.toString()
             history += "$prompt $title"
 

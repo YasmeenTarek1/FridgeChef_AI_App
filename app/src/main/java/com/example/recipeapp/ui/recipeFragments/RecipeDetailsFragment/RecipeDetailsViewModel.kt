@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.Ingredient
 import com.example.recipeapp.api.model.Recipe
+import com.example.recipeapp.room_DB.model.AiRecipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import com.example.recipeapp.room_DB.model.ToBuyIngredient
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
 
     private val toBuyIngredients: Flow<List<ToBuyIngredient>> = repository.getAllToBuyIngredients()
     private val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
+    private val aiRecipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
     suspend fun getRecipeIngredients(recipeId: Int): List<Ingredient>{
         return withContext(Dispatchers.IO){
@@ -62,6 +64,11 @@ class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
             )
             favRecipes.collect { favRecipes ->
                 repository.updateFavRecipesInFirestore(favRecipes)
+            }
+
+            repository.deleteAiRecipe(recipe.id)
+            aiRecipes.collect { recipes ->
+                repository.updateAiRecipesInFirestore(recipes)
             }
         }
     }

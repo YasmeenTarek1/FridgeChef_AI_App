@@ -19,6 +19,4 @@ interface UserDao {
     @Query("SELECT * FROM user_info WHERE id = :userId")
     suspend fun getUserById(userId: String): UserInfo?
 
-    @Query("DELETE FROM user_info")
-    suspend fun clearAll()
 }

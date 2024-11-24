@@ -68,6 +68,7 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
             binding.hello.text = "Hello, ${viewModel.getUserName()}"
 
             withContext(Dispatchers.Main) {
+
                 if (viewModel.getUserImage() != null) {
                     binding.userAvatar.scaleX = 1.0f
                     binding.userAvatar.scaleY = 1.0f
@@ -75,8 +76,8 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
                         .load(viewModel.getUserImage())
                         .into(binding.userAvatar)
                 } else {
-                    binding.userAvatar.scaleX = 1.25f
-                    binding.userAvatar.scaleY = 1.25f
+                    binding.userAvatar.scaleX = 1.29f
+                    binding.userAvatar.scaleY = 1.29f
                     Glide.with(requireContext())
                         .load(R.drawable.no_avatar)
                         .into(binding.userAvatar)
