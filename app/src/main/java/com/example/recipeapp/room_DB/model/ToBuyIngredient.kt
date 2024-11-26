@@ -10,9 +10,9 @@ import kotlinx.parcelize.Parcelize
 data class ToBuyIngredient(
     @PrimaryKey
     val name: String,
-    val image: String,
+    val image: String?,
     val createdAt: Long
 ): Parcelable {
-    constructor() : this("", "",  0)
+    constructor() : this("", null,  0)
 }
 

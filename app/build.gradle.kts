@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -6,6 +9,16 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
 }
+
+// Load properties from local.properties
+val localProperties = Properties().apply {
+    load(FileInputStream(rootProject.file("local.properties")))
+}
+
+// Load the API keys from local.properties
+val apiKeySpoonacular: String = localProperties.getProperty("API_KEY_spoonacular")
+val apiKeyGemini: String = localProperties.getProperty("API_KEY_gemini")
+val apiKeyCustomSearch: String = localProperties.getProperty("API_KEY_custom_search")
 
 android {
     namespace = "com.example.recipeapp"
@@ -20,15 +33,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-
-        // Load the API keys from local.properties
-        val apiKeySpoonacular: String? = project.findProperty("API_KEY_spoonacular") as String?
-        val apiKeyGemini: String? = project.findProperty("API_KEY_gemini") as String?
-        val apiKeyCustomSearch: String? = project.findProperty("API_KEY_custom_search") as String?
-
-        buildConfigField("String", "API_KEY_Spoonacular", "\"${apiKeySpoonacular}\"")
-        buildConfigField("String", "API_KEY_Gemini", "\"${apiKeyGemini}\"")
-        buildConfigField("String", "API_KEY_Custom_Search", "\"${apiKeyCustomSearch}\"")
+        buildConfigField("String", "API_KEY_Spoonacular", "\"$apiKeySpoonacular\"")
+        buildConfigField("String", "API_KEY_Gemini", "\"$apiKeyGemini\"")
+        buildConfigField("String", "API_KEY_Custom_Search", "\"$apiKeyCustomSearch\"")
     }
 
     buildTypes {

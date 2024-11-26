@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 data class AiRecipe(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
-    val image: String,
+    val image: String?,
     val summary: String,
     val readyInMinutes: Int,
     val servings: Int,
@@ -19,6 +19,6 @@ data class AiRecipe(
     val steps: String,
     var createdAt: Long,
     ): Parcelable{
-    constructor() : this(0, "","" , "" , 0 , 0  ,"", "" , 0)
+    constructor() : this(0, "",null , "" , 0 , 0  ,"", "" , 0)
 }
 

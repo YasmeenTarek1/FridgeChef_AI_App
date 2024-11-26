@@ -13,9 +13,9 @@ data class CookedRecipe(
     val title: String,
     val readyInMinutes: Int,
     val servings: Int,
-    val image: String,
+    val image: String?,
     val createdAt: Long,
     var summary: String
 ): Parcelable{
-    constructor() : this(0, "" ,0, 0,"" , 0 , "")
+    constructor() : this(0, "" ,0, 0,null , 0 , "")
 }

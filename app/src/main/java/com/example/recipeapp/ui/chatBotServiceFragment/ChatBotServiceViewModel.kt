@@ -1,5 +1,6 @@
 package com.example.recipeapp.ui.chatBotServiceFragment
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.recipeapp.AppUser
 import com.example.recipeapp.BuildConfig
@@ -9,15 +10,36 @@ import com.example.recipeapp.room_DB.model.AiRecipe
 import com.example.recipeapp.sharedPreferences.SharedPreferences
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 class ChatBotServiceViewModel (private val repository: Repository , private val sharedPreferences: SharedPreferences? = null) : ViewModel() {
 
     val recipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
-    companion object{
+    companion object {
         const val API_KEY_GEMINI = BuildConfig.API_KEY_Gemini
+        private const val API_CALL_DELAY_MS = 1000L // Delay of 1 second to respect rate limits
+        private val rateLimitMutex = Mutex() // Mutex to synchronize API calls
+    }
+
+    private suspend fun safeGenerateContent(
+        generativeModel: GenerativeModel,
+        prompt: String
+    ): String? {
+        return rateLimitMutex.withLock {
+            delay(API_CALL_DELAY_MS)
+            try {
+                val response = generativeModel.generateContent(prompt)
+                response.text
+            } catch (e: Exception) {
+                Log.d("Gemini Error" ,"quota exceeded or other exception")
+                throw e
+            }
+        }
     }
 
     suspend fun getCrazyRecipe(ingredients: String): Recipe{
@@ -34,7 +56,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             var prompt = "Mention only the title of a recipe no one has heard of using: $ingredients that matches my goal: ${user!!.goal} " +
                          "and follows my diet type: ${user!!.dietType}. If any information is missing, just guess the option you want. Don't ask any questions. " +
                          "Don't use any font styles"
-            val title = generativeModel.generateContent(prompt).text.toString()
+            val title = safeGenerateContent(generativeModel, prompt).toString()
             history += "$prompt $title"
 
 
@@ -44,23 +66,23 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
             // Summary (String)
             prompt = "Give me a brief summary of this recipe: $history without mentioning its title or ingredients"
-            val summaryResponse = generativeModel.generateContent(prompt).text
+            val summaryResponse = safeGenerateContent(generativeModel, prompt)
             history += "quick summary: $summaryResponse"
 
 
             // Servings (Int)
             prompt = "Give me the number of servings (only the number) of this recipe:$history"
-            val servingsResponse = generativeModel.generateContent(prompt).text!!.trim().toInt()
+            val servingsResponse = safeGenerateContent(generativeModel, prompt)!!.trim().toInt()
 
 
             // Prep Time (Int - minutes)
             prompt = "Give me the prep time (only the duration in minutes) of this recipe:$history"
-            val readyInMinutesResponse = generativeModel.generateContent(prompt).text!!.trim().toInt()
+            val readyInMinutesResponse = safeGenerateContent(generativeModel, prompt)!!.trim().toInt()
 
 
             // Ingredients
             prompt = "Give me only the names of the ingredients of this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
-            val ingredientsResponse = generativeModel.generateContent(prompt).text
+            val ingredientsResponse = safeGenerateContent(generativeModel, prompt)
             history += "ingredients used: $ingredientsResponse"
 
 
@@ -68,7 +90,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             prompt = "Give me your way in detailed steps to do this recipe using the ingredients mentioned here: $history in the form of Strings in \"\" separated by commas not lines and not in programming language or mark down." +
                     " Start immediately with the steps without mentioning any titles" +
                     " Every step is a complete sentence"
-            val stepsResponse = generativeModel.generateContent(prompt).text
+            val stepsResponse = safeGenerateContent(generativeModel, prompt)
 
 
             val aiRecipe = AiRecipe(
@@ -127,8 +149,8 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             $recipe
             """.trimIndent()
 
-            val response = generativeModel.generateContent(prompt)
-            response.text.toString()
+            val response = safeGenerateContent(generativeModel, prompt)
+            response.toString()
         }
     }
 
@@ -144,13 +166,13 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
                 )
 
             val prompt = "Give me a short unique professional cooking or health tip no one knows decorated with relevant emojis, follows my diet type: ${user!!.dietType}, excluding all tips similar to these $cookingTipHistory by choosing completely different ingredients, separate between the title and the content start the tip immediately without asking any questions"
-            val response = generativeModel.generateContent(prompt)
+            val response = safeGenerateContent(generativeModel, prompt)
 
-            cookingTipHistory += ", ${response.text.toString()}"
+            cookingTipHistory += ", ${response.toString()}"
             cookingTipHistory = cookingTipHistory.takeLast(3000)
 
             sharedPreferences.saveCookingTipsHistory(cookingTipHistory)
-            response.text.toString()
+            response.toString()
         }
     }
 
@@ -164,9 +186,9 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
                 )
 
             val prompt = "summarize this paragraph $summary mentioning only the description of the recipe and its nutritional values if exist"
-            val response = generativeModel.generateContent(prompt)
+            val response = safeGenerateContent(generativeModel, prompt)
 
-            response.text.toString()
+            response.toString()
         }
     }
 

@@ -53,18 +53,19 @@ class SimilarRecipesPagingSource(
             if (taken) {
                 results = repository.getSimilarRecipes(recipeId = recipeId).toMutableList()
 
+                // Filter out recipes with repeated recipes
+                results.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
+
                 // Fill recipe details
                 results.forEach { recipe ->
                     val detailedRecipe: ExtraDetailsResponse = repository.getRecipeInfo(recipe.id)
-                    val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
                     if (detailedRecipe.image != null) {
                         recipe.image = detailedRecipe.image
                     }
+
+                    val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
                     recipe.summary = chatBotServiceViewModel.summarizeSummary(detailedRecipe.summary)
                 }
-
-                // Filter out recipes with repeated recipes
-                results.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
 
                 // Check if we have enough recipes, else fetch additional random ones
                 if (results.size < 8) {
@@ -78,14 +79,15 @@ class SimilarRecipesPagingSource(
 
             // Fetch random recipes if no fav recipes available or similar recipes are insufficient
             if(moreRecipesNeeded){
-                var additionalRecipes = repository.getRandomRecipes(diet = diet).toMutableList()
-                additionalRecipes = additionalRecipes.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
-                additionalRecipes.forEach { recipe ->
+                val additionalRecipes = repository.getRandomRecipes(diet = diet).toMutableList()
+                results.addAll(additionalRecipes)
+                results.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
+
+                results.forEach { recipe ->
                     val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
                     recipe.summary = chatBotServiceViewModel.summarizeSummary(recipe.summary)
                 }
-                results.addAll(additionalRecipes)
-                results.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
+
             }
 
             // Save the IDs in shared preferences
