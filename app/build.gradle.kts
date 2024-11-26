@@ -19,8 +19,17 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
 
+
+        // Load the API keys from local.properties
+        val apiKeySpoonacular: String? = project.findProperty("API_KEY_spoonacular") as String?
+        val apiKeyGemini: String? = project.findProperty("API_KEY_gemini") as String?
+        val apiKeyCustomSearch: String? = project.findProperty("API_KEY_custom_search") as String?
+
+        buildConfigField("String", "API_KEY_Spoonacular", "\"${apiKeySpoonacular}\"")
+        buildConfigField("String", "API_KEY_Gemini", "\"${apiKeyGemini}\"")
+        buildConfigField("String", "API_KEY_Custom_Search", "\"${apiKeyCustomSearch}\"")
+    }
 
     buildTypes {
         release {
@@ -31,15 +40,19 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures{
+
+    buildFeatures {
         dataBinding = true
+        buildConfig = true
     }
 }
 

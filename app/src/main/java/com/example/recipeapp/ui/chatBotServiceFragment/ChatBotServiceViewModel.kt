@@ -2,6 +2,7 @@ package com.example.recipeapp.ui.chatBotServiceFragment
 
 import androidx.lifecycle.ViewModel
 import com.example.recipeapp.AppUser
+import com.example.recipeapp.BuildConfig
 import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.room_DB.model.AiRecipe
@@ -15,11 +16,15 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
     val recipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
+    companion object{
+        const val API_KEY_GEMINI = BuildConfig.API_KEY_Gemini
+    }
+
     suspend fun getCrazyRecipe(ingredients: String): Recipe{
         return withContext(Dispatchers.IO) {
             val generativeModel = GenerativeModel(
                 modelName = "gemini-1.5-flash",
-                apiKey = "AIzaSyCTkZ0g5W7t243Ti6hFLWv0HL3vnGLSQKo"
+                apiKey = API_KEY_GEMINI
             )
 
             val user = repository.getUserById(AppUser.instance!!.userId!!)
@@ -106,7 +111,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             val generativeModel =
                 GenerativeModel(
                     modelName = "gemini-1.5-flash",
-                    apiKey = "AIzaSyCTkZ0g5W7t243Ti6hFLWv0HL3vnGLSQKo"
+                    apiKey = API_KEY_GEMINI
                 )
 
             val user = repository.getUserById(AppUser.instance!!.userId!!)
@@ -135,7 +140,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             val generativeModel =
                 GenerativeModel(
                     modelName = "gemini-1.5-flash",
-                    apiKey = "AIzaSyCTkZ0g5W7t243Ti6hFLWv0HL3vnGLSQKo"
+                    apiKey = API_KEY_GEMINI
                 )
 
             val prompt = "Give me a short unique professional cooking or health tip no one knows decorated with relevant emojis, follows my diet type: ${user!!.dietType}, excluding all tips similar to these $cookingTipHistory by choosing completely different ingredients, separate between the title and the content start the tip immediately without asking any questions"
@@ -155,7 +160,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             val generativeModel =
                 GenerativeModel(
                     modelName = "gemini-1.5-flash",
-                    apiKey = "AIzaSyCTkZ0g5W7t243Ti6hFLWv0HL3vnGLSQKo"
+                    apiKey = API_KEY_GEMINI
                 )
 
             val prompt = "summarize this paragraph $summary mentioning only the description of the recipe and its nutritional values if exist"
