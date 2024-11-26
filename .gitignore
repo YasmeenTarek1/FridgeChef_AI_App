@@ -10,3 +10,5 @@
 /.idea/.name
 /.idea/misc.xml
 /.kotlin/
+/app/google-services.json
+/app/build
