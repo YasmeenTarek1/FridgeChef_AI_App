@@ -24,13 +24,13 @@ interface ApiService {
     suspend fun getSimilarRecipes(
         @Path("id") recipeId: Int,
         @Query("apiKey") apiKey: String = API_KEY_SPOONACULAR,
-        @Query("number") numberOfRecipes: Int = 5
+        @Query("number") numberOfRecipes: Int = 6
     ): List<Recipe>
 
     @GET("recipes/random")
     suspend fun getRandomRecipes(
         @Query("apiKey") apiKey: String = API_KEY_SPOONACULAR,
-        @Query("number") numberOfRecipes: Int = 5,
+        @Query("number") numberOfRecipes: Int = 4,
         @Query("include-tags") diet: String? = null
     ): RandomRecipeResponse
 

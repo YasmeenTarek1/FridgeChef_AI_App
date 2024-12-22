@@ -24,26 +24,23 @@ class SimilarRecipesPagingSource(
             var taken = false
             var recipeId = 0
 
-            var results: MutableList<Recipe> = mutableListOf()
-            var moreRecipesNeeded = false
-
+            var results: MutableSet<Recipe> = mutableSetOf()
             val favoriteRecipes = repository.getAllFavoriteRecipes().first()
             val cookedRecipes = repository.getAllCookedRecipes().first()
-            val usedBeforeRecipesIDs: MutableList<Int> = mutableListOf()
+            val recipesToFilterOut: MutableSet<Int> = mutableSetOf()
 
             // Get a new favorite recipe ID that hasn't been used
-            for (favorite in favoriteRecipes) {
-                if (!taken && !takenFromFavRecipesIDs.contains(favorite.id)) {
-                    takenFromFavRecipesIDs.add(favorite.id)
+            for (favoriteRecipe in favoriteRecipes) {
+                if (!taken && !takenFromFavRecipesIDs.contains(favoriteRecipe.id)) {
+                    takenFromFavRecipesIDs.add(favoriteRecipe.id)
                     taken = true
-                    recipeId = favorite.id
+                    recipeId = favoriteRecipe.id
                 }
-                usedBeforeRecipesIDs.add(favorite.id)
+                recipesToFilterOut.add(favoriteRecipe.id)
             }
             for(cookedRecipe in cookedRecipes){
-                usedBeforeRecipesIDs.add(cookedRecipe.id)
+                recipesToFilterOut.add(cookedRecipe.id)
             }
-
 
             // Get user's diet type, ignore "balanced"
             var diet: String? = repository.getUserById(AppUser.instance!!.userId!!)?.dietType?.lowercase()
@@ -51,10 +48,8 @@ class SimilarRecipesPagingSource(
 
             // Fetch similar recipes to a fav one
             if (taken) {
-                results = repository.getSimilarRecipes(recipeId = recipeId).toMutableList()
-
-                // Filter out recipes with repeated recipes
-                results.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
+                results.addAll(repository.getSimilarRecipes(recipeId = recipeId).toList())
+                results = results.filterNot { recipesToFilterOut.contains(it.id) }.toMutableSet()
 
                 // Fill recipe details
                 results.forEach { recipe ->
@@ -66,35 +61,39 @@ class SimilarRecipesPagingSource(
                     val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
                     recipe.summary = chatBotServiceViewModel.summarizeSummary(detailedRecipe.summary)
                 }
-
-                // Check if we have enough recipes, else fetch additional random ones
-                if (results.size < 8) {
-                    moreRecipesNeeded = true
-                }
             }
-            else{
-                moreRecipesNeeded = true
-            }
-
 
             // Fetch random recipes if no fav recipes available or similar recipes are insufficient
-            if(moreRecipesNeeded){
-                val additionalRecipes = repository.getRandomRecipes(diet = diet).toMutableList()
-                results.addAll(additionalRecipes)
-                results.filterNot { usedBeforeRecipesIDs.contains(it.id) }.toMutableList()
+            while(results.size < 8) {
+                try {
+                    var additionalRecipes = repository.getRandomRecipes(diet = diet).toMutableList()
+                    additionalRecipes =
+                        additionalRecipes.filterNot { recipesToFilterOut.contains(it.id) }
+                            .toMutableList()
 
-                results.forEach { recipe ->
-                    val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
-                    recipe.summary = chatBotServiceViewModel.summarizeSummary(recipe.summary)
+                    additionalRecipes.forEach { recipe ->
+                        val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
+                        recipe.summary = chatBotServiceViewModel.summarizeSummary(recipe.summary)
+                    }
+                    results.addAll(additionalRecipes)
+                } catch (e: Exception) {
+                    if (e.message?.contains("402") == true) {
+                        Log.e("RecipeFetchError", "Spoonacular Api limit reached: ${e.message}")
+                        break
+                    }
+                    if (e.message?.contains("429") == true) {
+                        Log.e("RecipeFetchError", "Gemini Api limit reached: ${e.message}")
+                        break
+                    }
                 }
-
             }
 
             // Save the IDs in shared preferences
             sharedPreferences.saveTakenIDs(takenFromFavRecipesIDs)
+            Log.d("PagingSource"," final result size is ${results.size} ");
 
             LoadResult.Page(
-                data = results,
+                data = results.toList(),
                 prevKey = if (page == 1) null else page - 1, // Handle first page
                 nextKey = if (results.isEmpty()) null else page + 1 // Continue loading if non-empty response
             )

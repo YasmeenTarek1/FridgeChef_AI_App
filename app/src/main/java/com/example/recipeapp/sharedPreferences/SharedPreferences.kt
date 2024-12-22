@@ -2,10 +2,12 @@ package com.example.recipeapp.sharedPreferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.recipeapp.AppUser
 
 class SharedPreferences(context: Context) {
 
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("recipe_prefs", Context.MODE_PRIVATE)
+    private val userId = AppUser.instance!!.userId
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPreferences_$userId", Context.MODE_PRIVATE)
 
     fun saveTakenIDs(takenIDs: Set<Int>) {
         sharedPreferences.edit().putStringSet("taken_ids", takenIDs.map { it.toString() }.toSet()).apply()

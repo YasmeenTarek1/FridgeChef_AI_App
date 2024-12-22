@@ -22,7 +22,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
     companion object {
         const val API_KEY_GEMINI = BuildConfig.API_KEY_Gemini
-        private const val API_CALL_DELAY_MS = 300L // Delay of 0.3 second to respect rate limits
+        private const val API_CALL_DELAY_MS = 1500L // Delay of 1.5 second to respect rate limits
         private val rateLimitMutex = Mutex() // Mutex to synchronize API calls
     }
 

@@ -70,7 +70,7 @@ class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
 
             val layoutParams = binding.recipeImage.layoutParams as ViewGroup.MarginLayoutParams
             if (currentDrawable == null || currentDrawable.constantState == errorDrawable) {
-                layoutParams.bottomMargin = 165 // Adjust margin
+                layoutParams.bottomMargin = 200 // Adjust margin
             } else {
                 layoutParams.bottomMargin = 105 // Reset margin
             }

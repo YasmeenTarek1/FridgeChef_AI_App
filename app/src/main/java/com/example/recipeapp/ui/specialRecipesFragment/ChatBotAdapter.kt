@@ -38,7 +38,7 @@ class ChatBotAdapter : RecyclerView.Adapter<ChatBotAdapter.ChatBotRecipeViewHold
 
         Glide.with(binding.root)
             .load(aiRecipe.image)
-            .error(R.drawable.dish_smaller2) // Fallback image in case of an error
+            .error(R.drawable.dish_smaller) // Fallback image in case of an error
             .into(binding.recipeImage)
 
         binding.textView.text = aiRecipe.title

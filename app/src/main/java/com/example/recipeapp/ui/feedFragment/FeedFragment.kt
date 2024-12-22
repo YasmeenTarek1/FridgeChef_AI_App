@@ -10,7 +10,6 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -79,6 +78,14 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = feedAdapter
 
+        feedAdapter.addLoadStateListener { loadStates ->
+            binding.loadingProgressBar.visibility = if (loadStates.refresh is LoadState.Loading) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
+
         ViewCompat.setTooltipText(binding.cookingTipButton, "Take a Cooking Tip")
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -113,24 +120,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 feedAdapter.submitData(pagingData)
             }
         }
-
-        // LoadStateListener provided by the Paging library
-        feedAdapter.addLoadStateListener { loadState ->
-            // Show the ProgressBar when loading initial data or appending
-            binding.loadingProgressBar.visibility = if(loadState.source.refresh is LoadState.Loading || loadState.append is LoadState.Loading){
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
-
-            // Error --> show a retry button
-            if (loadState.source.refresh is LoadState.Error) {
-                val error = (loadState.source.refresh as LoadState.Error).error
-                Toast.makeText(context, "Error: ${error.localizedMessage}", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
-
 
     private fun showCookingTip() {
         val chatBotServiceViewModel = ChatBotServiceViewModel(repository , SharedPreferences(requireContext()))
