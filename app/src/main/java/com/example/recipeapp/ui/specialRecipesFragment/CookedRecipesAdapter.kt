@@ -38,7 +38,7 @@ class CookedRecipesAdapter : RecyclerView.Adapter<CookedRecipesAdapter.CookedRec
 
         Glide.with(binding.root)
             .load(cookedRecipe.image)
-            .error(R.drawable.dish_smaller) // Fallback image in case of an error
+            .error(R.drawable.dish_smaller2) // Fallback image in case of an error
             .into(binding.recipeImage)
 
         binding.textView.text = cookedRecipe.title

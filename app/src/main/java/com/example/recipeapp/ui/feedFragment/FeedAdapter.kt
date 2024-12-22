@@ -3,6 +3,7 @@ package com.example.recipeapp.ui.feedFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -54,13 +55,27 @@ class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
             }
         }
 
-        binding.recipe = recipe
+        binding.recipe = recipe!!
         binding.executePendingBindings()
 
         Glide.with(binding.root)
-            .load(recipe!!.image)
-            .error(R.drawable.dish_smaller) // Fallback image in case of an error
+            .load(binding.recipe!!.image)
+            .error(R.drawable.dish_smaller2) // Fallback image in case of an error
             .into(binding.recipeImage)
+
+        // ViewTreeObserver to monitor when the drawable changes
+        binding.recipeImage.viewTreeObserver.addOnGlobalLayoutListener {
+            val currentDrawable = binding.recipeImage.drawable
+            val errorDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.dish_smaller2)?.constantState
+
+            val layoutParams = binding.recipeImage.layoutParams as ViewGroup.MarginLayoutParams
+            if (currentDrawable == null || currentDrawable.constantState == errorDrawable) {
+                layoutParams.bottomMargin = 165 // Adjust margin
+            } else {
+                layoutParams.bottomMargin = 105 // Reset margin
+            }
+            binding.recipeImage.layoutParams = layoutParams
+        }
 
 
         binding.love.setOnClickListener{

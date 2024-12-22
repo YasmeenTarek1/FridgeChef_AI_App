@@ -24,16 +24,6 @@
                 android:layout_height="match_parent"
                 android:background="#ff5c67">
 
-                <ImageView
-                    android:id="@+id/recipeImage"
-                    android:layout_width="200dp"
-                    android:layout_height="180dp"
-                    android:layout_marginBottom="40dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.533"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
                 <TextView
                     android:id="@+id/readyInMinutes"
                     android:layout_width="wrap_content"
@@ -64,6 +54,15 @@
                     android:textColor="@color/white"
                     android:text="@{String.valueOf(recipe.servings)}"/>
 
+                <ImageView
+                    android:id="@+id/recipeImage"
+                    android:layout_width="200dp"
+                    android:layout_height="180dp"
+                    android:layout_marginBottom="40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.533"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
                 <ImageButton
                     android:id="@+id/love"

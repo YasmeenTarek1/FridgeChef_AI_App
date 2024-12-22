@@ -31,10 +31,10 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
     }
 
     private fun createUser() {
-        val email = binding.emailEditText.text.toString()
+        val username = binding.usernameEditText.text.toString()
         val password = binding.passwordEditText.text.toString()
 
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) { task ->
+        auth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(requireActivity()) { task ->
             if (task.isSuccessful) {
                 lifecycleScope.launch {
                     AppUser.instance!!.userId = auth.currentUser?.uid

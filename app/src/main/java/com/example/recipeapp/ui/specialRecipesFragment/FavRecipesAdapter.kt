@@ -39,7 +39,7 @@ class FavRecipesAdapter : RecyclerView.Adapter<FavRecipesAdapter.FavRecipeViewHo
 
         Glide.with(binding.root)
             .load(favRecipe.image)
-            .error(R.drawable.dish_smaller) // Fallback image in case of an error
+            .error(R.drawable.dish_smaller2) // Fallback image in case of an error
             .into(binding.recipeImage)
 
 

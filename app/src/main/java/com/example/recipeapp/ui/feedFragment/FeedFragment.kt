@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +19,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.recipeapp.AppUser
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
@@ -44,7 +44,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     private lateinit var feedViewModel: FeedViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var feedAdapter: FeedAdapter
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private var tooltipWindow: PopupWindow? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -80,14 +79,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = feedAdapter
 
-        feedAdapter.addLoadStateListener { loadStates ->
-            binding.loadingProgressBar.visibility = if (loadStates.refresh is LoadState.Loading) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
-        }
-
         ViewCompat.setTooltipText(binding.cookingTipButton, "Take a Cooking Tip")
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -116,14 +107,30 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         observeData()
     }
 
-    private fun observeData(){
+    private fun observeData() {
         lifecycleScope.launch {
             feedViewModel.recipes.collectLatest { pagingData ->
                 feedAdapter.submitData(pagingData)
-                swipeRefreshLayout.isRefreshing = false
+            }
+        }
+
+        // LoadStateListener provided by the Paging library
+        feedAdapter.addLoadStateListener { loadState ->
+            // Show the ProgressBar when loading initial data or appending
+            binding.loadingProgressBar.visibility = if(loadState.source.refresh is LoadState.Loading || loadState.append is LoadState.Loading){
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+            // Error --> show a retry button
+            if (loadState.source.refresh is LoadState.Error) {
+                val error = (loadState.source.refresh as LoadState.Error).error
+                Toast.makeText(context, "Error: ${error.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 
     private fun showCookingTip() {
         val chatBotServiceViewModel = ChatBotServiceViewModel(repository , SharedPreferences(requireContext()))

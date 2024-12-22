@@ -74,11 +74,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun loginWithEmail() {
-        val email = binding.emailEditText.text.toString().trim()
+        val username = binding.usernameEditText.text.toString().trim()
         val password = binding.passwordEditText.text.toString().trim()
 
-        if (email.isNotEmpty() && password.isNotEmpty()) {
-            auth.signInWithEmailAndPassword(email, password)
+        if (username.isNotEmpty() && password.isNotEmpty()) {
+            auth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
                         lifecycleScope.launch(Dispatchers.IO) {
