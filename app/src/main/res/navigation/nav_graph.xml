@@ -66,7 +66,7 @@
     </fragment>
     <fragment
         android:id="@+id/recipeDetailsFragment"
-        android:name="com.example.recipeapp.ui.recipeFragments.RecipeDetailsFragment.RecipeDetailsFragment"
+        android:name="com.example.recipeapp.ui.recipeFragments.recipeDetailsFragment.RecipeDetailsFragment"
         android:label="fragment_recipe_details"
         tools:layout="@layout/fragment_recipe_details" >
         <action
@@ -84,7 +84,7 @@
     </fragment>
     <fragment
         android:id="@+id/recipeStepsFragment"
-        android:name="com.example.recipeapp.ui.recipeFragments.RecipeStepsFragment.RecipeStepsFragment"
+        android:name="com.example.recipeapp.ui.recipeFragments.recipeStepsFragment.RecipeStepsFragment"
         android:label="fragment_recipe_steps"
         tools:layout="@layout/fragment_recipe_steps">
         <action

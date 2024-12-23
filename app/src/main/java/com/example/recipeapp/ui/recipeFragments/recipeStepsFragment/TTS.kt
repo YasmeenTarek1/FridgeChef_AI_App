@@ -1,4 +1,4 @@
-package com.example.recipeapp.ui.recipeFragments.RecipeStepsFragment
+package com.example.recipeapp.ui.recipeFragments.recipeStepsFragment
 
 import android.app.Activity
 import android.speech.tts.TextToSpeech

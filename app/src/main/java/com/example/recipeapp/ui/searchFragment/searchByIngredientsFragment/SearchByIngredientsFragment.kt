@@ -2,12 +2,18 @@ package com.example.recipeapp.ui.searchFragment.searchByIngredientsFragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageButton
+import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.ViewCompat
 import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -40,6 +46,11 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
     private lateinit var searchView: SearchView
     private var ingredients1: MutableList<String> = mutableListOf()
 
+    private var tooltipWindow: PopupWindow? = null
+    private val handler = Handler(Looper.getMainLooper())
+    private val runnable = Runnable {
+        tooltipWindow?.dismiss()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,6 +69,15 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         binding.submitButton.visibility = View.INVISIBLE
 
         val chipGroup: ChipGroup = binding.chipGroup
+
+        ViewCompat.setTooltipText(binding.chatBotButton, "Take a Cooking Tip")
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (isAdded) {
+                // Show tooltip automatically when the fragment is first displayed
+                showCustomTooltip()
+            }
+        }, 100)
 
         searchView = binding.searchView
         searchView.setQuery("", false)
@@ -231,5 +251,33 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
             findNavController().navigate(SearchByIngredientsFragmentDirections.actionSearchByIngredientsFragmentToChatBotServiceFragment(ingredients2.toString()))
             dialogBuilder.dismiss()
         }
+    }
+
+    // "Got random ingredients? Let AI whip up a crazy recipe!"
+    // "Bored of the usual? Let AI invent something incredible!"
+
+    private fun showCustomTooltip() {
+        // Dismiss any existing tooltip if present
+        tooltipWindow?.dismiss()
+
+        val inflater = LayoutInflater.from(binding.chatBotButton.context)
+        val tooltipView = inflater.inflate(R.layout.tooltip, null)
+        val tooltipText = tooltipView.findViewById<TextView>(R.id.tooltip_text)
+        tooltipText.text = "   Got random ingredients?   \nLet AI whip up a crazy recipe!"
+
+        tooltipWindow = PopupWindow(tooltipView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
+        tooltipWindow?.isOutsideTouchable = true
+        tooltipWindow?.isFocusable = true
+
+        // Get the location of the view on screen
+        val location = IntArray(2)
+        binding.chatBotButton.getLocationOnScreen(location)
+
+        val xOffset = -415 // Horizontal offset
+        val yOffset = 12   // Vertical offset
+        tooltipWindow?.showAtLocation(view, 0, location[0] + xOffset, location[1] - binding.chatBotButton.height - yOffset)
+
+        // Schedule dismissal of the tooltip
+        handler.postDelayed(runnable, 4000)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.recipeapp.ui.recipeFragments.RecipeStepsFragment
+package com.example.recipeapp.ui.recipeFragments.recipeStepsFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,21 +40,8 @@ class RecipeStepsViewModel(private val recipeId: Int, private val repository: Re
             favRecipes.collect { recipes ->
                 repository.updateFavRecipesInFirestore(recipes)
             }
-        }
-    }
 
-    fun removeFromFavRecipes(recipeID: Int){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.deleteFavoriteRecipe(recipeID)
-            favRecipes.collect { recipes ->
-                repository.updateFavRecipesInFirestore(recipes)
-            }
-        }
-    }
-
-    fun removeFromAiRecipes(recipeID: Int){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.deleteAiRecipe(recipeID)
+            repository.deleteAiRecipe(cookedRecipe.id)
             aiRecipes.collect { recipes ->
                 repository.updateAiRecipesInFirestore(recipes)
             }

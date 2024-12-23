@@ -1,4 +1,4 @@
-package com.example.recipeapp.ui.recipeFragments.RecipeDetailsFragment
+package com.example.recipeapp.ui.recipeFragments.recipeDetailsFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,6 +31,10 @@ class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
 
     suspend fun getAiIngredientImage(title: String): String {
         return repository.getRecipeOrIngredientImage(title)
+    }
+
+    fun checkFavorite(recipeId: Int): Flow<Boolean> {
+        return repository.isFavoriteRecipeExists(recipeId)
     }
 
     fun onAddToCartClick(ingredient: Ingredient) {
@@ -81,5 +85,4 @@ class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
             }
         }
     }
-
 }

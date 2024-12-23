@@ -1,4 +1,4 @@
-package com.example.recipeapp.ui.recipeFragments.RecipeStepsFragment
+package com.example.recipeapp.ui.recipeFragments.recipeStepsFragment
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -19,10 +19,8 @@ import com.example.recipeapp.databinding.DialogRecipeFinishedBinding
 import com.example.recipeapp.databinding.FragmentRecipeStepsBinding
 import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.room_DB.model.CookedRecipe
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
 
@@ -64,59 +62,52 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
 
                 steps = stepsList
                 numOfSteps = stepsList.size
-                displayStep(recipe, classification, idx)
+                displayStep(recipe, idx)
             }
             else {
                 steps = viewModel.getSteps()
                 numOfSteps = steps.size
-                displayStep(recipe, classification, idx)
+                displayStep(recipe, idx)
             }
         }
 
 
         binding.nextButton.setOnClickListener {
-            displayStep(recipe, classification, ++idx)
+            displayStep(recipe, ++idx)
         }
         binding.nextStepTV.setOnClickListener{
-            displayStep(recipe, classification, ++idx)
+            displayStep(recipe, ++idx)
         }
         binding.previousButton.setOnClickListener {
-            displayStep(recipe, classification, --idx)
+            displayStep(recipe, --idx)
         }
         binding.previousStepTV.setOnClickListener{
-            displayStep(recipe, classification, --idx)
+            displayStep(recipe, --idx)
         }
     }
 
-    private fun displayStep(recipe: Recipe, classification: Int, index: Int){
+    private fun displayStep(recipe: Recipe, index: Int){
         if (index < steps.size) {
             showStep(index)
             changeProgress((((index+1.0) / numOfSteps) * 100).toInt())
             binding.stepsNumberTV.text = "${index+1} / $numOfSteps"
         }
         else if(index == steps.size){
-//          Recipe is Finished
+            // Recipe is Finished
             lifecycleScope.launch {
                 stopAndSpeak("Good job, ${viewModel.getUserName()}")
                 showFinishDialog()
 
-                withContext(Dispatchers.IO) {
-                    val cookedRecipe = CookedRecipe(
-                        id = recipe.id,
-                        title = recipe.title,
-                        image = recipe.image!!,
-                        readyInMinutes = recipe.readyInMinutes,
-                        servings = recipe.servings,
-                        summary = recipe.summary,
-                        createdAt = System.currentTimeMillis()
-                    )
-                    viewModel.addToCookedRecipes(cookedRecipe)
-
-                    if (classification == 0)
-                        viewModel.removeFromAiRecipes(cookedRecipe.id)
-                    else
-                        viewModel.removeFromFavRecipes(cookedRecipe.id)
-                }
+                val cookedRecipe = CookedRecipe(
+                    id = recipe.id,
+                    title = recipe.title,
+                    image = recipe.image!!,
+                    readyInMinutes = recipe.readyInMinutes,
+                    servings = recipe.servings,
+                    summary = recipe.summary,
+                    createdAt = System.currentTimeMillis()
+                )
+                viewModel.addToCookedRecipes(cookedRecipe)
             }
 
         }

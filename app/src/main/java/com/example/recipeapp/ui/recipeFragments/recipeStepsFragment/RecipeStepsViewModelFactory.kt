@@ -1,4 +1,4 @@
-package com.example.recipeapp.ui.recipeFragments.RecipeStepsFragment
+package com.example.recipeapp.ui.recipeFragments.recipeStepsFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

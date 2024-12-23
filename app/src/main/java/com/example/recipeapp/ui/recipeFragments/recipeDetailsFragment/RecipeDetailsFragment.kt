@@ -1,10 +1,16 @@
-package com.example.recipeapp.ui.recipeFragments.RecipeDetailsFragment
+package com.example.recipeapp.ui.recipeFragments.recipeDetailsFragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+import android.widget.PopupWindow
+import android.widget.TextView
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +39,12 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
     private lateinit var viewModel: RecipeDetailsViewModel
     private val args: RecipeDetailsFragmentArgs by navArgs()
 
+    private var tooltipWindow: PopupWindow? = null
+    private val handler = Handler(Looper.getMainLooper())
+    private val runnable = Runnable {
+        tooltipWindow?.dismiss()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -41,6 +53,15 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
         val factory = RecipeDetailsViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(RecipeDetailsViewModel::class.java)
+
+        ViewCompat.setTooltipText(binding.aiOpinionButton, "Take a Cooking Tip")
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (isAdded) {
+                // Show tooltip automatically when the fragment is first displayed
+                showCustomTooltip()
+            }
+        }, 100)
 
         val currentRecipe = args.recipe
         val classification = args.classification
@@ -58,12 +79,6 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
             binding.recipe = currentRecipe
             Log.d("Recipe" , currentRecipe.toString())
         }
-
-//        Custom Input
-//        val staticData = listOf(
-//            Ingredient(id = 1, name = "orange" , image = ""),
-//            Ingredient(id = 2, name = "apple" , image = "")
-//        )
 
         if(adapter.itemCount == 0)
             binding.loadingProgressBar.visibility = View.VISIBLE
@@ -99,6 +114,18 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
         binding.aiOpinionButton.setOnClickListener {
             showRecipeOpinionDialog(currentRecipe)
+        }
+
+        lifecycleScope.launch {
+            viewModel.checkFavorite(currentRecipe.id).collect { isFavorite ->
+                if (isFavorite) {
+                    binding.fullLove.visibility = View.VISIBLE
+                    binding.love.visibility = View.INVISIBLE
+                } else {
+                    binding.fullLove.visibility = View.INVISIBLE
+                    binding.love.visibility = View.VISIBLE
+                }
+            }
         }
 
         binding.love.setOnClickListener{
@@ -163,4 +190,29 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
             dialogBuilder.dismiss()
         }
     }
+
+    private fun showCustomTooltip() {
+        // Dismiss any existing tooltip if present
+        tooltipWindow?.dismiss()
+
+        val inflater = LayoutInflater.from(binding.aiOpinionButton.context)
+        val tooltipView = inflater.inflate(R.layout.tooltip, null)
+        val tooltipText = tooltipView.findViewById<TextView>(R.id.tooltip_text)
+        tooltipText.text = "Will this recipe work for you?\n                 Let’s find out!"
+
+        tooltipWindow = PopupWindow(tooltipView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
+        tooltipWindow?.isOutsideTouchable = true
+        tooltipWindow?.isFocusable = true
+
+        // Get the location of the view on screen
+        val location = IntArray(2)
+        binding.aiOpinionButton.getLocationOnScreen(location)
+
+        val xOffset = -415 // Horizontal offset
+        tooltipWindow?.showAtLocation(view, 0, location[0] + xOffset, location[1] + binding.aiOpinionButton.height)
+
+        // Schedule dismissal of the tooltip
+        handler.postDelayed(runnable, 4000)
+    }
+
 }

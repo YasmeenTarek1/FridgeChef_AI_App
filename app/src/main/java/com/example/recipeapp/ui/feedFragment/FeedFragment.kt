@@ -154,7 +154,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         }
     }
 
-
     private fun showCustomTooltip() {
         // Dismiss any existing tooltip if present
         tooltipWindow?.dismiss()
@@ -178,5 +177,4 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         // Schedule dismissal of the tooltip
         handler.postDelayed(runnable, 4000)
     }
-
 }
