@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.recipeapp.R
 import com.example.recipeapp.Repository
+import com.example.recipeapp.api.model.ExtraDetailsResponse
 import com.example.recipeapp.api.model.Ingredient
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.api.service.RetrofitInstance
@@ -31,6 +32,7 @@ import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
@@ -65,6 +67,19 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
         val currentRecipe = args.recipe
         val classification = args.classification
+
+        runBlocking {
+            if(currentRecipe.summary.isEmpty()){
+                val detailedRecipe: ExtraDetailsResponse = viewModel.getRecipeInfo(currentRecipe.id)
+
+                if (currentRecipe.servings == 0)
+                    currentRecipe.servings = detailedRecipe.servings
+                if (currentRecipe.readyInMinutes == 0)
+                    currentRecipe.readyInMinutes = detailedRecipe.readyInMinutes
+
+                currentRecipe.summary = viewModel.summarizeSummary(detailedRecipe.summary)
+            }
+        }
 
         val adapter = IngredientsListAdapter(onAddToCartClick = { ingredient ->
             viewModel.onAddToCartClick(ingredient)

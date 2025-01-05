@@ -10,6 +10,7 @@ import com.example.recipeapp.room_DB.model.CookedRecipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,21 +31,18 @@ class RecipeStepsViewModel(private val recipeId: Int, private val repository: Re
     }
 
     fun addToCookedRecipes(cookedRecipe: CookedRecipe){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             repository.insertCookedRecipe(cookedRecipe)
-            cookedRecipes.collect { recipes ->
-                repository.updateCookedRecipesInFirestore(recipes)
-            }
+            val currentCookedRecipes = cookedRecipes.first()
+            repository.updateCookedRecipesInFirestore(currentCookedRecipes)
 
             repository.deleteFavoriteRecipe(cookedRecipe.id)
-            favRecipes.collect { recipes ->
-                repository.updateFavRecipesInFirestore(recipes)
-            }
+            val currentFavRecipes = favRecipes.first()
+            repository.updateFavRecipesInFirestore(currentFavRecipes)
 
             repository.deleteAiRecipe(cookedRecipe.id)
-            aiRecipes.collect { recipes ->
-                repository.updateAiRecipesInFirestore(recipes)
-            }
+            val currentAiRecipes = aiRecipes.first()
+            repository.updateAiRecipesInFirestore(currentAiRecipes)
         }
     }
 

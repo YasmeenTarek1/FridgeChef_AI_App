@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.SeekBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +34,12 @@ class SearchByNutrientsFragment : Fragment(R.layout.fragment_search_by_nutrients
     private lateinit var sugarSeekBar: SeekBar
     private lateinit var caloriesSeekBar: SeekBar
 
+    private var carb:Int = 0
+    private var protein: Int = 0
+    private var fat: Int = 0
+    private var sugar: Int = 0
+    private var calories: Int = 0
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -41,7 +48,7 @@ class SearchByNutrientsFragment : Fragment(R.layout.fragment_search_by_nutrients
 
         val factory = SearchByNutrientsViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(SearchByNutrientsViewModel::class.java)
-
+        
         recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -56,26 +63,16 @@ class SearchByNutrientsFragment : Fragment(R.layout.fragment_search_by_nutrients
     }
 
     private fun performSearch() {
-        // Collect nutrient values
-        var carb:Int? = null
-        var protein: Int? = null
-        var fat: Int? = null
-        var sugar: Int? = null
-        var calories: Int? = null
-
-        if(carbSeekBar.progress != 0)
-            carb = carbSeekBar.progress*10
-        if(proteinSeekBar.progress != 0)
-            protein = proteinSeekBar.progress*10
-        if(fatSeekBar.progress != 0)
-            fat = fatSeekBar.progress*10
-        if(sugarSeekBar.progress != 0)
-            sugar = sugarSeekBar.progress*10
-        if(caloriesSeekBar.progress != 0)
-            calories = caloriesSeekBar.progress*10
+        carb = carbSeekBar.progress*10
+        protein = proteinSeekBar.progress*10
+        fat = fatSeekBar.progress*10
+        sugar = sugarSeekBar.progress*10
+        calories = caloriesSeekBar.progress*10
 
         lifecycleScope.launch {
-            adapter.differ.submitList(viewModel.performSearch(maxCarbs = carb, maxProtein = protein, maxFat = fat, maxSugar = sugar, maxCalories = calories))
+            binding.loadingProgressBar.visibility = View.VISIBLE
+            adapter.differ.submitList(viewModel.performSearch(maxCarbs = if (carb == 0) null else carb, maxProtein = if(protein == 0) null else protein, maxFat = if(fat == 0) null else fat, maxSugar = if(sugar == 0) null else sugar, maxCalories = if(calories == 0) null else calories))
+            binding.loadingProgressBar.visibility = View.GONE
         }
     }
 
@@ -87,6 +84,17 @@ class SearchByNutrientsFragment : Fragment(R.layout.fragment_search_by_nutrients
         fatSeekBar = dialogViewBinding.fatSeekBar
         sugarSeekBar = dialogViewBinding.sugarSeekBar
         caloriesSeekBar = dialogViewBinding.caloriesSeekBar
+
+        carbSeekBar.progress = (carb/10)
+        updateSeekBarVisibilityAndValue(carbSeekBar.progress, dialogViewBinding.cardView1, dialogViewBinding.cardView11, dialogViewBinding.carbsCancelButton, dialogViewBinding.carbValueTextView)
+        proteinSeekBar.progress = (protein/10)
+        updateSeekBarVisibilityAndValue(proteinSeekBar.progress, dialogViewBinding.cardView2, dialogViewBinding.cardView22, dialogViewBinding.proteinCancelButton, dialogViewBinding.proteinValueTextView)
+        fatSeekBar.progress = (fat/10)
+        updateSeekBarVisibilityAndValue(fatSeekBar.progress, dialogViewBinding.cardView3, dialogViewBinding.cardView33, dialogViewBinding.fatCancelButton, dialogViewBinding.fatValueTextView)
+        sugarSeekBar.progress = (sugar/10)
+        updateSeekBarVisibilityAndValue(sugarSeekBar.progress, dialogViewBinding.cardView4, dialogViewBinding.cardView44, dialogViewBinding.sugarCancelButton, dialogViewBinding.sugarValueTextView)
+        caloriesSeekBar.progress = (calories/10)
+        updateSeekBarVisibilityAndValue(caloriesSeekBar.progress, dialogViewBinding.cardView5, dialogViewBinding.cardView55, dialogViewBinding.caloriesCancelButton, dialogViewBinding.caloriesValueTextView)
 
         createSeekBarListeners(dialogViewBinding)
 
@@ -143,98 +151,86 @@ class SearchByNutrientsFragment : Fragment(R.layout.fragment_search_by_nutrients
         // Set listeners for each SeekBar to update the TextView next to it
         carbSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(progress == 0){
-                    dialogViewBinding.cardView1.visibility = View.GONE
-                    dialogViewBinding.cardView11.visibility = View.GONE
-                    dialogViewBinding.carbsCancelButton.visibility = View.VISIBLE
-                }
-                else{
-                    dialogViewBinding.cardView1.visibility = View.VISIBLE
-                    dialogViewBinding.cardView11.visibility = View.VISIBLE
-                    dialogViewBinding.carbsCancelButton.visibility = View.GONE
-                    carbValueTextView.text = (progress * 10).toString()
-                }
+                updateSeekBarVisibilityAndValue(
+                    progress,
+                    dialogViewBinding.cardView1,
+                    dialogViewBinding.cardView11,
+                    dialogViewBinding.carbsCancelButton,
+                    carbValueTextView
+                )
             }
-
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
         proteinSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(progress == 0){
-                    dialogViewBinding.cardView2.visibility = View.GONE
-                    dialogViewBinding.cardView22.visibility = View.GONE
-                    dialogViewBinding.proteinCancelButton.visibility = View.VISIBLE
-                }
-                else{
-                    dialogViewBinding.cardView2.visibility = View.VISIBLE
-                    dialogViewBinding.cardView22.visibility = View.VISIBLE
-                    dialogViewBinding.proteinCancelButton.visibility = View.GONE
-                    proteinValueTextView.text = (progress * 10).toString()
-                }
+                updateSeekBarVisibilityAndValue(
+                    progress,
+                    dialogViewBinding.cardView2,
+                    dialogViewBinding.cardView22,
+                    dialogViewBinding.proteinCancelButton,
+                    proteinValueTextView
+                )
             }
-
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
         fatSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(progress == 0){
-                    dialogViewBinding.cardView3.visibility = View.GONE
-                    dialogViewBinding.cardView33.visibility = View.GONE
-                    dialogViewBinding.fatCancelButton.visibility = View.VISIBLE
-                }
-                else{
-                    dialogViewBinding.cardView3.visibility = View.VISIBLE
-                    dialogViewBinding.cardView33.visibility = View.VISIBLE
-                    dialogViewBinding.fatCancelButton.visibility = View.GONE
-                    fatValueTextView.text = (progress * 10).toString()
-                }
+                updateSeekBarVisibilityAndValue(
+                    progress,
+                    dialogViewBinding.cardView3,
+                    dialogViewBinding.cardView33,
+                    dialogViewBinding.fatCancelButton,
+                    fatValueTextView
+                )
             }
-
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
         sugarSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(progress == 0){
-                    dialogViewBinding.cardView4.visibility = View.GONE
-                    dialogViewBinding.cardView44.visibility = View.GONE
-                    dialogViewBinding.sugarCancelButton.visibility = View.VISIBLE
-                }
-                else{
-                    dialogViewBinding.cardView4.visibility = View.VISIBLE
-                    dialogViewBinding.cardView44.visibility = View.VISIBLE
-                    dialogViewBinding.sugarCancelButton.visibility = View.GONE
-                    sugarValueTextView.text = (progress * 10).toString()
-                }
+                updateSeekBarVisibilityAndValue(
+                    progress,
+                    dialogViewBinding.cardView4,
+                    dialogViewBinding.cardView44,
+                    dialogViewBinding.sugarCancelButton,
+                    sugarValueTextView
+                )
             }
-
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
         caloriesSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(progress == 0){
-                    dialogViewBinding.cardView5.visibility = View.GONE
-                    dialogViewBinding.cardView55.visibility = View.GONE
-                    dialogViewBinding.caloriesCancelButton.visibility = View.VISIBLE
-                }
-                else{
-                    dialogViewBinding.cardView5.visibility = View.VISIBLE
-                    dialogViewBinding.cardView55.visibility = View.VISIBLE
-                    dialogViewBinding.caloriesCancelButton.visibility = View.GONE
-                    caloriesValueTextView.text = (progress * 10).toString()
-                }
+                updateSeekBarVisibilityAndValue(
+                    progress,
+                    dialogViewBinding.cardView5,
+                    dialogViewBinding.cardView55,
+                    dialogViewBinding.caloriesCancelButton,
+                    caloriesValueTextView
+                )
             }
-
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+    }
+
+    private fun updateSeekBarVisibilityAndValue(progress: Int, cardView1: View, cardView11: View, cancelButton: View, valueTextView: TextView) {
+        if (progress == 0) {
+            cardView1.visibility = View.GONE
+            cardView11.visibility = View.GONE
+            cancelButton.visibility = View.VISIBLE
+        } else {
+            cardView1.visibility = View.VISIBLE
+            cardView11.visibility = View.VISIBLE
+            cancelButton.visibility = View.GONE
+            valueTextView.text = (progress * 10).toString()
+        }
     }
 
     private fun showErrorDialog() {

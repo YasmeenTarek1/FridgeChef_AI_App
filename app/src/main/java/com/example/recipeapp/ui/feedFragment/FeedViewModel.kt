@@ -10,6 +10,7 @@ import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.room_DB.model.FavoriteRecipe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class FeedViewModel(private val repository: Repository, application: Application) : AndroidViewModel(application) {
@@ -41,9 +42,8 @@ class FeedViewModel(private val repository: Repository, application: Application
     fun onDislikeClick(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteFavoriteRecipe(recipe.id)
-            favRecipes.collect { favRecipes ->
-                repository.updateFavRecipesInFirestore(favRecipes)
-            }
+            val currentFavRecipes = favRecipes.first()
+            repository.updateFavRecipesInFirestore(currentFavRecipes)
         }
     }
 

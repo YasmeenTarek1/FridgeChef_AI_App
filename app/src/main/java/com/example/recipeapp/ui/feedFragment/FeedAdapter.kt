@@ -1,9 +1,10 @@
 package com.example.recipeapp.ui.feedFragment
 
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -11,6 +12,10 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.recipeapp.R
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.databinding.ItemFeedBinding
@@ -60,23 +65,35 @@ class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
 
         Glide.with(binding.root)
             .load(binding.recipe!!.image)
-            .error(R.drawable.dish_smaller2) // Fallback image in case of an error
+            .error(R.drawable.dish_smaller2) // Fallback image
+            .listener(object : RequestListener<Drawable> {
+                override fun onResourceReady(
+                    p0: Drawable,
+                    p1: Any,
+                    p2: Target<Drawable>?,
+                    p3: DataSource,
+                    p4: Boolean,
+                ): Boolean {
+                    // Reset margin
+                    val layoutParams = binding.recipeImage.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.bottomMargin = dpToPx(40)
+                    binding.recipeImage.layoutParams = layoutParams
+                    return false
+                }
+                override fun onLoadFailed(
+                    p0: GlideException?,
+                    p1: Any?,
+                    p2: Target<Drawable>,
+                    p3: Boolean,
+                ): Boolean {
+                    // error case
+                    val layoutParams = binding.recipeImage.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.bottomMargin = dpToPx(50)
+                    binding.recipeImage.layoutParams = layoutParams
+                    return false
+                }
+            })
             .into(binding.recipeImage)
-
-        // ViewTreeObserver to monitor when the drawable changes
-        binding.recipeImage.viewTreeObserver.addOnGlobalLayoutListener {
-            val currentDrawable = binding.recipeImage.drawable
-            val errorDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.dish_smaller2)?.constantState
-
-            val layoutParams = binding.recipeImage.layoutParams as ViewGroup.MarginLayoutParams
-            if (currentDrawable == null || currentDrawable.constantState == errorDrawable) {
-                layoutParams.bottomMargin = 200 // Adjust margin
-            } else {
-                layoutParams.bottomMargin = 105 // Reset margin
-            }
-            binding.recipeImage.layoutParams = layoutParams
-        }
-
 
         binding.love.setOnClickListener{
             binding.fullLove.visibility = View.VISIBLE
@@ -93,6 +110,11 @@ class FeedAdapter(private val lifecycleOwner: LifecycleOwner,
             val action = FeedFragmentDirections.actionFeedFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)
         }
+    }
+
+    // Function to convert dp to px
+    fun dpToPx(dp: Int): Int {
+        return (dp * Resources.getSystem().displayMetrics.density).toInt()
     }
 
     inner class RecipeViewHolder(val itemBinding: ItemFeedBinding) : RecyclerView.ViewHolder(itemBinding.root){

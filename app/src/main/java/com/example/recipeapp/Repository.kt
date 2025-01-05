@@ -47,6 +47,11 @@ class Repository(
     private val aiRecipesDao: AiRecipesDao = dataBase!!.aiRecipesDao()
     private val userDao: UserDao = dataBase!!.userDao()
 
+    private val cookedRecipes: Flow<List<CookedRecipe>> = getAllCookedRecipes()
+    private val favRecipes: Flow<List<FavoriteRecipe>> = getAllFavoriteRecipes()
+    private val aiRecipes: Flow<List<AiRecipe>> = getAllAiRecipes()
+    private val toBuyIngredients: Flow<List<ToBuyIngredient>> = getAllToBuyIngredients()
+
 
     // API-related functions
 
@@ -223,7 +228,11 @@ class Repository(
 
     // Listening for Firestore changes
 
-    fun listenForFirestoreChangesInCookedRecipes() {
+    suspend fun listenForFirestoreChangesInCookedRecipes() {
+        cookedRecipes.collect { cookedRecipes ->
+            updateCookedRecipesInFirestore(cookedRecipes)
+        }
+
         val firestore = FirebaseFirestore.getInstance()
         val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
         val cookedRecipesCollection = userDocRef.collection("Cooked Recipes")
@@ -262,7 +271,11 @@ class Repository(
         }
     }
 
-    fun listenForFirestoreChangesInFavoriteRecipes() {
+    suspend fun listenForFirestoreChangesInFavoriteRecipes() {
+        favRecipes.collect { favRecipes ->
+            updateFavRecipesInFirestore(favRecipes)
+        }
+
         val firestore = FirebaseFirestore.getInstance()
         val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
         val favoriteRecipesCollection = userDocRef.collection("Favorite Recipes")
@@ -301,7 +314,11 @@ class Repository(
         }
     }
 
-    fun listenForFirestoreChangesInToBuyIngredients() {
+    suspend fun listenForFirestoreChangesInToBuyIngredients() {
+        toBuyIngredients.collect { toBuyIngredients ->
+            updateToBuyIngredientsInFirestore(toBuyIngredients)
+        }
+
         val firestore = FirebaseFirestore.getInstance()
         val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
         val ingredientsCollection = userDocRef.collection("To-Buy Ingredients")
@@ -340,7 +357,11 @@ class Repository(
         }
     }
 
-    fun listenForFirestoreChangesInAiRecipes() {
+    suspend fun listenForFirestoreChangesInAiRecipes() {
+        aiRecipes.collect { aiRecipes ->
+            updateAiRecipesInFirestore(aiRecipes)
+        }
+
         val firestore = FirebaseFirestore.getInstance()
         val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
         val recipesCollection = userDocRef.collection("Ai Recipes")

@@ -7,8 +7,8 @@ import kotlinx.parcelize.Parcelize
 data class Recipe(
     val id: Int,
     val title: String,
-    val readyInMinutes: Int,
-    val servings: Int,
+    var readyInMinutes: Int,
+    var servings: Int,
     var image: String?,                                       // retrieved when getting similar(using ExtraDetailsResponse) or random recipes & Gemini
     var summary: String                                      // retrieved when getting similar(using ExtraDetailsResponse) or random recipes & Gemini
 
@@ -18,7 +18,6 @@ data class Recipe(
 ): Parcelable{
     constructor() : this(0, "" ,0 , 0 , "" ,"")
 }
-
 
 
 //@RawValue --> allows the Parcelize plugin to serialize and deserialize

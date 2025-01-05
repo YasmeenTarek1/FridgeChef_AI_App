@@ -8,7 +8,6 @@ import com.example.recipeapp.Repository
 import com.example.recipeapp.api.model.ExtraDetailsResponse
 import com.example.recipeapp.api.model.Recipe
 import com.example.recipeapp.sharedPreferences.SharedPreferences
-import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import kotlinx.coroutines.flow.first
 
 class SimilarRecipesPagingSource(
@@ -51,15 +50,12 @@ class SimilarRecipesPagingSource(
                 results.addAll(repository.getSimilarRecipes(recipeId = recipeId).toList())
                 results = results.filterNot { recipesToFilterOut.contains(it.id) }.toMutableSet()
 
-                // Fill recipe details
+                // Fill recipe image if missing (in case of similar recipes to a fav - Image not included int the api response)
                 results.forEach { recipe ->
                     val detailedRecipe: ExtraDetailsResponse = repository.getRecipeInfo(recipe.id)
-                    if (detailedRecipe.image != null) {
+                    if(detailedRecipe.image != null)
                         recipe.image = detailedRecipe.image
-                    }
 
-                    val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
-                    recipe.summary = chatBotServiceViewModel.summarizeSummary(detailedRecipe.summary)
                 }
             }
 
@@ -67,14 +63,7 @@ class SimilarRecipesPagingSource(
             while(results.size < 8) {
                 try {
                     var additionalRecipes = repository.getRandomRecipes(diet = diet).toMutableList()
-                    additionalRecipes =
-                        additionalRecipes.filterNot { recipesToFilterOut.contains(it.id) }
-                            .toMutableList()
-
-                    additionalRecipes.forEach { recipe ->
-                        val chatBotServiceViewModel = ChatBotServiceViewModel(repository)
-                        recipe.summary = chatBotServiceViewModel.summarizeSummary(recipe.summary)
-                    }
+                    additionalRecipes = additionalRecipes.filterNot { recipesToFilterOut.contains(it.id) }.toMutableList()
                     results.addAll(additionalRecipes)
                 } catch (e: Exception) {
                     if (e.message?.contains("402") == true) {

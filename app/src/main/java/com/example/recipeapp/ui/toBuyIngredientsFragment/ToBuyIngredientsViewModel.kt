@@ -13,16 +13,14 @@ class ToBuyIngredientsViewModel(private val repository: Repository) : ViewModel(
     val ingredients: Flow<List<ToBuyIngredient>> = repository.getAllToBuyIngredients()
 
     init {
-        repository.listenForFirestoreChangesInToBuyIngredients()
+        viewModelScope.launch (Dispatchers.IO) {
+            repository.listenForFirestoreChangesInToBuyIngredients()
+        }
     }
 
     fun deleteIngredient(ingredient: ToBuyIngredient){
         viewModelScope.launch (Dispatchers.IO) {
             repository.deleteIngredient(ingredient)
-
-            ingredients.collect { ingredients ->
-                repository.updateToBuyIngredientsInFirestore(ingredients)
-            }
         }
     }
 
