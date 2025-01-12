@@ -174,6 +174,8 @@ class Repository(
 
     suspend fun deleteCookedRecipe(recipeID: Int) = cookedRecipesDao.deleteCookedRecipe(recipeID)
 
+    fun isCookedRecipeExists(recipeId : Int) = cookedRecipesDao.isCookedRecipeExists(recipeId)
+
     // Database-related functions for FavoriteRecipes
 
     suspend fun insertFavoriteRecipe(favoriteRecipe: FavoriteRecipe) = favoriteRecipesDao.insertFavoriteRecipe(favoriteRecipe)
@@ -188,7 +190,7 @@ class Repository(
 
     fun isFavoriteRecipeExists(recipeId : Int) = favoriteRecipesDao.isFavoriteRecipeExists(recipeId)
 
-    fun updateFavoriteRecipe(readyInMinutes: Int, servings: Int, summary: String) = favoriteRecipesDao.updateFavoriteRecipe(readyInMinutes, servings, summary)
+    fun updateFavoriteRecipe(recipeId: Int, readyInMinutes: Int, servings: Int, summary: String) = favoriteRecipesDao.updateFavoriteRecipe(recipeId, readyInMinutes, servings, summary)
 
     // Database-related functions for ToBuyIngredients
 

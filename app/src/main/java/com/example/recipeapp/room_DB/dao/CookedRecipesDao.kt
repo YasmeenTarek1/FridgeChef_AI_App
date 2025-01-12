@@ -24,4 +24,7 @@ interface CookedRecipesDao {
 
     @Query("DELETE FROM cooked_recipes WHERE id = :recipeId")
     suspend fun deleteCookedRecipe(recipeId: Int)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM cooked_recipes WHERE id = :recipeId)")
+    fun isCookedRecipeExists(recipeId: Int): Flow<Boolean>
 }

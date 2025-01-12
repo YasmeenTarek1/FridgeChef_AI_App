@@ -113,7 +113,8 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
                 image = aiRecipe.image,
                 readyInMinutes = aiRecipe.readyInMinutes,
                 servings = aiRecipe.servings,
-                summary = aiRecipe.summary
+                summary = aiRecipe.summary,
+                wellWrittenSummary = aiRecipe.wellWrittenSummary
             )
 
             recipe

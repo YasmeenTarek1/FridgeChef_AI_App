@@ -33,6 +33,7 @@ import io.noties.markwon.Markwon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -71,6 +72,7 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         val classification = args.classification
 
         if(currentRecipe.wellWrittenSummary == 0) {
+            Log.d("debugging" , "hiiiiiiii")
             binding.descriptionLoadingProgressBar.visibility = View.VISIBLE
 
             lifecycleScope.launch{
@@ -98,8 +100,9 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
                 }
 
                 withContext(Dispatchers.IO) {
-                    repository.isFavoriteRecipeExists(currentRecipe.id).collectLatest {
-                        repository.updateFavoriteRecipe(currentRecipe.readyInMinutes, currentRecipe.servings, currentRecipe.summary)
+                    repository.isFavoriteRecipeExists(currentRecipe.id).collectLatest { isFav ->
+                        if(isFav)
+                            repository.updateFavoriteRecipe(currentRecipe.id, currentRecipe.readyInMinutes, currentRecipe.servings, currentRecipe.summary)
                     }
                 }
 
@@ -166,15 +169,26 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         }
 
         lifecycleScope.launch {
-            viewModel.checkFavorite(currentRecipe.id).collect { isFavorite ->
-                if (isFavorite) {
-                    binding.fullLove.visibility = View.VISIBLE
-                    binding.love.visibility = View.INVISIBLE
-                } else {
-                    binding.fullLove.visibility = View.INVISIBLE
-                    binding.love.visibility = View.VISIBLE
+            viewModel.checkCooked(currentRecipe.id)
+                .combine(viewModel.checkFavorite(currentRecipe.id)) { isCooked, isFavorite ->
+                    Pair(isCooked, isFavorite)
                 }
-            }
+                .collectLatest { (isCooked, isFavorite) ->
+                    if (isCooked) {
+                        binding.fullLove.visibility = View.INVISIBLE
+                        binding.love.visibility = View.INVISIBLE
+                        binding.cookedRecipe.visibility = View.VISIBLE
+                    } else {
+                        binding.cookedRecipe.visibility = View.INVISIBLE
+                        if (isFavorite) {
+                            binding.fullLove.visibility = View.VISIBLE
+                            binding.love.visibility = View.INVISIBLE
+                        } else {
+                            binding.fullLove.visibility = View.INVISIBLE
+                            binding.love.visibility = View.VISIBLE
+                        }
+                    }
+                }
         }
 
         binding.love.setOnClickListener{

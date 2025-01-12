@@ -95,7 +95,8 @@ class ChatBotRecipesAdapter(private val onDeleteClick: (AiRecipe) -> Unit): Recy
                 image = aiRecipe.image,
                 readyInMinutes = aiRecipe.readyInMinutes,
                 servings = aiRecipe.servings,
-                summary = aiRecipe.summary
+                summary = aiRecipe.summary,
+                wellWrittenSummary = aiRecipe.wellWrittenSummary
             )
             val action = ChatBotRecipesFragmentDirections.actionChatBotRecipesFragmentToRecipeDetailsFragment(recipe , 0)
             view.findNavController().navigate(action)

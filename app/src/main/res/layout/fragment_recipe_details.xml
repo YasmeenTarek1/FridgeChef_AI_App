@@ -53,6 +53,18 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
+                <ImageView
+                    android:id="@+id/cookedRecipe"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/done_button"
+                    android:translationZ="5dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="18dp"
+                    android:visibility="invisible"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/recipeCardView"
                     android:layout_width="375dp"

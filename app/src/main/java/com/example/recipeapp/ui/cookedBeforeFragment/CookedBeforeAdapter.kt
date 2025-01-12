@@ -97,7 +97,8 @@ class CookedBeforeAdapter(private val  onDeleteClick: (CookedRecipe) -> Unit) :
                 readyInMinutes = cookedRecipe.readyInMinutes,
                 servings = cookedRecipe.servings,
                 image = cookedRecipe.image,
-                summary = cookedRecipe.summary
+                summary = cookedRecipe.summary,
+                wellWrittenSummary = cookedRecipe.wellWrittenSummary
             )
             val action = CookedRecipesFragmentDirections.actionCookedRecipesFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)

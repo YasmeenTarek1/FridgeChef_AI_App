@@ -20,16 +20,24 @@
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/done"/>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/goodJob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lottieAnimationView">
+
         <TextView
             android:id="@+id/goodJobTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="110dp"
             android:text="Good Job, "
             android:textColor="#000000"
             android:textSize="22sp"
-            app:layout_constraintStart_toStartOf="@id/lottieAnimationView"
-            app:layout_constraintTop_toBottomOf="@id/lottieAnimationView" />
+            app:layout_constraintEnd_toStartOf="@+id/nameTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/nameTV"
@@ -38,9 +46,10 @@
             android:textColor="#000000"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/goodJobTV"
-            app:layout_constraintStart_toEndOf="@id/goodJobTV"
-            app:layout_constraintTop_toTopOf="@id/goodJobTV" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/returnToFeedButton"
@@ -55,7 +64,7 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/goodJobTV" />
+            app:layout_constraintTop_toBottomOf="@id/goodJob" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

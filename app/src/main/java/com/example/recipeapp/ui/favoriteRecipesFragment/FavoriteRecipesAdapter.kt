@@ -100,7 +100,8 @@ class FavoriteRecipesAdapter(private val onDeleteClick: (FavoriteRecipe) -> Unit
                 image = favRecipe.image,
                 readyInMinutes = favRecipe.readyInMinutes,
                 servings = favRecipe.servings,
-                summary = favRecipe.summary
+                summary = favRecipe.summary,
+                wellWrittenSummary = favRecipe.wellWrittenSummary
             )
             val action = FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)

@@ -41,6 +41,10 @@ class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
         return repository.isFavoriteRecipeExists(recipeId)
     }
 
+    fun checkCooked(recipeId: Int): Flow<Boolean> {
+        return repository.isCookedRecipeExists(recipeId)
+    }
+
     fun onAddToCartClick(ingredient: Ingredient) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertToBuyIngredient(
