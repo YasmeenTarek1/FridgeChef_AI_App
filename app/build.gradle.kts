@@ -21,11 +21,11 @@ val apiKeyGemini: String = localProperties.getProperty("API_KEY_gemini")
 val apiKeyCustomSearch: String = localProperties.getProperty("API_KEY_custom_search")
 
 android {
-    namespace = "com.example.recipeapp"
+    namespace = "com.example.fridgeChefAIApp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.recipeapp"
+        applicationId = "com.example.fridgeChefAIApp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

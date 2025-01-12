@@ -6,7 +6,7 @@
     app:startDestination="@id/introFragment">
     <fragment
         android:id="@+id/favoriteRecipesFragment"
-        android:name="com.example.recipeapp.ui.favoriteRecipesFragment.FavoriteRecipesFragment"
+        android:name="com.example.fridgeChefAIApp.ui.favoriteRecipesFragment.FavoriteRecipesFragment"
         android:label="FavoriteRecipesFragment">
         <action
             android:id="@+id/action_favoriteRecipesFragment_to_recipeDetailsFragment"
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/cookedRecipesFragment"
-        android:name="com.example.recipeapp.ui.cookedBeforeFragment.CookedRecipesFragment"
+        android:name="com.example.fridgeChefAIApp.ui.cookedBeforeFragment.CookedRecipesFragment"
         android:label="CookedRecipesFragment">
         <action
             android:id="@+id/action_cookedRecipesFragment_to_recipeDetailsFragment"
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.recipeapp.ui.loginFragments.LoginFragment"
+        android:name="com.example.fridgeChefAIApp.ui.loginFragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.recipeapp.ui.loginFragments.SignUpFragment"
+        android:name="com.example.fridgeChefAIApp.ui.loginFragments.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/feedFragment"
-        android:name="com.example.recipeapp.ui.feedFragment.FeedFragment"
+        android:name="com.example.fridgeChefAIApp.ui.feedFragment.FeedFragment"
         android:label="FeedFragment" >
         <action
             android:id="@+id/action_feedFragment_to_recipeDetailsFragment"
@@ -66,7 +66,7 @@
     </fragment>
     <fragment
         android:id="@+id/recipeDetailsFragment"
-        android:name="com.example.recipeapp.ui.recipeFragments.recipeDetailsFragment.RecipeDetailsFragment"
+        android:name="com.example.fridgeChefAIApp.ui.recipeFragments.recipeDetailsFragment.RecipeDetailsFragment"
         android:label="fragment_recipe_details"
         tools:layout="@layout/fragment_recipe_details" >
         <action
@@ -77,14 +77,14 @@
             app:destination="@id/chatBotServiceFragment" />
         <argument
             android:name="recipe"
-            app:argType="com.example.recipeapp.api.model.Recipe"/>
+            app:argType="com.example.fridgeChefAIApp.api.model.Recipe"/>
         <argument
             android:name="classification"
             app:argType="integer"/>
     </fragment>
     <fragment
         android:id="@+id/recipeStepsFragment"
-        android:name="com.example.recipeapp.ui.recipeFragments.recipeStepsFragment.RecipeStepsFragment"
+        android:name="com.example.fridgeChefAIApp.ui.recipeFragments.recipeStepsFragment.RecipeStepsFragment"
         android:label="fragment_recipe_steps"
         tools:layout="@layout/fragment_recipe_steps">
         <action
@@ -92,14 +92,14 @@
             app:destination="@id/feedFragment" />
         <argument
             android:name="recipe"
-            app:argType="com.example.recipeapp.api.model.Recipe"/>
+            app:argType="com.example.fridgeChefAIApp.api.model.Recipe"/>
         <argument
             android:name="classification"
             app:argType="integer"/>
     </fragment>
     <fragment
         android:id="@+id/searchByIngredientsFragment"
-        android:name="com.example.recipeapp.ui.searchFragment.searchByIngredientsFragment.SearchByIngredientsFragment"
+        android:name="com.example.fridgeChefAIApp.ui.searchFragment.searchByIngredientsFragment.SearchByIngredientsFragment"
         android:label="SearchByIngredientsFragment" >
         <action
             android:id="@+id/action_searchByIngredientsFragment_to_recipeDetailsFragment"
@@ -110,7 +110,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchByNutrientsFragment"
-        android:name="com.example.recipeapp.ui.searchFragment.searchByNutrients.SearchByNutrientsFragment"
+        android:name="com.example.fridgeChefAIApp.ui.searchFragment.searchByNutrients.SearchByNutrientsFragment"
         android:label="SearchByNutrientsFragment" >
         <action
             android:id="@+id/action_searchByNutrientsFragment_to_recipeDetailsFragment"
@@ -118,7 +118,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchByNameFragment"
-        android:name="com.example.recipeapp.ui.searchFragment.searchByNameFragment.SearchByNameFragment"
+        android:name="com.example.fridgeChefAIApp.ui.searchFragment.searchByNameFragment.SearchByNameFragment"
         android:label="SearchByNameFragment" >
         <action
             android:id="@+id/action_searchByNameFragment_to_recipeDetailsFragment"
@@ -126,7 +126,7 @@
     </fragment>
     <fragment
         android:id="@+id/userInfoFragment"
-        android:name="com.example.recipeapp.ui.userFragments.userInfoFragment.UserInfoFragment"
+        android:name="com.example.fridgeChefAIApp.ui.userFragments.userInfoFragment.UserInfoFragment"
         android:label="UserInfoFragment" >
         <action
             android:id="@+id/action_userInfoFragment_to_feedFragment"
@@ -137,7 +137,7 @@
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.example.recipeapp.ui.userFragments.userProfileFragment.UserProfileFragment"
+        android:name="com.example.fridgeChefAIApp.ui.userFragments.userProfileFragment.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" >
         <action
@@ -146,12 +146,12 @@
     </fragment>
     <fragment
         android:id="@+id/toBuyIngredientsFragment"
-        android:name="com.example.recipeapp.ui.toBuyIngredientsFragment.ToBuyIngredientsFragment"
+        android:name="com.example.fridgeChefAIApp.ui.toBuyIngredientsFragment.ToBuyIngredientsFragment"
         android:label="ToBuyIngredientsFragment" >
     </fragment>
     <fragment
         android:id="@+id/specialRecipesFragment"
-        android:name="com.example.recipeapp.ui.specialRecipesFragment.SpecialRecipesFragment"
+        android:name="com.example.fridgeChefAIApp.ui.specialRecipesFragment.SpecialRecipesFragment"
         android:label="fragment_special_recipes"
         tools:layout="@layout/fragment_special_recipes" >
         <action
@@ -169,7 +169,7 @@
     </fragment>
     <fragment
         android:id="@+id/chatBotRecipesFragment"
-        android:name="com.example.recipeapp.ui.chatBotRecipesFragment.ChatBotRecipesFragment"
+        android:name="com.example.fridgeChefAIApp.ui.chatBotRecipesFragment.ChatBotRecipesFragment"
         android:label="ChatBotRecipesFragment" >
         <action
             android:id="@+id/action_chatBotRecipesFragment_to_recipeDetailsFragment"
@@ -177,7 +177,7 @@
     </fragment>
     <fragment
         android:id="@+id/chatBotServiceFragment"
-        android:name="com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceFragment"
+        android:name="com.example.fridgeChefAIApp.ui.chatBotServiceFragment.ChatBotServiceFragment"
         android:label="ChatBotServiceFragment" >
         <action
             android:id="@+id/action_chatBotServiceFragment_to_recipeDetailsFragment"
@@ -189,7 +189,7 @@
     </fragment>
     <fragment
         android:id="@+id/introFragment"
-        android:name="com.example.recipeapp.ui.loginFragments.IntroFragment"
+        android:name="com.example.fridgeChefAIApp.ui.loginFragments.IntroFragment"
         android:label="IntroFragment" >
         <action
             android:id="@+id/action_introFragment_to_loginFragment"

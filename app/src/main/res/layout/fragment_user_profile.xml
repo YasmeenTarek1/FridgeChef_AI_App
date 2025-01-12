@@ -5,7 +5,7 @@
     <data>
         <variable
             name="user"
-            type="com.example.recipeapp.room_DB.model.UserInfo" />
+            type="com.example.fridgeChefAIApp.room_DB.model.UserInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

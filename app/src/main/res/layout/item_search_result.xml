@@ -6,7 +6,7 @@
     <data>
         <variable
             name="recipe"
-            type="com.example.recipeapp.api.model.Recipe" />
+            type="com.example.fridgeChefAIApp.api.model.Recipe" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

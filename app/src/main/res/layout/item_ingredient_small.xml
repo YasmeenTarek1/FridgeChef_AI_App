@@ -6,7 +6,7 @@
     <data>
         <variable
             name="ingredient"
-            type="com.example.recipeapp.api.model.Ingredient" />
+            type="com.example.fridgeChefAIApp.api.model.Ingredient" />
     </data>
 
     <io.github.rexmtorres.android.swipereveallayout.SwipeRevealLayout

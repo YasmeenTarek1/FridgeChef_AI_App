@@ -6,7 +6,7 @@
     <data>
         <variable
             name="recipe"
-            type="com.example.recipeapp.room_DB.model.AiRecipe" />
+            type="com.example.fridgeChefAIApp.room_DB.model.AiRecipe" />
     </data>
 
     <io.github.rexmtorres.android.swipereveallayout.SwipeRevealLayout
