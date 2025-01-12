@@ -148,8 +148,7 @@
                     app:layout_constraintTop_toTopOf="@+id/clock"
                     app:layout_constraintVertical_bias="1.0"
                     android:textSize="14sp"
-                    android:textColor="#787878"
-                    android:text='@{recipe.readyInMinutes + " mins"}'/>
+                    android:textColor="#787878"/>
 
                 <TextView
                     android:id="@+id/servings"
@@ -161,8 +160,7 @@
                     app:layout_constraintTop_toTopOf="@+id/servingsImage"
                     android:textSize="14sp"
                     app:layout_constraintVertical_bias="1.0"
-                    android:textColor="#787878"
-                    android:text='@{recipe.servings > 1 &amp;&amp; recipe.servings &lt; 10 ? recipe.servings + " plates" : recipe.servings + " plate"}'/>
+                    android:textColor="#787878"/>
 
                 <TextView
                     android:id="@+id/descriptionTV"
@@ -183,11 +181,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="10dp"
-                    android:text="@{recipe.summary}"
                     android:textColor="#787878"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/descriptionTV" />
+
+                <ProgressBar
+                    android:id="@+id/descriptionLoadingProgressBar"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/descriptionTV"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
 
                 <TextView
                     android:id="@+id/ingredientsTV"
@@ -216,7 +224,7 @@
 
 
                 <ProgressBar
-                    android:id="@+id/loadingProgressBar"
+                    android:id="@+id/ingredientsLoadingProgressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

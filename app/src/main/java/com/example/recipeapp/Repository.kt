@@ -188,6 +188,8 @@ class Repository(
 
     fun isFavoriteRecipeExists(recipeId : Int) = favoriteRecipesDao.isFavoriteRecipeExists(recipeId)
 
+    fun updateFavoriteRecipe(readyInMinutes: Int, servings: Int, summary: String) = favoriteRecipesDao.updateFavoriteRecipe(readyInMinutes, servings, summary)
+
     // Database-related functions for ToBuyIngredients
 
     suspend fun insertToBuyIngredient(toBuyIngredient: ToBuyIngredient) = toBuyIngredientsDao.insertToBuyIngredient(toBuyIngredient)

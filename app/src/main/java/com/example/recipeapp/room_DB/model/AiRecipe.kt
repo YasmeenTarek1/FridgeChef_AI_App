@@ -18,6 +18,7 @@ data class AiRecipe(
     val ingredients: String,
     val steps: String,
     var createdAt: Long,
+    var wellWrittenSummary: Int = 1
     ): Parcelable{
     constructor() : this(0, "",null , "" , 0 , 0  ,"", "" , 0)
 }

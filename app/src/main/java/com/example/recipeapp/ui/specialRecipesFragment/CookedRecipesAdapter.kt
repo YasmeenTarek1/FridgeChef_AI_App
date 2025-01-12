@@ -50,7 +50,8 @@ class CookedRecipesAdapter : RecyclerView.Adapter<CookedRecipesAdapter.CookedRec
                 image = cookedRecipe.image,
                 readyInMinutes = cookedRecipe.readyInMinutes,
                 servings = cookedRecipe.servings,
-                summary = cookedRecipe.summary
+                summary = cookedRecipe.summary,
+                wellWrittenSummary = cookedRecipe.wellWrittenSummary
             )
             val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)

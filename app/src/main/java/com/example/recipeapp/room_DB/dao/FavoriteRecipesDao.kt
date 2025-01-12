@@ -27,4 +27,7 @@ interface FavoriteRecipesDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_recipes WHERE id = :recipeId)")
     fun isFavoriteRecipeExists(recipeId: Int): Flow<Boolean>
+
+    @Query("UPDATE favorite_recipes SET readyInMinutes = :readyInMinutes, servings = :servings, summary = :summary, wellWrittenSummary = 1")
+    fun updateFavoriteRecipe(readyInMinutes: Int, servings: Int, summary: String)
 }

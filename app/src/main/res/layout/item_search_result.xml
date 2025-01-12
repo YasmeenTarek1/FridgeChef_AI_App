@@ -48,12 +48,12 @@
                 android:id="@+id/recipeImage"
                 android:layout_width="185dp"
                 android:layout_height="187dp"
-                android:layout_marginEnd="244dp"
+                android:layout_marginEnd="224dp"
                 android:layout_marginBottom="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.475" />
+                app:layout_constraintVertical_bias="0.469" />
 
             <TextView
                 android:id="@+id/recipeTitle"

@@ -15,7 +15,8 @@ data class FavoriteRecipe(
     val readyInMinutes: Int,
     val servings: Int,
     val createdAt: Long,
-    var summary: String
+    var summary: String,
+    var wellWrittenSummary: Int = 0
 ): Parcelable {
     constructor() : this(0, "", null,0, 0 , 0 , "")
 }

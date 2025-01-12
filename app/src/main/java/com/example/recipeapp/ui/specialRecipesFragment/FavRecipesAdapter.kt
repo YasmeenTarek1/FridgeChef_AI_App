@@ -52,7 +52,8 @@ class FavRecipesAdapter : RecyclerView.Adapter<FavRecipesAdapter.FavRecipeViewHo
                 image = favRecipe.image,
                 readyInMinutes = favRecipe.readyInMinutes,
                 servings = favRecipe.servings,
-                summary = favRecipe.summary
+                summary = favRecipe.summary,
+                wellWrittenSummary = favRecipe.wellWrittenSummary
             )
             val action = SpecialRecipesFragmentDirections.actionSpecialRecipesFragmentToRecipeDetailsFragment(recipe , 1)
             view.findNavController().navigate(action)

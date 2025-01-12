@@ -10,8 +10,8 @@ data class Recipe(
     var readyInMinutes: Int,
     var servings: Int,
     var image: String?,                                       // retrieved when getting similar(using ExtraDetailsResponse) or random recipes & Gemini
-    var summary: String                                      // retrieved when getting similar(using ExtraDetailsResponse) or random recipes & Gemini
-
+    var summary: String,                                      // retrieved when getting similar(using ExtraDetailsResponse) or random recipes & Gemini
+    var wellWrittenSummary: Int = 0
 //    var ingredients: List<Ingredient>? = null,             // Ai Recipe --> retrieved from gemini & google search api for images, otherwise --> retrieved in recipeDetailsFragment using spoonacular api
 //    val steps: List<Step>? = null,                         // Ai Recipe --> retrieved from gemini, otherwise --> retrieved in recipeStepsFragment using spoonacular api
 

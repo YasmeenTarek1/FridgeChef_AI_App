@@ -30,9 +30,11 @@ import com.example.recipeapp.room_DB.database.AppDatabase
 import com.example.recipeapp.sharedPreferences.SharedPreferences
 import com.example.recipeapp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import io.noties.markwon.Markwon
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
@@ -68,17 +70,49 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         val currentRecipe = args.recipe
         val classification = args.classification
 
-        runBlocking {
-            if(currentRecipe.summary.isEmpty()){
-                val detailedRecipe: ExtraDetailsResponse = viewModel.getRecipeInfo(currentRecipe.id)
+        if(currentRecipe.wellWrittenSummary == 0) {
+            binding.descriptionLoadingProgressBar.visibility = View.VISIBLE
 
-                if (currentRecipe.servings == 0)
-                    currentRecipe.servings = detailedRecipe.servings
-                if (currentRecipe.readyInMinutes == 0)
-                    currentRecipe.readyInMinutes = detailedRecipe.readyInMinutes
+            lifecycleScope.launch{
+                withContext(Dispatchers.IO) {
+                    val detailedRecipe: ExtraDetailsResponse = viewModel.getRecipeInfo(currentRecipe.id)
 
-                currentRecipe.summary = viewModel.summarizeSummary(detailedRecipe.summary)
+                    if (currentRecipe.servings == 0)
+                        currentRecipe.servings = detailedRecipe.servings
+                    if (currentRecipe.readyInMinutes == 0)
+                        currentRecipe.readyInMinutes = detailedRecipe.readyInMinutes
+
+                    currentRecipe.summary = viewModel.summarizeSummary(detailedRecipe.summary)
+                }
+
+                withContext(Dispatchers.Main) {
+                    binding.summaryTV.text = currentRecipe.summary
+                    if (currentRecipe.servings in 2..9)
+                        binding.servings.text = "${currentRecipe.servings} plates"
+                    else
+                        binding.servings.text = "${currentRecipe.servings} plate"
+
+                    binding.readyInMinutes.text = "${currentRecipe.readyInMinutes} mins"
+
+                    binding.descriptionLoadingProgressBar.visibility = View.GONE
+                }
+
+                withContext(Dispatchers.IO) {
+                    repository.isFavoriteRecipeExists(currentRecipe.id).collectLatest {
+                        repository.updateFavoriteRecipe(currentRecipe.readyInMinutes, currentRecipe.servings, currentRecipe.summary)
+                    }
+                }
+
             }
+        }
+        else{
+            binding.summaryTV.text = currentRecipe.summary
+            if (currentRecipe.servings in 2..9)
+                binding.servings.text = "${currentRecipe.servings} plates"
+            else
+                binding.servings.text = "${currentRecipe.servings} plate"
+
+            binding.readyInMinutes.text = "${currentRecipe.readyInMinutes} mins"
         }
 
         val adapter = IngredientsListAdapter(onAddToCartClick = { ingredient ->
@@ -96,7 +130,7 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         }
 
         if(adapter.itemCount == 0)
-            binding.loadingProgressBar.visibility = View.VISIBLE
+            binding.ingredientsLoadingProgressBar.visibility = View.VISIBLE
 
         lifecycleScope.launch {
             if(classification == 0){
@@ -110,7 +144,7 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
                 }
 
                 adapter.differ.submitList(ingredientsList)
-                binding.loadingProgressBar.visibility = View.GONE
+                binding.ingredientsLoadingProgressBar.visibility = View.GONE
             }
             else {
                 val ingredients = viewModel.getRecipeIngredients(currentRecipe.id)
@@ -118,7 +152,7 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
                     ingredient.image = "https://img.spoonacular.com/ingredients_100x100/"+ ingredient.image
                 }
                 adapter.differ.submitList(ingredients)
-                binding.loadingProgressBar.visibility = View.GONE
+                binding.ingredientsLoadingProgressBar.visibility = View.GONE
             }
         }
 

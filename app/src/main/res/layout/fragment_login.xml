@@ -27,14 +27,14 @@
                 android:textStyle="bold"
                 android:textSize="32sp"
                 android:textColor="#901431"
-                android:layout_marginTop="55dp"
+                android:layout_marginTop="30dp"
                 android:fontFamily="@font/font1"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="25dp"
-                android:layout_marginTop="110dp"
+                android:layout_marginTop="130dp"
                 android:orientation="horizontal"
                 android:padding="12dp">
 
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:hint="Username"
+                    android:hint="Email"
                     android:inputType="textPersonName"
                     android:paddingStart="8dp" />
             </LinearLayout>
@@ -59,7 +59,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
+                android:layout_marginBottom="120dp"
                 android:orientation="horizontal"
                 android:padding="12dp">
 

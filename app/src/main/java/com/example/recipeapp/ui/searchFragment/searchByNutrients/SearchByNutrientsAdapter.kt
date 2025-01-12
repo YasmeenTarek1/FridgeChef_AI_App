@@ -70,7 +70,7 @@ class SearchByNutrientsAdapter : RecyclerView.Adapter<SearchByNutrientsAdapter.S
                 ): Boolean {
                     // error case
                     val layoutParams = binding.recipeImage.layoutParams as ViewGroup.MarginLayoutParams
-                    layoutParams.marginEnd = dpToPx(210)
+                    layoutParams.marginEnd = dpToPx(195)
                     binding.recipeImage.layoutParams = layoutParams
                     return false
                 }
