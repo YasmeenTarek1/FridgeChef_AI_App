@@ -6,13 +6,18 @@ import com.example.fridgeChefAIApp.AppUser
 import com.example.fridgeChefAIApp.Repository
 import com.example.fridgeChefAIApp.api.model.Ingredient
 import com.example.fridgeChefAIApp.api.model.Recipe
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class SearchByIngredientsViewModel(private val repository: Repository): ViewModel() {
+@HiltViewModel
+class SearchByIngredientsViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
     suspend fun searchRecipesByIngredients(ingredients: List<String>):List<Recipe>{
         return withContext(Dispatchers.IO){

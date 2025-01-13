@@ -10,16 +10,22 @@ import com.example.fridgeChefAIApp.room_DB.model.AiRecipe
 import com.example.fridgeChefAIApp.room_DB.model.FavoriteRecipe
 import com.example.fridgeChefAIApp.room_DB.model.ToBuyIngredient
 import com.example.fridgeChefAIApp.ui.chatBotServiceFragment.ChatBotServiceViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
+@HiltViewModel
+class RecipeDetailsViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
+
 
     private val toBuyIngredients: Flow<List<ToBuyIngredient>> = repository.getAllToBuyIngredients()
-    private val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
+    val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
     private val aiRecipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
 
@@ -54,10 +60,8 @@ class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
                     createdAt = System.currentTimeMillis()
                 )
             )
-
-            toBuyIngredients.collect { toBuyIngredients ->
-                repository.updateToBuyIngredientsInFirestore(toBuyIngredients)
-            }
+            val currentToBuyIngredients = toBuyIngredients.first()
+            repository.updateToBuyIngredientsInFirestore(currentToBuyIngredients)
         }
     }
 
@@ -74,14 +78,13 @@ class RecipeDetailsViewModel(private val repository: Repository): ViewModel() {
                     summary = recipe.summary
                 )
             )
-            favRecipes.collect { favRecipes ->
-                repository.updateFavRecipesInFirestore(favRecipes)
-            }
+            val currentFavRecipes = favRecipes.first()
+            repository.updateFavRecipesInFirestore(currentFavRecipes)
 
             repository.deleteAiRecipe(recipe.id)
-            aiRecipes.collect { recipes ->
-                repository.updateAiRecipesInFirestore(recipes)
-            }
+            val currentAiRecipes = aiRecipes.first()
+            repository.updateAiRecipesInFirestore(currentAiRecipes)
+
         }
     }
 

@@ -3,10 +3,11 @@ package com.example.fridgeChefAIApp.sharedPreferences
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.fridgeChefAIApp.AppUser
+import javax.inject.Inject
 
-class SharedPreferences(context: Context) {
+class SharedPreferences @Inject constructor(context: Context) {
 
-    private val userId = AppUser.instance!!.userId
+    private val userId = AppUser.instance?.userId ?: "default_user" // Provide fallback to handle null userId
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPreferences_$userId", Context.MODE_PRIVATE)
 
     fun saveTakenIDs(takenIDs: Set<Int>) {
@@ -28,5 +29,4 @@ class SharedPreferences(context: Context) {
     fun clearCookingTipsHistory() {
         sharedPreferences.edit().remove("cooking_tips_history").apply()
     }
-
 }

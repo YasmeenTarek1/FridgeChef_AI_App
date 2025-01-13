@@ -7,26 +7,24 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.DialogErrorNutrientsBinding
 import com.example.fridgeChefAIApp.databinding.DialogNutrientsBinding
 import com.example.fridgeChefAIApp.databinding.FragmentSearchByNutrientsBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SearchByNutrientsFragment : Fragment(R.layout.fragment_search_by_nutrients) {
 
     private lateinit var binding: FragmentSearchByNutrientsBinding
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewModel: SearchByNutrientsViewModel
+    private val viewModel: SearchByNutrientsViewModel by viewModels()
     private lateinit var adapter: SearchByNutrientsAdapter
-    private lateinit var repository: Repository
 
     private lateinit var carbSeekBar: SeekBar
     private lateinit var proteinSeekBar: SeekBar
@@ -44,11 +42,6 @@ class SearchByNutrientsFragment : Fragment(R.layout.fragment_search_by_nutrients
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentSearchByNutrientsBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
-        val factory = SearchByNutrientsViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(SearchByNutrientsViewModel::class.java)
-        
         recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 

@@ -1,7 +1,9 @@
 package com.example.fridgeChefAIApp
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class AppUser: Application() {
     var userId: String? = null
 

@@ -3,22 +3,20 @@ package com.example.fridgeChefAIApp.ui.chatBotRecipesFragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.FragmentChatBotRecipesBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ChatBotRecipesFragment : Fragment(R.layout.fragment_chat_bot_recipes) {
 
     private lateinit var binding: FragmentChatBotRecipesBinding
-    private lateinit var repository: Repository
-    private lateinit var viewModel: ChatBotRecipesViewModel
+    private val viewModel: ChatBotRecipesViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var chatBotRecipesAdapter: ChatBotRecipesAdapter
 
@@ -26,10 +24,6 @@ class ChatBotRecipesFragment : Fragment(R.layout.fragment_chat_bot_recipes) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentChatBotRecipesBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
-        val factory = ChatBotRecipesViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(ChatBotRecipesViewModel::class.java)
 
         chatBotRecipesAdapter = ChatBotRecipesAdapter(
             onDeleteClick = { recipe ->

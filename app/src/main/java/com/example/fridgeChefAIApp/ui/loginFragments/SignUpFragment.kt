@@ -13,8 +13,10 @@ import com.example.fridgeChefAIApp.databinding.FragmentSignUpBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentSignUpBinding

@@ -1,13 +1,11 @@
 <resources>
-    <string name="app_name">RecipeApp</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">FridgeChef AI App</string>
     <string name="enter_your_email">Enter your email</string>
     <string name="enter_your_password">Enter your Password</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>
     <string name="login_with_gmail">Login with Gmail</string>
     <string name="login_with_facebook">Login with Facebook</string>
-    <string name="welcome_to_the_fitness_app">Welcome To the Fitness App</string>
     <string-array name="goals_array">
         <item>Gain Muscle</item>
         <item>Lose Fat</item>

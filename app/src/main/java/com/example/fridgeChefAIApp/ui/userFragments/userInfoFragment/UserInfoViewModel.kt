@@ -4,11 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fridgeChefAIApp.Repository
 import com.example.fridgeChefAIApp.room_DB.model.UserInfo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class UserInfoViewModel (private val repository: Repository): ViewModel() {
+@HiltViewModel
+class UserInfoViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
     fun insertUser(userInfo:UserInfo){
         viewModelScope.launch(Dispatchers.IO) {
@@ -21,5 +26,4 @@ class UserInfoViewModel (private val repository: Repository): ViewModel() {
             repository.getUserById(userID)
         }
     }
-
 }

@@ -12,13 +12,17 @@ import com.example.fridgeChefAIApp.room_DB.model.ToBuyIngredient
 import com.example.fridgeChefAIApp.room_DB.model.UserInfo
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-
-class FetchingViewModel (private val repository: Repository) : ViewModel() {
+@HiltViewModel
+class FetchingViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
     suspend fun getUserName(): String {
         return repository.getUserById(AppUser.instance!!.userId!!)!!.name.substringBefore(" ")

@@ -16,33 +16,31 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.DialogChatBotIngredientsBinding
 import com.example.fridgeChefAIApp.databinding.DialogNewIngredientsBinding
 import com.example.fridgeChefAIApp.databinding.FragmentSearchByIngredientsBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
 import com.example.fridgeChefAIApp.ui.searchFragment.searchByNameFragment.IngredientSuggestionsAdapter
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredients) {
 
     private lateinit var binding: FragmentSearchByIngredientsBinding
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewModel: SearchByIngredientsViewModel
+    private val viewModel: SearchByIngredientsViewModel by viewModels()
     private lateinit var adapter: SearchByIngredientsAdapter
-    private lateinit var repository: Repository
     private lateinit var searchView: SearchView
     private var ingredients1: MutableList<String> = mutableListOf()
 
@@ -56,11 +54,6 @@ class SearchByIngredientsFragment : Fragment(R.layout.fragment_search_by_ingredi
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentSearchByIngredientsBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
-        val factory = SearchByIngredientsViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(SearchByIngredientsViewModel::class.java)
-
         recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter = SearchByIngredientsAdapter()

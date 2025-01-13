@@ -10,14 +10,12 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.fridgeChefAIApp.AppUser
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.FragmentLoginBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -28,25 +26,24 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var credentialManager: CredentialManager
     private lateinit var callbackManager: CallbackManager
-    private lateinit var repository: Repository
-    private lateinit var viewModel: FetchingViewModel
+    private val viewModel: FetchingViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentLoginBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-        viewModel = FetchingViewModel(repository)
         auth = FirebaseAuth.getInstance()
 
         credentialManager = CredentialManager.create(requireContext())
@@ -81,11 +78,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             auth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            AppUser.instance!!.userId = auth.currentUser?.uid
-                            viewModel.fetchUserInfoFromFirestoreAndInitializeRoom() // It's already collected before
-                            val userName = viewModel.getUserName()
+                        lifecycleScope.launch{
+                            withContext(Dispatchers.IO) {
+                                AppUser.instance!!.userId = auth.currentUser?.uid
+                                viewModel.fetchUserInfoFromFirestoreAndInitializeRoom() // It's already collected before
+                            }
                             withContext(Dispatchers.Main) {
+                                val userName = viewModel.getUserName()
                                 goToHomePage()
                                 Toast.makeText(requireContext(), "Welcome Back, $userName", Toast.LENGTH_SHORT).show()
                             }

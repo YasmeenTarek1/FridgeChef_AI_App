@@ -1,8 +1,6 @@
 package com.example.fridgeChefAIApp.room_DB.database
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.fridgeChefAIApp.room_DB.dao.AiRecipesDao
 import com.example.fridgeChefAIApp.room_DB.dao.CookedRecipesDao
@@ -22,34 +20,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun favoriteRecipesDao(): FavoriteRecipesDao
     abstract fun toBuyIngredientsDao(): ToBuyIngredientsDao
     abstract fun aiRecipesDao(): AiRecipesDao
-
     abstract fun userDao(): UserDao
-
-
-    companion object {
-
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
-
-        fun getInstance(context: Context): AppDatabase?{
-            var instance = INSTANCE
-
-            if (instance == null) {
-                // Synchronize to ensure only one thread creates the instance
-                synchronized(this) {
-                    // Double-check if INSTANCE is still null inside the synchronized block
-                    instance = INSTANCE
-                    if (instance == null) {
-                        instance = Room.databaseBuilder(
-                            context.applicationContext,
-                            AppDatabase::class.java,
-                            "recipe_database"
-                        ).fallbackToDestructiveMigration().build()
-                        INSTANCE = instance
-                    }
-                }
-            }
-            return instance
-        }
-    }
 }

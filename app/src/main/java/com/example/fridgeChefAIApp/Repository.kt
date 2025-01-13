@@ -10,13 +10,13 @@ import com.example.fridgeChefAIApp.api.model.Ingredient
 import com.example.fridgeChefAIApp.api.model.Recipe
 import com.example.fridgeChefAIApp.api.model.Step
 import com.example.fridgeChefAIApp.api.service.ApiService
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
+import com.example.fridgeChefAIApp.di.GoogleCustomSearchApi
+import com.example.fridgeChefAIApp.di.SpoonacularApi
 import com.example.fridgeChefAIApp.room_DB.dao.AiRecipesDao
 import com.example.fridgeChefAIApp.room_DB.dao.CookedRecipesDao
 import com.example.fridgeChefAIApp.room_DB.dao.FavoriteRecipesDao
 import com.example.fridgeChefAIApp.room_DB.dao.ToBuyIngredientsDao
 import com.example.fridgeChefAIApp.room_DB.dao.UserDao
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
 import com.example.fridgeChefAIApp.room_DB.model.AiRecipe
 import com.example.fridgeChefAIApp.room_DB.model.CookedRecipe
 import com.example.fridgeChefAIApp.room_DB.model.FavoriteRecipe
@@ -26,26 +26,29 @@ import com.example.fridgeChefAIApp.sharedPreferences.SharedPreferences
 import com.example.fridgeChefAIApp.ui.feedFragment.SimilarRecipesPagingSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class Repository(
-    retrofitInstance: RetrofitInstance,
-    dataBase: AppDatabase?
-) {
-
-    private val api: ApiService = retrofitInstance.getApiService(BASE_URL = "https://api.spoonacular.com/")
-    private val customSearchApi: ApiService = retrofitInstance.getApiService(BASE_URL = "https://www.googleapis.com/")
-    private val cookedRecipesDao: CookedRecipesDao = dataBase!!.cookedRecipesDao()
-    private val favoriteRecipesDao: FavoriteRecipesDao = dataBase!!.favoriteRecipesDao()
-    private val toBuyIngredientsDao: ToBuyIngredientsDao = dataBase!!.toBuyIngredientsDao()
-    private val aiRecipesDao: AiRecipesDao = dataBase!!.aiRecipesDao()
-    private val userDao: UserDao = dataBase!!.userDao()
+@Singleton
+class Repository
+    @Inject constructor(
+        @SpoonacularApi private val spoonacularApi: ApiService,
+        @GoogleCustomSearchApi private val googleCustomSearchApi: ApiService,
+        private val favoriteRecipesDao: FavoriteRecipesDao,
+        private val cookedRecipesDao: CookedRecipesDao,
+        private val toBuyIngredientsDao: ToBuyIngredientsDao,
+        private val aiRecipesDao: AiRecipesDao,
+        private val userDao: UserDao,
+        @ApplicationContext private val context: Context,
+        val sharedPreferences: SharedPreferences
+    ) {
 
     private val cookedRecipes: Flow<List<CookedRecipe>> = getAllCookedRecipes()
     private val favRecipes: Flow<List<FavoriteRecipe>> = getAllFavoriteRecipes()
@@ -57,7 +60,7 @@ class Repository(
 
     suspend fun searchRecipesByIngredients(ingredients: List<String>): List<Recipe> {
         return try {
-            api.searchRecipesByIngredients(ingredients = ingredients)
+            spoonacularApi.searchRecipesByIngredients(ingredients = ingredients)
         } catch (e: IOException) {
             Log.e("Repository", "Network error: ${e.message}")
 
@@ -74,7 +77,7 @@ class Repository(
 
     suspend fun getSimilarRecipes(recipeId: Int) :List<Recipe>{
         return try {
-            api.getSimilarRecipes(recipeId = recipeId)
+            spoonacularApi.getSimilarRecipes(recipeId = recipeId)
         } catch (e: Exception) {
             emptyList()
         }
@@ -82,7 +85,7 @@ class Repository(
 
     suspend fun getRandomRecipes(diet: String?) :List<Recipe>{
         return try {
-            api.getRandomRecipes(diet = diet).recipes
+            spoonacularApi.getRandomRecipes(diet = diet).recipes
         } catch (e: Exception) {
             emptyList()
         }
@@ -90,23 +93,23 @@ class Repository(
 
     suspend fun getSteps(recipeId: Int): List<Step> {
         return try {
-            api.getInstructions(recipeId = recipeId).get(0).steps
+            spoonacularApi.getInstructions(recipeId = recipeId).get(0).steps
         } catch (e: Exception) {
             emptyList()
         }
     }
 
     // Implementing Paging for similar recipes
-    fun getSimilarRecipesForFavorites(repository: Repository , context: Context): Flow<PagingData<Recipe>> {
+    fun getSimilarRecipesForFavorites(): Flow<PagingData<Recipe>> {
         return Pager(
             config = PagingConfig(pageSize = 5, enablePlaceholders = false),
-            pagingSourceFactory = { SimilarRecipesPagingSource(repository , SharedPreferences(context)) }
+            pagingSourceFactory = { SimilarRecipesPagingSource(this , sharedPreferences) }
         ).flow
     }
 
     suspend fun autocompleteRecipeSearch(query: String): List<Recipe> {
         return try {
-            api.autocompleteRecipeSearch(query = query)
+            spoonacularApi.autocompleteRecipeSearch(query = query)
         } catch (e: Exception) {
             emptyList()
         }
@@ -114,7 +117,7 @@ class Repository(
 
     suspend fun getRecipeInfo(recipeId: Int): ExtraDetailsResponse {
         return try {
-            api.getRecipeInfo(recipeId = recipeId)
+            spoonacularApi.getRecipeInfo(recipeId = recipeId)
         } catch (e: Exception) {
             throw e
         }
@@ -122,7 +125,7 @@ class Repository(
 
     suspend fun getRecipeIngredients(recipeId: Int): List<Ingredient> {
         return try {
-            api.getIngredients(recipeId = recipeId).ingredients
+            spoonacularApi.getIngredients(recipeId = recipeId).ingredients
         } catch (e: Exception) {
             throw e
         }
@@ -130,7 +133,7 @@ class Repository(
 
     suspend fun autocompleteIngredientSearch(query: String): List<Ingredient> {
         return try {
-            api.autocompleteIngredientSearch(query = query).results
+            spoonacularApi.autocompleteIngredientSearch(query = query).results
         } catch (e: Exception) {
             emptyList()
         }
@@ -138,7 +141,7 @@ class Repository(
 
     suspend fun searchRecipesByName(query: String): List<Recipe> {
         return try {
-            api.searchRecipesByName(query = query).results
+            spoonacularApi.searchRecipesByName(query = query).results
         } catch (e: Exception) {
             emptyList()
         }
@@ -148,7 +151,7 @@ class Repository(
         maxCarbs: Int? = null, maxProtein: Int? = null, maxFat: Int? = null, maxCalories: Int? = null, maxSugar: Int? = null)
     : List<Recipe> {
         return try {
-            api.searchRecipesByNutrients(maxCarbs = maxCarbs, maxProtein = maxProtein, maxSugar = maxSugar, maxFat = maxFat, maxCalories = maxCalories)
+            spoonacularApi.searchRecipesByNutrients(maxCarbs = maxCarbs, maxProtein = maxProtein, maxSugar = maxSugar, maxFat = maxFat, maxCalories = maxCalories)
         } catch (e: Exception) {
             emptyList()
         }
@@ -156,7 +159,7 @@ class Repository(
 
     suspend fun getRecipeOrIngredientImage(title: String): String{
         return try {
-            customSearchApi.getRecipeOrIngredientImage(title = title).items!!.get(0).link
+            googleCustomSearchApi.getRecipeOrIngredientImage(title = title).items!!.get(0).link
         } catch (e: Exception) {
             throw e
         }
@@ -233,10 +236,6 @@ class Repository(
     // Listening for Firestore changes
 
     suspend fun listenForFirestoreChangesInCookedRecipes() {
-        cookedRecipes.collect { cookedRecipes ->
-            updateCookedRecipesInFirestore(cookedRecipes)
-        }
-
         val firestore = FirebaseFirestore.getInstance()
         val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
         val cookedRecipesCollection = userDocRef.collection("Cooked Recipes")
@@ -276,10 +275,6 @@ class Repository(
     }
 
     suspend fun listenForFirestoreChangesInFavoriteRecipes() {
-        favRecipes.collect { favRecipes ->
-            updateFavRecipesInFirestore(favRecipes)
-        }
-
         val firestore = FirebaseFirestore.getInstance()
         val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
         val favoriteRecipesCollection = userDocRef.collection("Favorite Recipes")
@@ -319,10 +314,6 @@ class Repository(
     }
 
     suspend fun listenForFirestoreChangesInToBuyIngredients() {
-        toBuyIngredients.collect { toBuyIngredients ->
-            updateToBuyIngredientsInFirestore(toBuyIngredients)
-        }
-
         val firestore = FirebaseFirestore.getInstance()
         val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
         val ingredientsCollection = userDocRef.collection("To-Buy Ingredients")
@@ -362,10 +353,6 @@ class Repository(
     }
 
     suspend fun listenForFirestoreChangesInAiRecipes() {
-        aiRecipes.collect { aiRecipes ->
-            updateAiRecipesInFirestore(aiRecipes)
-        }
-
         val firestore = FirebaseFirestore.getInstance()
         val userDocRef = firestore.collection("users").document(AppUser.instance!!.userId!!)
         val recipesCollection = userDocRef.collection("Ai Recipes")

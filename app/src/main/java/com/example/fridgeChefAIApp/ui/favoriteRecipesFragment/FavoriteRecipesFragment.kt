@@ -3,22 +3,20 @@ package com.example.fridgeChefAIApp.ui.favoriteRecipesFragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.FragmentFavoriteRecipesBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class FavoriteRecipesFragment : Fragment(R.layout.fragment_favorite_recipes) {
 
     private lateinit var binding: FragmentFavoriteRecipesBinding
-    private lateinit var repository: Repository
-    private lateinit var favViewModel: FavoriteRecipesViewModel
+    private val favViewModel: FavoriteRecipesViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var favoriteRecipesAdapter: FavoriteRecipesAdapter
 
@@ -27,11 +25,6 @@ class FavoriteRecipesFragment : Fragment(R.layout.fragment_favorite_recipes) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentFavoriteRecipesBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
-        val factory = FavoriteRecipesViewModelFactory(repository)
-        favViewModel = ViewModelProvider(this, factory).get(FavoriteRecipesViewModel::class.java)
-
         favoriteRecipesAdapter = FavoriteRecipesAdapter(
             onDeleteClick = { favRecipe ->
             favViewModel.deleteRecipe(favRecipe)

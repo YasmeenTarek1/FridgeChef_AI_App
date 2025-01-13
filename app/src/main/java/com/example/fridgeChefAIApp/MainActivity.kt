@@ -13,7 +13,9 @@ import com.example.fridgeChefAIApp.databinding.ActivityMainBinding
 import com.example.fridgeChefAIApp.databinding.DialogSearchOptionsBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

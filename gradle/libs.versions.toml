@@ -11,9 +11,10 @@ firebaseStorage = "21.0.1"
 generativeai = "0.9.0"
 glide = "4.16.0"
 googleid = "1.1.1"
-firebaseBom = "33.6.0"
+firebaseBom = "33.7.0"
 fragmentKtx = "1.8.5"
 googleServices = "4.4.2"
+hiltCompiler = "2.48"
 kotlin = "2.0.20"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -25,16 +26,16 @@ lottie = "6.4.1"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
-navigationFragmentKtx = "2.8.4"
-navigationSafeArgsGradlePlugin = "2.8.4"
+navigationFragmentKtx = "2.8.5"
+navigationSafeArgsGradlePlugin = "2.8.5"
 navigationSafeArgsGradlePluginVersion = "1.0.0"
-pagingRuntime = "3.3.4"
-playServicesAuth = "21.2.0"
+pagingRuntime = "3.3.5"
+playServicesAuth = "21.3.0"
 retrofit = "2.11.0"
 roomRuntime = "2.6.1"
 firebaseFirestoreKtx = "25.1.1"
 loggingInterceptor = "4.12.0"
-pagingCommonAndroid = "3.3.4"
+pagingCommonAndroid = "3.3.5"
 swipereveallayout = "0.0.1"
 
 
@@ -48,6 +49,9 @@ androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:na
 core = { module = "io.noties.markwon:core", version.ref = "core" }
 firebase-storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorage" }
 generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltCompiler" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltCompiler" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 navigation-safe-args-gradle-plugin = { module = "android.arch.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationSafeArgsGradlePluginVersion" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }

@@ -12,7 +12,7 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -23,25 +23,25 @@ import com.example.fridgeChefAIApp.Repository
 import com.example.fridgeChefAIApp.api.model.ExtraDetailsResponse
 import com.example.fridgeChefAIApp.api.model.Ingredient
 import com.example.fridgeChefAIApp.api.model.Recipe
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.DialogRecipeOpinionBinding
 import com.example.fridgeChefAIApp.databinding.FragmentRecipeDetailsBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
-import com.example.fridgeChefAIApp.sharedPreferences.SharedPreferences
 import com.example.fridgeChefAIApp.ui.chatBotServiceFragment.ChatBotServiceViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
     private lateinit var binding: FragmentRecipeDetailsBinding
     private lateinit var repository: Repository
-    private lateinit var viewModel: RecipeDetailsViewModel
+    private val viewModel: RecipeDetailsViewModel by viewModels()
     private val args: RecipeDetailsFragmentArgs by navArgs()
 
     private var tooltipWindow: PopupWindow? = null
@@ -54,10 +54,6 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentRecipeDetailsBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
-        val factory = RecipeDetailsViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(RecipeDetailsViewModel::class.java)
 
         ViewCompat.setTooltipText(binding.aiOpinionButton, "Take a Cooking Tip")
 
@@ -72,12 +68,12 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
         val classification = args.classification
 
         if(currentRecipe.wellWrittenSummary == 0) {
-            Log.d("debugging" , "hiiiiiiii")
             binding.descriptionLoadingProgressBar.visibility = View.VISIBLE
 
-            lifecycleScope.launch{
+            lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    val detailedRecipe: ExtraDetailsResponse = viewModel.getRecipeInfo(currentRecipe.id)
+                    val detailedRecipe: ExtraDetailsResponse =
+                        viewModel.getRecipeInfo(currentRecipe.id)
 
                     if (currentRecipe.servings == 0)
                         currentRecipe.servings = detailedRecipe.servings
@@ -98,12 +94,18 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
                     binding.descriptionLoadingProgressBar.visibility = View.GONE
                 }
+            }
+            lifecycleScope.launch(Dispatchers.IO) {
+                val isFav = viewModel.checkFavorite(currentRecipe.id).first()
+                if (isFav) {
+                        repository.updateFavoriteRecipe(
+                            currentRecipe.id,
+                            currentRecipe.readyInMinutes,
+                            currentRecipe.servings,
+                            currentRecipe.summary
+                        )
 
-                withContext(Dispatchers.IO) {
-                    repository.isFavoriteRecipeExists(currentRecipe.id).collectLatest { isFav ->
-                        if(isFav)
-                            repository.updateFavoriteRecipe(currentRecipe.id, currentRecipe.readyInMinutes, currentRecipe.servings, currentRecipe.summary)
-                    }
+                    repository.updateFavRecipesInFirestore(viewModel.favRecipes.first())
                 }
 
             }
@@ -212,7 +214,7 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
     }
 
     private fun showRecipeOpinionDialog(recipe: Recipe) {
-        val chatBotServiceViewModel = ChatBotServiceViewModel(repository , SharedPreferences(requireContext()))
+        val chatBotServiceViewModel: ChatBotServiceViewModel by viewModels()
 
         val dialogViewBinding = DialogRecipeOpinionBinding.inflate(LayoutInflater.from(requireContext()))
 

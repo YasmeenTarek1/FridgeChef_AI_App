@@ -5,37 +5,30 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.FragmentSearchByNameBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class SearchByNameFragment : Fragment(R.layout.fragment_search_by_name) {
 
     private lateinit var binding: FragmentSearchByNameBinding
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewModel: SearchByNameViewModel
+    private val viewModel: SearchByNameViewModel by viewModels()
     private lateinit var adapter: SearchByNameAdapter
-    private lateinit var repository: Repository
     private lateinit var searchView: SearchView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = FragmentSearchByNameBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
-        val factory = SearchByNameViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(SearchByNameViewModel::class.java)
-
         searchView = binding.searchView
         recyclerView = binding.recyclerView
 

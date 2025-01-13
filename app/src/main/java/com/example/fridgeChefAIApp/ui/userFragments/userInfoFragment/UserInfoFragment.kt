@@ -9,31 +9,29 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.fridgeChefAIApp.AppUser
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.FragmentUserInfoBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
 import com.example.fridgeChefAIApp.room_DB.model.UserInfo
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.UUID
 
+@AndroidEntryPoint
 class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
     private lateinit var binding: FragmentUserInfoBinding
-    private lateinit var viewModel: UserInfoViewModel
-    private lateinit var repository: Repository
+    private val viewModel: UserInfoViewModel by viewModels()
     private lateinit var storageReference: StorageReference
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
     private var uriImage:String? = null
@@ -41,12 +39,7 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = FragmentUserInfoBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
         storageReference = FirebaseStorage.getInstance().reference
-
-        val factory = UserInfoViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(UserInfoViewModel::class.java)
 
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)

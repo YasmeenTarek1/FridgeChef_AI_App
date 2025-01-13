@@ -4,11 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fridgeChefAIApp.Repository
 import com.example.fridgeChefAIApp.room_DB.model.ToBuyIngredient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ToBuyIngredientsViewModel(private val repository: Repository) : ViewModel() {
+@HiltViewModel
+class ToBuyIngredientsViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
     val ingredients: Flow<List<ToBuyIngredient>> = repository.getAllToBuyIngredients()
 
@@ -21,6 +27,8 @@ class ToBuyIngredientsViewModel(private val repository: Repository) : ViewModel(
     fun deleteIngredient(ingredient: ToBuyIngredient){
         viewModelScope.launch (Dispatchers.IO) {
             repository.deleteIngredient(ingredient)
+            val currentToBuyIngredients = ingredients.first()
+            repository.updateToBuyIngredientsInFirestore(currentToBuyIngredients)
         }
     }
 

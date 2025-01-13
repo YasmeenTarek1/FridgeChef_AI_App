@@ -8,6 +8,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
 }
 
 // Load properties from local.properties
@@ -30,7 +31,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "API_KEY_Spoonacular", "\"$apiKeySpoonacular\"")
@@ -149,4 +149,8 @@ dependencies {
 
     // LottieFiles
     implementation(libs.lottie)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }

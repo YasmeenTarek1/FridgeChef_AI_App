@@ -1,22 +1,26 @@
 package com.example.fridgeChefAIApp.ui.feedFragment
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.fridgeChefAIApp.Repository
 import com.example.fridgeChefAIApp.api.model.Recipe
 import com.example.fridgeChefAIApp.room_DB.model.FavoriteRecipe
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FeedViewModel(private val repository: Repository, application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class FeedViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
-    val recipes: Flow<PagingData<Recipe>> = repository.getSimilarRecipesForFavorites(repository, application.baseContext)
-        .cachedIn(viewModelScope)
+    val recipes: Flow<PagingData<Recipe>> = repository.getSimilarRecipesForFavorites().cachedIn(viewModelScope)
 
     private val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
 
@@ -33,9 +37,8 @@ class FeedViewModel(private val repository: Repository, application: Application
                     summary = recipe.summary
                 )
             )
-            favRecipes.collect { favRecipes ->
-                repository.updateFavRecipesInFirestore(favRecipes)
-            }
+            val currentFavRecipes = favRecipes.first()
+            repository.updateFavRecipesInFirestore(currentFavRecipes)
         }
     }
 

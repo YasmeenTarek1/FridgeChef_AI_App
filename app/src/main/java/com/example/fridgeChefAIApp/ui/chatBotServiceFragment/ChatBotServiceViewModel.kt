@@ -7,16 +7,21 @@ import com.example.fridgeChefAIApp.BuildConfig
 import com.example.fridgeChefAIApp.Repository
 import com.example.fridgeChefAIApp.api.model.Recipe
 import com.example.fridgeChefAIApp.room_DB.model.AiRecipe
-import com.example.fridgeChefAIApp.sharedPreferences.SharedPreferences
 import com.google.ai.client.generativeai.GenerativeModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class ChatBotServiceViewModel (private val repository: Repository , private val sharedPreferences: SharedPreferences? = null) : ViewModel() {
+@HiltViewModel
+class ChatBotServiceViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
     val recipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
@@ -61,11 +66,11 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
 
             // Image (String - URL)
-            val image = repository.getRecipeOrIngredientImage("$title recipe horizontal image")
+            val image = repository.getRecipeOrIngredientImage("$title landscape recipe photo")
 
 
             // Summary (String)
-            prompt = "Give me a brief summary of this recipe: $history without mentioning its title or ingredients"
+            prompt = "Give me a summary for this recipe: $history mentioning its nutritional value, servings without mentioning its title"
             val summaryResponse = safeGenerateContent(generativeModel, prompt)
             history += "quick summary: $summaryResponse"
 
@@ -81,7 +86,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
 
 
             // Ingredients
-            prompt = "Give me only the names of the ingredients of this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
+            prompt = "Give me the names of all the ingredients(even the simple ones) used in this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
             val ingredientsResponse = safeGenerateContent(generativeModel, prompt)
             history += "ingredients used: $ingredientsResponse"
 
@@ -106,6 +111,8 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             )
 
             repository.insertAiRecipe(aiRecipe)
+            val currentAiRecipes = recipes.first()
+            repository.updateAiRecipesInFirestore(currentAiRecipes)
 
             val recipe = Recipe(
                 id = repository.getLastInsertedAiRecipeID(),
@@ -118,14 +125,6 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
             )
 
             recipe
-        }
-    }
-
-    suspend fun updateFirestore(){
-        withContext(Dispatchers.IO) {
-            recipes.collect { recipes ->
-                repository.updateAiRecipesInFirestore(recipes)
-            }
         }
     }
 
@@ -158,7 +157,7 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
     suspend fun getCookingTip():String {
         return withContext(Dispatchers.IO) {
             val user = repository.getUserById(AppUser.instance!!.userId!!)
-            var cookingTipHistory: String = sharedPreferences!!.getCookingTipsHistory().toString()
+            var cookingTipHistory: String = repository.sharedPreferences.getCookingTipsHistory().toString()
 
             val generativeModel =
                 GenerativeModel(
@@ -166,13 +165,13 @@ class ChatBotServiceViewModel (private val repository: Repository , private val 
                     apiKey = API_KEY_GEMINI
                 )
 
-            val prompt = "Give me a short unique professional cooking or health tip no one knows decorated with relevant emojis, follows my diet type: ${user!!.dietType}, excluding all tips similar to these $cookingTipHistory by choosing completely different ingredients, separate between the title and the content start the tip immediately without asking any questions"
+            val prompt = "Give me a short health or cooking tip no one knows decorated with relevant emojis, follows my diet type: ${user!!.dietType}, separate between the title and the content and start the tip immediately without asking any questions. Exclude all tips similar to these: $cookingTipHistory"
             val response = safeGenerateContent(generativeModel, prompt)
 
             cookingTipHistory += ", ${response.toString()}"
             cookingTipHistory = cookingTipHistory.takeLast(3000)
 
-            sharedPreferences.saveCookingTipsHistory(cookingTipHistory)
+            repository.sharedPreferences.saveCookingTipsHistory(cookingTipHistory)
             response.toString()
         }
     }

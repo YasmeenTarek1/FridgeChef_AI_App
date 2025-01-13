@@ -6,27 +6,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
 import com.example.fridgeChefAIApp.api.model.Recipe
 import com.example.fridgeChefAIApp.api.model.Step
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.DialogRecipeFinishedBinding
 import com.example.fridgeChefAIApp.databinding.FragmentRecipeStepsBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
 import com.example.fridgeChefAIApp.room_DB.model.CookedRecipe
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
 
     private lateinit var binding: FragmentRecipeStepsBinding
-    private lateinit var repository: Repository
-    private lateinit var viewModel: RecipeStepsViewModel
+    private val viewModel: RecipeStepsViewModel by viewModels()
     private val args: RecipeStepsFragmentArgs by navArgs()
 
     private var tts: TTS? = null // TTS instance
@@ -37,14 +35,8 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentRecipeStepsBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
         val recipe = args.recipe
         val classification = args.classification
-
-        val factory = RecipeStepsViewModelFactory(recipe.id, repository)
-        viewModel = ViewModelProvider(this, factory).get(RecipeStepsViewModel::class.java)
-
         var idx = 0
 
         // First step
@@ -65,7 +57,7 @@ class RecipeStepsFragment : Fragment(R.layout.fragment_recipe_steps) {
                 displayStep(recipe, idx)
             }
             else {
-                steps = viewModel.getSteps()
+                steps = viewModel.getSteps(recipeId = recipe.id)
                 numOfSteps = steps.size
                 displayStep(recipe, idx)
             }

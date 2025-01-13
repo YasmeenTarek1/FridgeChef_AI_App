@@ -3,32 +3,23 @@ package com.example.fridgeChefAIApp.ui.chatBotServiceFragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.FragmentChatBotBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
-import com.example.fridgeChefAIApp.sharedPreferences.SharedPreferences
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
     private lateinit var binding: FragmentChatBotBinding
-    private lateinit var repository: Repository
-    private lateinit var viewModel: ChatBotServiceViewModel
+    private val viewModel: ChatBotServiceViewModel by viewModels()
     private val args: ChatBotServiceFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         binding = FragmentChatBotBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
-        val factory = ChatBotServiceViewModelFactory(repository , SharedPreferences(requireContext()))
-        viewModel = ViewModelProvider(this, factory).get(ChatBotServiceViewModel::class.java)
-
         displayRecipe(args.ingredients)
     }
 
@@ -39,7 +30,6 @@ class ChatBotServiceFragment : Fragment(R.layout.fragment_chat_bot) {
             val recipe = viewModel.getCrazyRecipe(ingredients!!)
             val action = ChatBotServiceFragmentDirections.actionChatBotServiceFragmentToRecipeDetailsFragment(recipe , 0)
             findNavController().navigate(action)
-            viewModel.updateFirestore()
         }
     }
 }

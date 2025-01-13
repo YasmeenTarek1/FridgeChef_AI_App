@@ -3,22 +3,20 @@ package com.example.fridgeChefAIApp.ui.cookedBeforeFragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.FragmentCookedRecipesBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CookedRecipesFragment : Fragment(R.layout.fragment_cooked_recipes) {
 
     private lateinit var binding: FragmentCookedRecipesBinding
-    private lateinit var repository: Repository
-    private lateinit var cookedViewModel: CookedBeforeViewModel
+    private val cookedViewModel: CookedBeforeViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var cookedBeforeAdapter: CookedBeforeAdapter
 
@@ -26,11 +24,6 @@ class CookedRecipesFragment : Fragment(R.layout.fragment_cooked_recipes) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentCookedRecipesBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
-        val factory = CookedBeforeViewModelFactory(repository)
-        cookedViewModel = ViewModelProvider(this, factory).get(CookedBeforeViewModel::class.java)
-
         cookedBeforeAdapter = CookedBeforeAdapter(
             onDeleteClick = { recipe ->
                 cookedViewModel.deleteRecipe(recipe)

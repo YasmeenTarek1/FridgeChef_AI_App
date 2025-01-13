@@ -12,7 +12,7 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -20,27 +20,23 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fridgeChefAIApp.AppUser
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
-import com.example.fridgeChefAIApp.api.service.RetrofitInstance
 import com.example.fridgeChefAIApp.databinding.FragmentFeedBinding
-import com.example.fridgeChefAIApp.room_DB.database.AppDatabase
-import com.example.fridgeChefAIApp.sharedPreferences.SharedPreferences
 import com.example.fridgeChefAIApp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import com.facebook.login.LoginManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
+@AndroidEntryPoint
 class FeedFragment : Fragment(R.layout.fragment_feed) {
 
     private lateinit var binding: FragmentFeedBinding
-    private lateinit var repository: Repository
-    private lateinit var feedViewModel: FeedViewModel
+    private val feedViewModel: FeedViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var feedAdapter: FeedAdapter
 
@@ -55,11 +51,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentFeedBinding.bind(view)
-        repository = Repository(RetrofitInstance(), AppDatabase.getInstance(requireContext()))
-
-        val factory = FeedViewModelFactory(repository , requireActivity().application)
-        feedViewModel = ViewModelProvider(this, factory).get(FeedViewModel::class.java)
-
         feedAdapter = FeedAdapter(
             lifecycleOwner = viewLifecycleOwner,
             checkFavorite = { recipeId ->
@@ -123,7 +114,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     }
 
     private fun showCookingTip() {
-        val chatBotServiceViewModel = ChatBotServiceViewModel(repository , SharedPreferences(requireContext()))
+        val chatBotServiceViewModel: ChatBotServiceViewModel by viewModels()
 
         val inflater = LayoutInflater.from(context)
         val dialogView = inflater.inflate(R.layout.dialog_cooking_tip, null)
