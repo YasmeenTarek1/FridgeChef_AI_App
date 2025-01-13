@@ -7,7 +7,6 @@ import com.example.fridgeChefAIApp.room_DB.model.FavoriteRecipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +16,6 @@ class FavoriteRecipesViewModel @Inject constructor(
 ) : ViewModel() {
 
     val recipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
-    private val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
 
     init {
         viewModelScope.launch (Dispatchers.IO) {
@@ -28,8 +26,6 @@ class FavoriteRecipesViewModel @Inject constructor(
     fun deleteRecipe(recipe: FavoriteRecipe){
         viewModelScope.launch (Dispatchers.IO) {
             repository.deleteFavoriteRecipe(recipe.id)
-            val currentFavRecipes = favRecipes.first()
-            repository.updateFavRecipesInFirestore(currentFavRecipes)
         }
     }
 

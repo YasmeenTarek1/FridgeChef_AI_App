@@ -1,6 +1,5 @@
 package com.example.fridgeChefAIApp
 
-import android.content.Context
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -26,9 +25,10 @@ import com.example.fridgeChefAIApp.sharedPreferences.SharedPreferences
 import com.example.fridgeChefAIApp.ui.feedFragment.SimilarRecipesPagingSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -46,14 +46,25 @@ class Repository
         private val toBuyIngredientsDao: ToBuyIngredientsDao,
         private val aiRecipesDao: AiRecipesDao,
         private val userDao: UserDao,
-        @ApplicationContext private val context: Context,
         val sharedPreferences: SharedPreferences
     ) {
 
-    private val cookedRecipes: Flow<List<CookedRecipe>> = getAllCookedRecipes()
-    private val favRecipes: Flow<List<FavoriteRecipe>> = getAllFavoriteRecipes()
-    private val aiRecipes: Flow<List<AiRecipe>> = getAllAiRecipes()
-    private val toBuyIngredients: Flow<List<ToBuyIngredient>> = getAllToBuyIngredients()
+    init {
+        observeRoomChangesAndSyncWithFirestore()
+    }
+
+    private fun observeRoomChangesAndSyncWithFirestore() {
+        CoroutineScope(Dispatchers.IO).launch {
+            // Collect all flows concurrently
+            val favoriteRecipesFlow = async { getAllFavoriteRecipes().collect { roomRecipes -> updateFavRecipesInFirestore(roomRecipes) } }
+            val cookedRecipesFlow = async { getAllCookedRecipes().collect { roomRecipes -> updateCookedRecipesInFirestore(roomRecipes) } }
+            val aiRecipesFlow = async { getAllAiRecipes().collect { roomRecipes -> updateAiRecipesInFirestore(roomRecipes) } }
+            val toBuyIngredientsFlow = async { getAllToBuyIngredients().collect { roomRecipes -> updateToBuyIngredientsInFirestore(roomRecipes) } }
+
+            // Wait for all collections to finish
+            awaitAll(favoriteRecipesFlow, cookedRecipesFlow, aiRecipesFlow, toBuyIngredientsFlow)
+        }
+    }
 
 
     // API-related functions

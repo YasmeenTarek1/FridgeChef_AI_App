@@ -7,7 +7,6 @@ import com.example.fridgeChefAIApp.room_DB.model.CookedRecipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,8 +27,6 @@ class CookedBeforeViewModel @Inject constructor(
     fun deleteRecipe(recipe: CookedRecipe){
         viewModelScope.launch (Dispatchers.IO) {
             repository.deleteCookedRecipe(recipe.id)
-            val currentCookedRecipes = cookedRecipes.first()
-            repository.updateCookedRecipesInFirestore(currentCookedRecipes)
         }
     }
 }

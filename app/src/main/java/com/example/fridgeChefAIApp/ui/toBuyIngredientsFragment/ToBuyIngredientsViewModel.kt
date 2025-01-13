@@ -7,7 +7,6 @@ import com.example.fridgeChefAIApp.room_DB.model.ToBuyIngredient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +26,6 @@ class ToBuyIngredientsViewModel @Inject constructor(
     fun deleteIngredient(ingredient: ToBuyIngredient){
         viewModelScope.launch (Dispatchers.IO) {
             repository.deleteIngredient(ingredient)
-            val currentToBuyIngredients = ingredients.first()
-            repository.updateToBuyIngredientsInFirestore(currentToBuyIngredients)
         }
     }
 

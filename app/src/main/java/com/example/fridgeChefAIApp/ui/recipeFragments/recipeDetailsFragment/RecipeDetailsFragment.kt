@@ -19,7 +19,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.fridgeChefAIApp.R
-import com.example.fridgeChefAIApp.Repository
 import com.example.fridgeChefAIApp.api.model.ExtraDetailsResponse
 import com.example.fridgeChefAIApp.api.model.Ingredient
 import com.example.fridgeChefAIApp.api.model.Recipe
@@ -40,7 +39,6 @@ import kotlinx.coroutines.withContext
 class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
     private lateinit var binding: FragmentRecipeDetailsBinding
-    private lateinit var repository: Repository
     private val viewModel: RecipeDetailsViewModel by viewModels()
     private val args: RecipeDetailsFragmentArgs by navArgs()
 
@@ -94,20 +92,12 @@ class RecipeDetailsFragment : Fragment(R.layout.fragment_recipe_details) {
 
                     binding.descriptionLoadingProgressBar.visibility = View.GONE
                 }
-            }
-            lifecycleScope.launch(Dispatchers.IO) {
-                val isFav = viewModel.checkFavorite(currentRecipe.id).first()
-                if (isFav) {
-                        repository.updateFavoriteRecipe(
-                            currentRecipe.id,
-                            currentRecipe.readyInMinutes,
-                            currentRecipe.servings,
-                            currentRecipe.summary
-                        )
 
-                    repository.updateFavRecipesInFirestore(viewModel.favRecipes.first())
+                withContext(Dispatchers.IO){
+                    val isFav = viewModel.checkFavorite(currentRecipe.id).first()
+                    if (isFav)
+                        viewModel.updateFavRecipe(currentRecipe)
                 }
-
             }
         }
         else{

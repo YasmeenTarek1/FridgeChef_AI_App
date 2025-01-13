@@ -6,14 +6,12 @@ import com.example.fridgeChefAIApp.Repository
 import com.example.fridgeChefAIApp.api.model.ExtraDetailsResponse
 import com.example.fridgeChefAIApp.api.model.Ingredient
 import com.example.fridgeChefAIApp.api.model.Recipe
-import com.example.fridgeChefAIApp.room_DB.model.AiRecipe
 import com.example.fridgeChefAIApp.room_DB.model.FavoriteRecipe
 import com.example.fridgeChefAIApp.room_DB.model.ToBuyIngredient
 import com.example.fridgeChefAIApp.ui.chatBotServiceFragment.ChatBotServiceViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,12 +20,6 @@ import javax.inject.Inject
 class RecipeDetailsViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
-
-
-    private val toBuyIngredients: Flow<List<ToBuyIngredient>> = repository.getAllToBuyIngredients()
-    val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
-    private val aiRecipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
-
 
     suspend fun getRecipeIngredients(recipeId: Int): List<Ingredient>{
         return withContext(Dispatchers.IO){
@@ -51,6 +43,17 @@ class RecipeDetailsViewModel @Inject constructor(
         return repository.isCookedRecipeExists(recipeId)
     }
 
+    fun updateFavRecipe(recipe: Recipe) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateFavoriteRecipe(
+                recipe.id,
+                recipe.readyInMinutes,
+                recipe.servings,
+                recipe.summary
+            )
+        }
+    }
+
     fun onAddToCartClick(ingredient: Ingredient) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertToBuyIngredient(
@@ -60,8 +63,6 @@ class RecipeDetailsViewModel @Inject constructor(
                     createdAt = System.currentTimeMillis()
                 )
             )
-            val currentToBuyIngredients = toBuyIngredients.first()
-            repository.updateToBuyIngredientsInFirestore(currentToBuyIngredients)
         }
     }
 
@@ -78,21 +79,13 @@ class RecipeDetailsViewModel @Inject constructor(
                     summary = recipe.summary
                 )
             )
-            val currentFavRecipes = favRecipes.first()
-            repository.updateFavRecipesInFirestore(currentFavRecipes)
-
             repository.deleteAiRecipe(recipe.id)
-            val currentAiRecipes = aiRecipes.first()
-            repository.updateAiRecipesInFirestore(currentAiRecipes)
-
         }
     }
 
     fun onDislikeClick(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteFavoriteRecipe(recipe.id)
-            val currentFavRecipes = favRecipes.first()
-            repository.updateFavRecipesInFirestore(currentFavRecipes)
         }
     }
 

@@ -11,7 +11,6 @@ import com.example.fridgeChefAIApp.room_DB.model.FavoriteRecipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +20,6 @@ class FeedViewModel @Inject constructor(
 ) : ViewModel() {
 
     val recipes: Flow<PagingData<Recipe>> = repository.getSimilarRecipesForFavorites().cachedIn(viewModelScope)
-
-    private val favRecipes: Flow<List<FavoriteRecipe>> = repository.getAllFavoriteRecipes()
 
     fun onLoveClick(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -37,16 +34,12 @@ class FeedViewModel @Inject constructor(
                     summary = recipe.summary
                 )
             )
-            val currentFavRecipes = favRecipes.first()
-            repository.updateFavRecipesInFirestore(currentFavRecipes)
         }
     }
 
     fun onDislikeClick(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteFavoriteRecipe(recipe.id)
-            val currentFavRecipes = favRecipes.first()
-            repository.updateFavRecipesInFirestore(currentFavRecipes)
         }
     }
 

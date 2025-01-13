@@ -12,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -66,7 +65,7 @@ class ChatBotServiceViewModel @Inject constructor(
 
 
             // Image (String - URL)
-            val image = repository.getRecipeOrIngredientImage("$title landscape recipe photo")
+            val image = repository.getRecipeOrIngredientImage("$title food")
 
 
             // Summary (String)
@@ -76,7 +75,7 @@ class ChatBotServiceViewModel @Inject constructor(
 
 
             // Servings (Int)
-            prompt = "Give me the number of servings (only the number) of this recipe:$history"
+            prompt = "Give me the number of servings (only 1 numeric value) of this recipe:$history"
             val servingsResponse = safeGenerateContent(generativeModel, prompt)!!.trim().toInt()
 
 
@@ -86,7 +85,7 @@ class ChatBotServiceViewModel @Inject constructor(
 
 
             // Ingredients
-            prompt = "Give me the names of all the ingredients(even the simple ones) used in this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
+            prompt = "Give me names of all ingredients even the simple ones used in this recipe:$history in the form of Strings in \"\" separated by commas not in programming language"
             val ingredientsResponse = safeGenerateContent(generativeModel, prompt)
             history += "ingredients used: $ingredientsResponse"
 
@@ -111,8 +110,6 @@ class ChatBotServiceViewModel @Inject constructor(
             )
 
             repository.insertAiRecipe(aiRecipe)
-            val currentAiRecipes = recipes.first()
-            repository.updateAiRecipesInFirestore(currentAiRecipes)
 
             val recipe = Recipe(
                 id = repository.getLastInsertedAiRecipeID(),

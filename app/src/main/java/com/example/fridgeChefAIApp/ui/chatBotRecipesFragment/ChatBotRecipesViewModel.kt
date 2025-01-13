@@ -7,7 +7,6 @@ import com.example.fridgeChefAIApp.room_DB.model.AiRecipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +16,6 @@ class ChatBotRecipesViewModel @Inject constructor(
 ) : ViewModel() {
 
     val recipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
-    private val aiRecipes: Flow<List<AiRecipe>> = repository.getAllAiRecipes()
 
     init {
         viewModelScope.launch (Dispatchers.IO){
@@ -28,8 +26,6 @@ class ChatBotRecipesViewModel @Inject constructor(
     fun deleteRecipe(recipe: AiRecipe){
         viewModelScope.launch (Dispatchers.IO) {
             repository.deleteAiRecipe(recipe.id)
-            val currentAiRecipes = aiRecipes.first()
-            repository.updateAiRecipesInFirestore(currentAiRecipes)
         }
     }
 }
