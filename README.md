@@ -50,7 +50,7 @@ FridgeChef AI ensures a smooth and secure user experience with a comprehensive a
 #### **3. To-Buy Ingredients**
 - **Missing Ingredients Tracker:** Tracks ingredients needed for selected recipes, helping users easily identify what they need to buy and allows users to remove items they've already purchased.
 
-![To-Buy Ingredients Video](assets/tobuy.gif)
+![To-Buy Ingredients Video](assets/toBuyIngredients.gif)
 
 #### **4. Profile**
 - Displays user-specific information such as:
@@ -58,8 +58,8 @@ FridgeChef AI ensures a smooth and secure user experience with a comprehensive a
     - Diet type and fitness goals.
     - Personalized avatar image.
 
-| ![Profile](assets/profile.png) | ![Profile Info Edit](assets/profile edit.png) | 
-|-------------------------|:--------------------------------------:|
+| ![Profile](assets/profile.png) | ![Profile Info Edit](assets/profileEdit.png) | 
+|-------------------------|:--------------------------------------------:|
 ---
 
 
@@ -69,18 +69,18 @@ FridgeChef AI ensures a smooth and secure user experience with a comprehensive a
     - **Traditional Recipes:** Enter ingredients to find standard recipes using them.
     - **AI-Powered Recipes:** Enter random ingredients from your fridge, and the "Go Crazy" chatbot uses **Gemini AI** to generate innovative and creative recipes, transforming what you have on hand into unique meal ideas, while recipe and ingredient images are retrieved using the **Google Custom Search API** with a customizable search engine.
 
-      |![Search By Ingredients Video](assets/search by ingredients.gif)|
-          |:-------------------------------------:|
+      | ![Search By Ingredients Video](assets/searchByIngredients.gif) |
+          |:--------------------------------------------------------------:|
 
     2. **Search by Nutrients:** Users can select a combination of nutrients (e.g., carbs, protein, sugar, calories, fat) to filter recipes based on desired nutritional values.
 
-       |![Search By Nutritions Video](assets/search by nutritions.gif)|
-            |:-------------------------------------:|
+       | ![Search By Nutritions Video](assets/searchByNutritions.gif) |
+            |:------------------------------------------------------------:|
 
     3. **Search by Recipe Name:** A search feature that returns recipes related to the entered name, with exact or similar matches.
 
-       |![Search By Recipe Name Video](assets/search by recipe name.gif)|  
-            |:-------------------------------------:|
+       | ![Search By Recipe Name Video](assets/searchByRecipeName.gif) |  
+            |:-------------------------------------------------------------:|
 
 ---
 
@@ -96,8 +96,8 @@ FridgeChef AI ensures a smooth and secure user experience with a comprehensive a
 - **Interactive Cooking Steps:**
     - Written and spoken guidance lead the user through step-by-step cooking instructions until the recipe is completed.
 
-  |![Recipe Deatils](assets/recipe details.gif)|
-    |:-------------------------------------:|
+  | ![Recipe Details](assets/recipeDetails.gif) |
+    |:-------------------------------------------:|
 
 ---
 
