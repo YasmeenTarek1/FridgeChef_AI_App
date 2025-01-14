@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
@@ -49,6 +50,8 @@ class Repository
         val sharedPreferences: SharedPreferences
     ) {
 
+    private var job: Job? = null // Job to track and cancel ongoing operations
+
     init {
         observeRoomChangesAndSyncWithFirestore()
     }
@@ -66,6 +69,10 @@ class Repository
         }
     }
 
+    // Method to cancel ongoing jobs when user logs out
+    fun cancelOngoingOperations() {
+        job?.cancel()
+    }
 
     // API-related functions
 

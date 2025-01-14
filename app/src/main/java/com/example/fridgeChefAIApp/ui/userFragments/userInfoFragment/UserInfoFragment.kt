@@ -8,6 +8,7 @@ import android.widget.Spinner
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -40,6 +41,10 @@ class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
         binding = FragmentUserInfoBinding.bind(view)
         storageReference = FirebaseStorage.getInstance().reference
+
+        val colorStateList = context?.let { ContextCompat.getColorStateList(it, R.color.radio_button_tint) }
+        binding.male.buttonTintList = colorStateList
+        binding.female.buttonTintList = colorStateList
 
         lifecycleScope.launch {
             binding.user = viewModel.getUserById(AppUser.instance!!.userId!!)

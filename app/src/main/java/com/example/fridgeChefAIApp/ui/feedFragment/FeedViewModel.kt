@@ -48,6 +48,7 @@ class FeedViewModel @Inject constructor(
     }
 
     suspend fun clearAllInfo() {
+        repository.cancelOngoingOperations()
         repository.clearAllToFavoriteRecipes()
         repository.clearAllCookedRecipes()
         repository.clearAllToBuyIngredients()
