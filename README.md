@@ -31,7 +31,7 @@ FridgeChef AI ensures a smooth and secure user experience with a comprehensive a
 
 #### **1. Feed**
 - **Infinite Recipe Feed:** Displays a combination of recipes similar to the user’s favorites, along with random suggestions.
-- **Get a Cooking Tip Feature:** Offers quick, unique cooking or health tips tailored to the user’s diet and fitness goals.
+- **Get a Cooking Tip Feature:** Offers quick, unique cooking or health tips tailored to the user’s diet and fitness goals, powered by AI (Gemini).
 
 
 | ![Feed Video](assets/feed.gif) |
@@ -110,27 +110,33 @@ FridgeChef AI ensures a smooth and secure user experience with a comprehensive a
 
 - **Programming Language:** Kotlin
 - **Architecture:** MVVM (Model-View-ViewModel), Single-Activity Pattern
-- **Backend Services:**
-  - Firebase Authentication
-  - Firebase Firestore
-  - Firebase Storage
-- **Database:** Room Database
+- **Backend and Database:**
+  - **Firebase Authentication:** For user authentication (email/password, Google, Facebook)
+  - **Firebase Storage:** For storing user-related files like profile avatars
+  - **Firebase Firestore:** For cloud-based data storage and synchronization
+  - **Room Database:** A local SQLite database for offline data storage and caching
 - **API Integration:**
   - Spoonacular API
   - Gemini API
   - Google Custom Search API
 - **Dependency Injection:** Hilt
 - **Other Libraries and Technologies:**
-  - Retrofit2
-  - Paging3
-  - Coroutines
-  - Flows
-  - SharedPreferences
-  - TTS (Text-to-Speech)
-  - Navigation Component
-  - XML Layouts
-  - Glide
-  - Lottie
+  - **Retrofit2**: For networking
+  - **GSON**: For JSON parsing
+  - **Logging Interceptor**: For logging network requests and responses.
+  - **Paging3**: For paginated data loading
+  - **Coroutines and Flows**: For asynchronous and reactive programming
+  - **SharedPreferences**: For lightweight data storage
+  - **Data Binding**: For binding UI components directly to data sources
+  - **Text-to-Speech (TTS)**: For voice guidance
+  - **Navigation Component**: For navigation
+  - **Glide**: For image loading
+  - **Lottie**: For animations
+  - **SwipeRevealLayout**: For creating swipeable layouts in RecyclerView.
+  - **Markdown Support**: For displaying formatted text.
+- **UI and Layout:**
+  - **XML Layouts**: For UI design
+  - **Bottom Navigation View**: For app navigation
 
 ---
 
