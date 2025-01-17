@@ -114,7 +114,7 @@ FridgeChef AI ensures a smooth and secure user experience with a comprehensive a
   - **Firebase Authentication:** For user authentication (email/password, Google, Facebook)
   - **Firebase Storage:** For storing user-related files like profile avatars
   - **Firebase Firestore:** For cloud-based data storage and synchronization
-  - **Room Database:** A local SQLite database for offline data storage and caching
+  - **Room Database:** For offline data storage and caching
 - **API Integration:**
   - Spoonacular API
   - Gemini API
